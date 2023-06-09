@@ -124,7 +124,7 @@ public class GeoTagImage {
 
                             new LoadMapImageTask().execute(imageUrl);
                         } else {
-                            Bitmap bitmap = createImage();
+                            Bitmap bitmap = createBitmap();
                             storeBitmapInternally(bitmap);
                         }
 
@@ -156,7 +156,7 @@ public class GeoTagImage {
         protected void onPostExecute(Bitmap result) {
             if (result != null) {
                 mapBitmap = result;
-                Bitmap bitmap = createImage();
+                Bitmap bitmap = createBitmap();
                 storeBitmapInternally(bitmap);
             }
         }
@@ -176,7 +176,7 @@ public class GeoTagImage {
         }
     }
 
-    private Bitmap createImage() {
+    private Bitmap createBitmap() {
         Bitmap b = Bitmap.createBitmap(originalImageWidth/4, originalImageHeight/4, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(b);
         canvas.drawARGB(0, 255, 255, 255);
@@ -200,7 +200,7 @@ public class GeoTagImage {
         Bitmap scaledbmp = Bitmap.createScaledBitmap(bitmap, originalImageWidth/4, originalImageHeight/4, false);
         canvas.drawBitmap(scaledbmp, 0, 0, design);
 
-        Log.i("xoxo" , " dimen "+ originalImageWidth + "x" + originalImageHeight);
+//        Log.i("xoxo" , " dimen "+ originalImageWidth + "x" + originalImageHeight);
 
         Paint rectPaint = new Paint();
         rectPaint.setColor(backgroundColor);
@@ -415,14 +415,6 @@ public class GeoTagImage {
         String mImageName = "IMG" + timeStamp + "." + IMAGE_EXTENSION;
         String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
         File media = new File(imagePath);
-
-        MediaScannerConnection.scanFile(context,
-                new String[]{media.getAbsolutePath()}, null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(String path, Uri uri) {
-                        Log.i("ASHISH", "Check image in gallery: " + uri.toString());
-                    }
-                });
         return Uri.fromFile(media);
     }
 
