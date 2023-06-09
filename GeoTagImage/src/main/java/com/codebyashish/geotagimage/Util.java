@@ -33,8 +33,8 @@ public class Util {
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             Bundle metaData = applicationInfo.metaData;
 
-            if (metaData != null && metaData.containsKey(context.getPackageName())) {
-                apiKey = metaData.getString(context.getPackageName());
+            if (metaData != null && metaData.containsKey("com.google.android.geo.API_KEY")) {
+                apiKey = metaData.getString("com.google.android.geo.API_KEY");
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

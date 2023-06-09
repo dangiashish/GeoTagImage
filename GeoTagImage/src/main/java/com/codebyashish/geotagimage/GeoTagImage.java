@@ -59,7 +59,7 @@ public class GeoTagImage {
     private boolean showAuthorName, showLatLng, showDate, showGoogleMap;
     private ArrayList<String> elementsList = new ArrayList<>();
     private int mapHeight, mapWidth;
-    String apiKey, center, imageUrl, dimension, markerUrl;
+    private String apiKey, center, imageUrl, dimension, markerUrl, imageStoragePath;
 
 
     public GeoTagImage(Context context) {
@@ -68,7 +68,7 @@ public class GeoTagImage {
 
     }
 
-    public void createBitmap(Uri fileUri) {
+    public void createImage(Uri fileUri) {
         this.fileUri = fileUri;
 
         // set default values here.
@@ -124,7 +124,7 @@ public class GeoTagImage {
 
                             new LoadMapImageTask().execute(imageUrl);
                         } else {
-                            Bitmap bitmap = createBitmap();
+                            Bitmap bitmap = createImage();
                             storeBitmapInternally(bitmap);
                         }
 
@@ -156,7 +156,7 @@ public class GeoTagImage {
         protected void onPostExecute(Bitmap result) {
             if (result != null) {
                 mapBitmap = result;
-                Bitmap bitmap = createBitmap();
+                Bitmap bitmap = createImage();
                 storeBitmapInternally(bitmap);
             }
         }
@@ -176,8 +176,8 @@ public class GeoTagImage {
         }
     }
 
-    private Bitmap createBitmap() {
-        Bitmap b = Bitmap.createBitmap(originalImageWidth, originalImageHeight, Bitmap.Config.ARGB_8888);
+    private Bitmap createImage() {
+        Bitmap b = Bitmap.createBitmap(originalImageWidth/4, originalImageHeight/4, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(b);
         canvas.drawARGB(0, 255, 255, 255);
         canvas.drawRGB(255, 255, 255);
@@ -197,8 +197,10 @@ public class GeoTagImage {
         }
 
         Paint design = new Paint();
-        Bitmap scaledbmp = Bitmap.createScaledBitmap(bitmap, originalImageWidth, originalImageHeight, false);
+        Bitmap scaledbmp = Bitmap.createScaledBitmap(bitmap, originalImageWidth/4, originalImageHeight/4, false);
         canvas.drawBitmap(scaledbmp, 0, 0, design);
+
+        Log.i("xoxo" , " dimen "+ originalImageWidth + "x" + originalImageHeight);
 
         Paint rectPaint = new Paint();
         rectPaint.setColor(backgroundColor);
@@ -238,7 +240,7 @@ public class GeoTagImage {
                 }
             }
 
-        } else  {
+        } else {
             float backgroundLeft = 10;
             canvas.drawRoundRect(backgroundLeft, canvas.getHeight() - backgroundHeight, canvas.getWidth() - 10, canvas.getHeight() - 10, dpToPx(radius), dpToPx(radius), rectPaint);
 
@@ -251,6 +253,7 @@ public class GeoTagImage {
     }
 
     private void drawText(float textX, float textY, Canvas canvas) {
+        elementsList.clear();
         Paint textPaint = new Paint();
         textPaint.setColor(textColor);
         textPaint.setTextAlign(Paint.Align.LEFT);
@@ -326,13 +329,13 @@ public class GeoTagImage {
 
         String mImageName = "IMG" + timeStamp + "." + IMAGE_EXTENSION;
         String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
+        imageStoragePath = imagePath;
         File mediaFile = new File(imagePath);
-        Log.d("ASHISH", "new copy path = " + imagePath);
-
         MediaScannerConnection.scanFile(context,
                 new String[]{imagePath}, null,
                 new MediaScannerConnection.OnScanCompletedListener() {
                     public void onScanCompleted(String path, Uri uri) {
+
                     }
                 });
 
@@ -371,12 +374,56 @@ public class GeoTagImage {
         this.showDate = showDate;
     }
 
-    public void showGoogleMap(boolean showGoogleMap){
-        this.showGoogleMap  = showGoogleMap;
+    public void showGoogleMap(boolean showGoogleMap) {
+        this.showGoogleMap = showGoogleMap;
     }
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    public String getImagePath() {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "/");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                return null;
+            }
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
+        String mImageName = "IMG" + timeStamp + "." + IMAGE_EXTENSION;
+        String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
+        File media = new File(imagePath);
+        MediaScannerConnection.scanFile(context,
+                new String[]{media.getAbsolutePath()}, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("ASHISH", "check image in gallery");
+                    }
+                });
+        Log.i("ASHISH", "" + imagePath);
+        return imagePath;
+    }
+
+    public Uri getImageUri() {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "/");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                return null;
+            }
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
+        String mImageName = "IMG" + timeStamp + "." + IMAGE_EXTENSION;
+        String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
+        File media = new File(imagePath);
+
+        MediaScannerConnection.scanFile(context,
+                new String[]{media.getAbsolutePath()}, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("ASHISH", "Check image in gallery: " + uri.toString());
+                    }
+                });
+        return Uri.fromFile(media);
     }
 
 }
