@@ -121,6 +121,8 @@ public class GeoTagImage {
             bitmapWidth = 960 * 2;
             bitmapHeight = 1280 * 2;
             backgroundHeight = (float) (backgroundHeight * 2);
+            mapWidth = 120 *2;
+            mapHeight = (int) backgroundHeight;
             textSize = textSize * 2;
             textTopMargin = 50 * 2;
             radius = radius * 2;
@@ -470,6 +472,8 @@ public class GeoTagImage {
                 bitmapHeight = 1280;
                 textTopMargin = 50;
                 backgroundHeight = 150f;
+                mapWidth = 120;
+                mapHeight = (int) backgroundHeight;
                 break;
             }
             case HIGH : {
@@ -479,6 +483,8 @@ public class GeoTagImage {
                 textSize = (float) (textSize * 3.6);
                 textTopMargin = (float) (50 * 3.6);
                 radius = (float) (radius * 3.6);
+                mapWidth = (int) (mapWidth *2);
+                mapHeight = (int) ((int) backgroundHeight *1.5);
                 break;
             }
         }
@@ -524,5 +530,4 @@ public class GeoTagImage {
     public void handlePermissionGrantResult() {
         permissionCallback.onPermissionGranted();
     }
-
 }
