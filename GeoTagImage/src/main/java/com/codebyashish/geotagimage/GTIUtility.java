@@ -80,15 +80,15 @@ public class GTIUtility {
     public static File generateOriginalFile(FragmentActivity mContext, String IMAGE_EXTENSION) {
         File file = null;
         try {
-            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Camera");
             if (!mediaStorageDir.exists()) {
                 if (!mediaStorageDir.mkdirs()) {
                     return null;
                 }
 
             }
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-            file = new File(mediaStorageDir.getPath() + File.separator + "ORG_" + timeStamp + IMAGE_EXTENSION);
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
+            file = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + IMAGE_EXTENSION);
         }catch (Exception e){
             e.printStackTrace();
                     

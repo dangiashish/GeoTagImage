@@ -1,7 +1,7 @@
 package com.codebyashish.geotagimage;
 
 import static com.codebyashish.geotagimage.ImageQuality.HIGH;
-import static com.codebyashish.geotagimage.ImageQuality.STANDARD;
+import static com.codebyashish.geotagimage.ImageQuality.LOW;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -118,9 +118,12 @@ public class GeoTagImage {
 
 
         if (imageQuality == null) {
-            bitmapWidth = 960;
-            bitmapHeight = 1280;
-            textTopMargin = 50;
+            bitmapWidth = 960 * 2;
+            bitmapHeight = 1280 * 2;
+            backgroundHeight = (float) (backgroundHeight * 2);
+            textSize = textSize * 2;
+            textTopMargin = 50 * 2;
+            radius = radius * 2;
         }
 
 
@@ -288,6 +291,13 @@ public class GeoTagImage {
     }
 
     private void drawText(float textX, float textY, Canvas canvas) {
+
+        if (imageQuality == null) {
+            textSize = textSize * 2;
+            textTopMargin = 50 * 2;
+        }
+
+
         elementsList.clear();
         Paint textPaint = new Paint();
         textPaint.setColor(textColor);
@@ -330,30 +340,31 @@ public class GeoTagImage {
             String appName = GTIUtility.getApplicationName(context);
             if (imageQuality != null) {
                 switch (imageQuality) {
-                    case STANDARD -> {
-                        textSize = (float) (textSize) / 2;
-                        textTopMargin = 50 * 2;
+                    case LOW : {
+                        textTopMargin = 50;
+                        textPaint.setTextSize(textSize / 2);
                         textY = canvas.getHeight() - 20;
-                        textPaint.setTextSize(textSize);
                         canvas.drawText(appName, (canvas.getWidth() - 10) - 10 - textPaint.measureText(appName), textY, textPaint);
+                        break;
                     }
-                    case HIGH -> {
+                    case HIGH : {
                         textSize = (float) (textSize) / 2;
                         textTopMargin = (float) (50 * 3.6);
                         textPaint.setTextSize(textSize);
                         textY = canvas.getHeight() - 40;
                         canvas.drawText(appName, (canvas.getWidth() - 10) - 20 - textPaint.measureText(appName), textY, textPaint);
+                        break;
                     }
                 }
             } else {
-                textTopMargin = 50;
-                textPaint.setTextSize(textSize / 2);
+                textSize = (float) (textSize) /2;
+                textTopMargin = 50 * 2;
                 textY = canvas.getHeight() - 20;
+                textPaint.setTextSize(textSize);
                 canvas.drawText(appName, (canvas.getWidth() - 10) - 10 - textPaint.measureText(appName), textY, textPaint);
-
             }
         }
-        
+
     }
 
     private float dpToPx(float dp) {
@@ -390,9 +401,9 @@ public class GeoTagImage {
                 return null;
             }
         }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
 
-        String mImageName = "GTI" + timeStamp + IMAGE_EXTENSION;
+        String mImageName = "IMG_" + timeStamp + IMAGE_EXTENSION;
         String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
         File mediaFile = new File(imagePath);
         MediaScannerConnection.scanFile(context,
@@ -454,21 +465,21 @@ public class GeoTagImage {
         this.imageQuality = imageQuality;
 
         switch (imageQuality) {
-            case STANDARD -> {
-                bitmapWidth = 960 * 2;
-                bitmapHeight = 1280 * 2;
-                backgroundHeight = (float) (backgroundHeight * 2);
-                textSize = (float) (textSize * 2);
-                textTopMargin = 50 * 2;
-                radius = radius * 2;
+            case LOW : {
+                bitmapWidth = 960;
+                bitmapHeight = 1280;
+                textTopMargin = 50;
+                backgroundHeight = 150f;
+                break;
             }
-            case HIGH -> {
+            case HIGH : {
                 bitmapWidth = (int) (960 * 3.6);
                 bitmapHeight = (int) (1280 * 3.6);
-                backgroundHeight = (float) (backgroundHeight * 3.6);
+                backgroundHeight = (float) (backgroundHeight * 1.5);
                 textSize = (float) (textSize * 3.6);
                 textTopMargin = (float) (50 * 3.6);
                 radius = (float) (radius * 3.6);
+                break;
             }
         }
 
@@ -481,8 +492,8 @@ public class GeoTagImage {
                 return null;
             }
         }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String mImageName = "GTI" + timeStamp + IMAGE_EXTENSION;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
+        String mImageName = "IMG_" + timeStamp + IMAGE_EXTENSION;
         String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
         File media = new File(imagePath);
         MediaScannerConnection.scanFile(context,
@@ -503,8 +514,8 @@ public class GeoTagImage {
                 return null;
             }
         }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String mImageName = "GTI" + timeStamp + IMAGE_EXTENSION;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
+        String mImageName = "IMG_" + timeStamp + IMAGE_EXTENSION;
         String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
         File media = new File(imagePath);
         return Uri.fromFile(media);
