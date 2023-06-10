@@ -1,7 +1,9 @@
 package com.codebyashish.geotagimage;
 
+import static com.codebyashish.geotagimage.ImageQuality.HIGH;
+import static com.codebyashish.geotagimage.ImageQuality.STANDARD;
+
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,15 +16,13 @@ import android.location.Location;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
-
-import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,37 +38,59 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * 2023, Copyright by Ashish Dangi,
+ * <a href="https://github.com/dangiashish">github.com/dangiashish</a>,
+ * India
+ */
+
 public class GeoTagImage {
     private String place = "", road = "", latlng = "", date = "";
     private int originalImageHeight = 0;
     private int originalImageWidth = 0;
     private Context context;
+    private File returnFile;
     private Bitmap bitmap = null, mapBitmap = null;
     private List<Address> addresses;
-    private static final String IMAGE_EXTENSION = "png";
+    private static final String IMAGE_EXTENSION = ".jpg";
     private Uri fileUri;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Geocoder geocoder;
     private double latitude, longitude;
-    private float textSize;
+    private float textSize, textTopMargin;
     private Typeface typeface;
     private float radius;
     private int backgroundColor, textColor;
-    private float backgroundHeight;
+    private float backgroundHeight, backgroundLeft;
     private String authorName;
-    private boolean showAuthorName, showLatLng, showDate, showGoogleMap;
+    private boolean showAuthorName, showAppName, showLatLng, showDate, showGoogleMap;
     private ArrayList<String> elementsList = new ArrayList<>();
-    private int mapHeight, mapWidth;
-    private String apiKey, center, imageUrl, dimension, markerUrl, imageStoragePath;
+    private int mapHeight, mapWidth, bitmapWidth, bitmapHeight;
+    private String apiKey, center, imageUrl, dimension, markerUrl, imageQuality;
+    private final PermissionCallback permissionCallback;
 
 
-    public GeoTagImage(Context context) {
+    public GeoTagImage(Context context, PermissionCallback callback) throws GTIException {
+
+        if (context == null) {
+            throw new GTIException("Context is not initialized or assigned to null value, use : context = getActivity();");
+        }
+        if (callback == null) {
+            throw new GTIException("Permission callback is not initialized or assigned to null value, use : permissionCallback = this;");
+        }
+
         this.context = context;
+        this.permissionCallback = callback;
 
 
     }
 
-    public void createImage(Uri fileUri) {
+    public void createImage(Uri fileUri) throws GTIException {
+
+        if (fileUri == null) {
+            throw new GTIException("Uri cannot be null");
+        }
+
         this.fileUri = fileUri;
 
         // set default values here.
@@ -76,17 +98,17 @@ public class GeoTagImage {
         typeface = Typeface.DEFAULT;
         radius = dpToPx(6);
         backgroundColor = Color.parseColor("#66000000");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            textColor = context.getColor(android.R.color.white);
-        }
+        textColor = context.getColor(android.R.color.white);
         backgroundHeight = 150f;
         authorName = "";
         showAuthorName = false;
+        showAppName = false;
         showGoogleMap = true;
         showLatLng = true;
         showDate = true;
         mapHeight = (int) backgroundHeight;
         mapWidth = 120;
+        imageQuality = null;
 
         initialization();
     }
@@ -94,16 +116,22 @@ public class GeoTagImage {
     private void initialization() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
+
+        if (imageQuality == null) {
+            bitmapWidth = 960;
+            bitmapHeight = 1280;
+            textTopMargin = 50;
+        }
+
+
         getDeviceLocation();
-        getDimensions();
+//        getDimensions();
 
 
     }
 
     private void getDeviceLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (GTIPermissions.checkCameraLocationPermission(context)) {
             Task<Location> task = fusedLocationProviderClient.getLastLocation();
             task.addOnSuccessListener(location -> {
                 if (location != null) {
@@ -112,20 +140,28 @@ public class GeoTagImage {
                     geocoder = new Geocoder(context, Locale.getDefault());
                     try {
                         addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        if (GTIUtility.isGoogleMapsLinked(context)) {
+                            if (GTIUtility.getMapKey(context) == null) {
+                                Bitmap bitmap = createBitmap();
+                                storeBitmapInternally(bitmap);
 
-                        if (Util.isGoogleMapsLinked(context)) {
-                            apiKey = Util.getMapKey(context);
+                                throw new GTIException("API key not found for this project");
+                            } else {
 
-                            center = latitude + "," + longitude;
-                            dimension = mapWidth + "x" + mapHeight;
-                            markerUrl = String.format(Locale.getDefault(), "%s%s%s", "markers=color:red%7C", center, "&");
-                            imageUrl = String.format(Locale.getDefault(), "https://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=%d&size=%s&%s&maptype=%s&key=%s",
-                                    center, 15, dimension, markerUrl, "satellite", apiKey);
+                                apiKey = GTIUtility.getMapKey(context);
 
-                            new LoadMapImageTask().execute(imageUrl);
-                        } else {
+                                center = latitude + "," + longitude;
+                                dimension = mapWidth + "x" + mapHeight;
+                                markerUrl = String.format(Locale.getDefault(), "%s%s%s", "markers=color:red%7C", center, "&");
+                                imageUrl = String.format(Locale.getDefault(), "https://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=%d&size=%s&%s&maptype=%s&key=%s",
+                                        center, 15, dimension, markerUrl, "satellite", apiKey);
+
+                                new LoadMapImageTask().execute(imageUrl);
+                            }
+                        } else if (!GTIUtility.isGoogleMapsLinked(context)) {
                             Bitmap bitmap = createBitmap();
                             storeBitmapInternally(bitmap);
+                            throw new GTIException("Project is not linked with google map sdk");
                         }
 
                     } catch (Exception e) {
@@ -162,7 +198,7 @@ public class GeoTagImage {
         }
     }
 
-    public void getDimensions() {
+    public void getDimensions() throws GTIException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         try {
@@ -172,12 +208,12 @@ public class GeoTagImage {
             Log.d("ASHISH", originalImageHeight + " & " + originalImageWidth);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Log.d("ASHISH", "file not Found" + e.getMessage());
+            throw new GTIException("File Not Found : " + e.getMessage());
         }
     }
 
     private Bitmap createBitmap() {
-        Bitmap b = Bitmap.createBitmap(originalImageWidth/4, originalImageHeight/4, Bitmap.Config.ARGB_8888);
+        Bitmap b = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(b);
         canvas.drawARGB(0, 255, 255, 255);
         canvas.drawRGB(255, 255, 255);
@@ -197,55 +233,54 @@ public class GeoTagImage {
         }
 
         Paint design = new Paint();
-        Bitmap scaledbmp = Bitmap.createScaledBitmap(bitmap, originalImageWidth/4, originalImageHeight/4, false);
+        Bitmap scaledbmp = Bitmap.createScaledBitmap(bitmap, bitmapWidth, bitmapHeight, false);
         canvas.drawBitmap(scaledbmp, 0, 0, design);
-
-//        Log.i("xoxo" , " dimen "+ originalImageWidth + "x" + originalImageHeight);
 
         Paint rectPaint = new Paint();
         rectPaint.setColor(backgroundColor);
         rectPaint.setStyle(Paint.Style.FILL);
 
         if (showAuthorName) {
-            backgroundHeight = backgroundHeight + 50;
+            backgroundHeight = backgroundHeight + textTopMargin;
         }
         if (showDate) {
-            backgroundHeight = backgroundHeight + 50;
+            backgroundHeight = backgroundHeight + textTopMargin;
         }
         if (showLatLng) {
-            backgroundHeight = backgroundHeight + 50;
+            backgroundHeight = backgroundHeight + textTopMargin;
         }
 
-        if (Util.isGoogleMapsLinked(context)) {
+
+        if (GTIUtility.isGoogleMapsLinked(context)) {
             if (mapBitmap != null) {
                 if (showGoogleMap) {
                     float mapLeft = 10;
-                    float backgroundLeft = mapBitmap.getWidth() + 20;
+                    backgroundLeft = mapBitmap.getWidth() + 20;
                     canvas.drawRoundRect(backgroundLeft, canvas.getHeight() - backgroundHeight, canvas.getWidth() - 10, canvas.getHeight() - 10, dpToPx(radius), dpToPx(radius), rectPaint);
                     Bitmap scaledbmp2 = Bitmap.createScaledBitmap(mapBitmap, mapWidth, mapHeight, false);
                     canvas.drawBitmap(scaledbmp2, mapLeft, (canvas.getHeight() - backgroundHeight) + (backgroundHeight - mapBitmap.getHeight()) / 2, design);
 
                     float textX = backgroundLeft + 10;
-                    float textY = canvas.getHeight() - (backgroundHeight - 50);
+                    float textY = canvas.getHeight() - (backgroundHeight - textTopMargin);
 
                     drawText(textX, textY, canvas);
                 } else {
-                    float backgroundLeft = 10;
+                    backgroundLeft = 10;
                     canvas.drawRoundRect(backgroundLeft, canvas.getHeight() - backgroundHeight, canvas.getWidth() - 10, canvas.getHeight() - 10, dpToPx(radius), dpToPx(radius), rectPaint);
 
                     float textX = backgroundLeft + 10;
-                    float textY = canvas.getHeight() - (backgroundHeight - 50);
+                    float textY = canvas.getHeight() - (backgroundHeight - textTopMargin);
 
                     drawText(textX, textY, canvas);
                 }
             }
 
         } else {
-            float backgroundLeft = 10;
+            backgroundLeft = 10;
             canvas.drawRoundRect(backgroundLeft, canvas.getHeight() - backgroundHeight, canvas.getWidth() - 10, canvas.getHeight() - 10, dpToPx(radius), dpToPx(radius), rectPaint);
 
             float textX = backgroundLeft + 10;
-            float textY = canvas.getHeight() - (backgroundHeight - 50);
+            float textY = canvas.getHeight() - (backgroundHeight - textTopMargin);
 
             drawText(textX, textY, canvas);
         }
@@ -260,6 +295,7 @@ public class GeoTagImage {
         textPaint.setTypeface(typeface);
         textPaint.setTextSize(textSize);
 
+
         if (addresses != null) {
 
             place = addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName();
@@ -273,23 +309,51 @@ public class GeoTagImage {
                 elementsList.add(latlng);
             }
 
-            if (showDate) {
-                date = new SimpleDateFormat("dd/MM/yyyy hh:mm a z", Locale.getDefault()).format(new Date());
-                elementsList.add(date);
-            }
-
-            if (showAuthorName) {
-                authorName = "Clicked by : " + authorName;
-                elementsList.add(authorName);
-            }
-
         }
 
+
+
+        if (showDate) {
+            date = new SimpleDateFormat("dd/MM/yyyy hh:mm a z", Locale.getDefault()).format(new Date());
+            elementsList.add(date);
+        }
+        if (showAuthorName) {
+            authorName = "Clicked by : " + authorName;
+            elementsList.add(authorName);
+        }
         for (String item : elementsList) {
             canvas.drawText(item, textX, textY, textPaint);
-            textY += 50;
+            textY += textTopMargin;
         }
 
+        if (showAppName) {
+            String appName = GTIUtility.getApplicationName(context);
+            if (imageQuality != null) {
+                switch (imageQuality) {
+                    case STANDARD -> {
+                        textSize = (float) (textSize) / 2;
+                        textTopMargin = 50 * 2;
+                        textY = canvas.getHeight() - 20;
+                        textPaint.setTextSize(textSize);
+                        canvas.drawText(appName, (canvas.getWidth() - 10) - 10 - textPaint.measureText(appName), textY, textPaint);
+                    }
+                    case HIGH -> {
+                        textSize = (float) (textSize) / 2;
+                        textTopMargin = (float) (50 * 3.6);
+                        textPaint.setTextSize(textSize);
+                        textY = canvas.getHeight() - 40;
+                        canvas.drawText(appName, (canvas.getWidth() - 10) - 20 - textPaint.measureText(appName), textY, textPaint);
+                    }
+                }
+            } else {
+                textTopMargin = 50;
+                textPaint.setTextSize(textSize / 2);
+                textY = canvas.getHeight() - 20;
+                canvas.drawText(appName, (canvas.getWidth() - 10) - 10 - textPaint.measureText(appName), textY, textPaint);
+
+            }
+        }
+        
     }
 
     private float dpToPx(float dp) {
@@ -299,6 +363,7 @@ public class GeoTagImage {
 
     private void storeBitmapInternally(Bitmap b) {
         File pictureFile = getOutputMediaFile();
+        returnFile = pictureFile;
         if (pictureFile == null) {
             Log.e("ASHISH", "Error creating media file, check storage permissions: ");
             return;
@@ -325,11 +390,10 @@ public class GeoTagImage {
                 return null;
             }
         }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
 
-        String mImageName = "IMG" + timeStamp + "." + IMAGE_EXTENSION;
+        String mImageName = "GTI" + timeStamp + IMAGE_EXTENSION;
         String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
-        imageStoragePath = imagePath;
         File mediaFile = new File(imagePath);
         MediaScannerConnection.scanFile(context,
                 new String[]{imagePath}, null,
@@ -362,8 +426,12 @@ public class GeoTagImage {
         this.textColor = textColor;
     }
 
-    public void setAuthorNameEnabled(boolean authorNameEnabled) {
-        this.showAuthorName = authorNameEnabled;
+    public void showAuthorName(boolean showAuthorName) {
+        this.showAuthorName = showAuthorName;
+    }
+
+    public void showAppName(boolean showAppName) {
+        this.showAppName = showAppName;
     }
 
     public void showLatLng(boolean showLatLng) {
@@ -382,25 +450,49 @@ public class GeoTagImage {
         this.authorName = authorName;
     }
 
+    public void setImageQuality(String imageQuality) {
+        this.imageQuality = imageQuality;
+
+        switch (imageQuality) {
+            case STANDARD -> {
+                bitmapWidth = 960 * 2;
+                bitmapHeight = 1280 * 2;
+                backgroundHeight = (float) (backgroundHeight * 2);
+                textSize = (float) (textSize * 2);
+                textTopMargin = 50 * 2;
+                radius = radius * 2;
+            }
+            case HIGH -> {
+                bitmapWidth = (int) (960 * 3.6);
+                bitmapHeight = (int) (1280 * 3.6);
+                backgroundHeight = (float) (backgroundHeight * 3.6);
+                textSize = (float) (textSize * 3.6);
+                textTopMargin = (float) (50 * 3.6);
+                radius = (float) (radius * 3.6);
+            }
+        }
+
+    }
+
     public String getImagePath() {
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "/");
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 return null;
             }
         }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
-        String mImageName = "IMG" + timeStamp + "." + IMAGE_EXTENSION;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String mImageName = "GTI" + timeStamp + IMAGE_EXTENSION;
         String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
         File media = new File(imagePath);
         MediaScannerConnection.scanFile(context,
                 new String[]{media.getAbsolutePath()}, null,
                 new MediaScannerConnection.OnScanCompletedListener() {
                     public void onScanCompleted(String path, Uri uri) {
-                        Log.i("ASHISH", "check image in gallery");
+
                     }
                 });
-        Log.i("ASHISH", "" + imagePath);
+
         return imagePath;
     }
 
@@ -411,11 +503,15 @@ public class GeoTagImage {
                 return null;
             }
         }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
-        String mImageName = "IMG" + timeStamp + "." + IMAGE_EXTENSION;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String mImageName = "GTI" + timeStamp + IMAGE_EXTENSION;
         String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
         File media = new File(imagePath);
         return Uri.fromFile(media);
+    }
+
+    public void handlePermissionGrantResult() {
+        permissionCallback.onPermissionGranted();
     }
 
 }

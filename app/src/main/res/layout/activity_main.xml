@@ -8,7 +8,7 @@
 
 
     <LinearLayout
-        android:id="@+id/layoutImage1"
+        android:id="@+id/layoutImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -24,6 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:visibility="visible"
+            app:cardElevation="1dp"
+            android:layout_margin="5dp"
             app:cardCornerRadius="8dp">
 
             <RelativeLayout
@@ -44,29 +46,17 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:orientation="horizontal"
-                    android:weightSum="2">
+                    >
 
                     <ImageView
                         android:id="@+id/ivCamera"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         android:layout_marginEnd="5dp"
-                        android:layout_weight="1"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_outline_camera_alt_24"
                         android:visibility="visible"
                         />
-
-                    <ImageView
-                        android:id="@+id/ivGallery"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="1"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_baseline_photo_library_24"
-                        android:visibility="gone"
-                         />
 
                 </LinearLayout>
 
@@ -87,5 +77,24 @@
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvLibName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvAuthorName"/>
+
+    <TextView
+        android:id="@+id/tvAuthorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="by Ashish Dangi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="5dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
