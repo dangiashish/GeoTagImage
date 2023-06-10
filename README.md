@@ -2,6 +2,9 @@
 
 
 [![](https://jitpack.io/v/dangiashish/GeoTagImage.svg)](https://jitpack.io/#dangiashish/GeoTagImage)
+[![](https://img.shields.io/badge/android--sdk-24%2B-green)](https://developer.android.com/tools/sdkmanager)
+[![](https://img.shields.io/badge/compatible-java-blue)](https://www.java.com/)
+[![](https://img.shields.io/badge/compatible-kotlin-blueviolet)](https://kotlinlang.org/)
 
 ### Gradle
 
