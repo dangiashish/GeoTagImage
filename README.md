@@ -6,6 +6,10 @@
 [![](https://img.shields.io/badge/compatible-java-blue)](https://www.java.com/)
 [![](https://img.shields.io/badge/compatible-kotlin-blueviolet)](https://kotlinlang.org/)
 
+[](https://miro.medium.com/v2/resize:fit:720/format:webp/1*rcAxNUUVIi4yZ_sBI_vTRw.jpeg)
+
+#### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f)
+
 ### Gradle
 
 Add repository in your `build.gradle` (project-level) file :
