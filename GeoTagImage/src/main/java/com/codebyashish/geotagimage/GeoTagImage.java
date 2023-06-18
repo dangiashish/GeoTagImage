@@ -121,7 +121,7 @@ public class GeoTagImage {
             bitmapWidth = 960 * 2;
             bitmapHeight = 1280 * 2;
             backgroundHeight = (float) (backgroundHeight * 2);
-            mapWidth = 120 *2;
+            mapWidth = 120 * 2;
             mapHeight = (int) backgroundHeight;
             textSize = textSize * 2;
             textTopMargin = 50 * 2;
@@ -324,7 +324,6 @@ public class GeoTagImage {
         }
 
 
-
         if (showDate) {
             date = new SimpleDateFormat("dd/MM/yyyy hh:mm a z", Locale.getDefault()).format(new Date());
             elementsList.add(date);
@@ -342,14 +341,14 @@ public class GeoTagImage {
             String appName = GTIUtility.getApplicationName(context);
             if (imageQuality != null) {
                 switch (imageQuality) {
-                    case LOW : {
+                    case LOW: {
                         textTopMargin = 50;
                         textPaint.setTextSize(textSize / 2);
                         textY = canvas.getHeight() - 20;
                         canvas.drawText(appName, (canvas.getWidth() - 10) - 10 - textPaint.measureText(appName), textY, textPaint);
                         break;
                     }
-                    case HIGH : {
+                    case HIGH: {
                         textSize = (float) (textSize) / 2;
                         textTopMargin = (float) (50 * 3.6);
                         textPaint.setTextSize(textSize);
@@ -359,7 +358,7 @@ public class GeoTagImage {
                     }
                 }
             } else {
-                textSize = (float) (textSize) /2;
+                textSize = (float) (textSize) / 2;
                 textTopMargin = 50 * 2;
                 textY = canvas.getHeight() - 20;
                 textPaint.setTextSize(textSize);
@@ -467,7 +466,7 @@ public class GeoTagImage {
         this.imageQuality = imageQuality;
 
         switch (imageQuality) {
-            case LOW : {
+            case LOW: {
                 bitmapWidth = 960;
                 bitmapHeight = 1280;
                 textTopMargin = 50;
@@ -476,15 +475,15 @@ public class GeoTagImage {
                 mapHeight = (int) backgroundHeight;
                 break;
             }
-            case HIGH : {
+            case HIGH: {
                 bitmapWidth = (int) (960 * 3.6);
                 bitmapHeight = (int) (1280 * 3.6);
                 backgroundHeight = (float) (backgroundHeight * 1.5);
                 textSize = (float) (textSize * 3.6);
                 textTopMargin = (float) (50 * 3.6);
                 radius = (float) (radius * 3.6);
-                mapWidth = (int) (mapWidth *2);
-                mapHeight = (int) ((int) backgroundHeight *1.5);
+                mapWidth = (int) (mapWidth * 2);
+                mapHeight = (int) ((int) backgroundHeight * 1.5);
                 break;
             }
         }
@@ -492,25 +491,26 @@ public class GeoTagImage {
     }
 
     public String getImagePath() {
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "/");
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
-            }
-        }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
-        String mImageName = "IMG_" + timeStamp + IMAGE_EXTENSION;
-        String imagePath = mediaStorageDir.getPath() + File.separator + mImageName;
-        File media = new File(imagePath);
-        MediaScannerConnection.scanFile(context,
-                new String[]{media.getAbsolutePath()}, null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(String path, Uri uri) {
 
+                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "/");
+                if (!mediaStorageDir.exists()) {
+                    if (!mediaStorageDir.mkdirs()) {
+                        return null;
                     }
-                });
+                }
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
+                String mImageName = "IMG_" + timeStamp + IMAGE_EXTENSION;
+                String ImagePath = mediaStorageDir.getPath() + File.separator + mImageName;
+                File media = new File(ImagePath);
+                MediaScannerConnection.scanFile(context,
+                        new String[]{media.getAbsolutePath()}, null,
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            public void onScanCompleted(String path, Uri uri) {
 
-        return imagePath;
+                            }
+                        });
+
+        return ImagePath;
     }
 
     public Uri getImageUri() {

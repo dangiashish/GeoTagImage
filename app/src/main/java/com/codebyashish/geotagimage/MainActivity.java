@@ -3,10 +3,12 @@ package com.codebyashish.geotagimage;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -110,24 +112,26 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         if (requestCode == CAMERA_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
-                // if result is OK then preview the original created image file.
-                previewCapturedImage();
-
                 try {
                     // now call the function createImage() and pass the uri object (line no. 90-100)
                     geoTagImage.createImage(fileUri);
 
                     // set all the customizations for geotagging as per your requirements.
-                    geoTagImage.setTextSize(25f);
+                    geoTagImage.setTextSize(30f);
                     geoTagImage.setBackgroundRadius(5f);
                     geoTagImage.setBackgroundColor(Color.parseColor("#66000000"));
                     geoTagImage.setTextColor(getColor(android.R.color.white));
                     geoTagImage.setAuthorName("Ashish");
                     geoTagImage.showAuthorName(true);
                     geoTagImage.showAppName(true);
+                    geoTagImage.setImageQuality(ImageQuality.LOW);
 
-                    // after the geotagged photo is created, get the new image path by using getImagePath() method
+                    // after geotagged photo is created, get the new image path by using getImagePath() method
                     imageStoragePath = geoTagImage.getImagePath();
+
+                    /* The time it takes for a Canvas to draw items on a blank Bitmap can vary depending on several factors,
+                     * such as the complexity of the items being drawn, the size of the Bitmap, and the processing power of the device.*/
+                    new Handler().postDelayed(this::previewCapturedImage, 3000);
 
 
                 } catch (GTIException e) {
@@ -150,7 +154,8 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         try {
             ivCamera.setVisibility(View.GONE);
             Bitmap bitmap = GTIUtility.optimizeBitmap(imageStoragePath);
-            ivImage.setImageBitmap(bitmap);
+            Bitmap bitmap1 = BitmapFactory.decodeFile(imageStoragePath);
+            ivImage.setImageBitmap(bitmap1);
 
             if (ivImage.getDrawable() != null) {
                 ivClose.setVisibility(View.VISIBLE);
