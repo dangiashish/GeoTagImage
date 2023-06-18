@@ -170,9 +170,6 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         if (requestCode == CAMERA_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
-                // if result is OK then preview the original created image file.
-                previewCapturedImage();
-
                 try {
                     // now call the function createImage() and pass the uri object (line no. 90-100)
                     geoTagImage.createImage(fileUri);
@@ -188,6 +185,10 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
 
                     // after the geotagged photo is created, get the new image path by using getImagePath() method
                     imageStoragePath = geoTagImage.getImagePath();
+
+                    /* The time it takes for a Canvas to draw items on a blank Bitmap can vary depending on several factors, 
+                    * such as the complexity of the items being drawn, the size of the Bitmap, and the processing power of the device.*/
+                    new Handler().postDelayed(this::previewCapturedImage, 3000);
 
 
                 } catch (GTIException e) {
