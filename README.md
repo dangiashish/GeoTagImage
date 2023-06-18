@@ -6,6 +6,10 @@
 [![](https://img.shields.io/badge/compatible-java-blue)](https://www.java.com/)
 [![](https://img.shields.io/badge/compatible-kotlin-blueviolet)](https://kotlinlang.org/)
 
+[](https://miro.medium.com/v2/resize:fit:720/format:webp/1*rcAxNUUVIi4yZ_sBI_vTRw.jpeg)
+
+#### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f)
+
 ### Gradle
 
 Add repository in your `build.gradle` (project-level) file :
@@ -36,7 +40,7 @@ Add dependency in your `build.gradle` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.0.4'
+    implementation 'com.github.dangiashish:GeoTagImage:1.0.7'
 }
 ```
 #### Add file provider in [AndroidManifest.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/AndroidManifest.xml#L34)
@@ -52,7 +56,7 @@ dependencies{
         </provider>
 
 ```
-#### Create an xml file for path profider [@xml/provider_path.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/res/xml/provider_paths.xml)
+#### Create an xml file for path provider [@xml/provider_path.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/res/xml/provider_paths.xml)
 ```groovy
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
@@ -166,9 +170,6 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         if (requestCode == CAMERA_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
-                // if result is OK then preview the original created image file.
-                previewCapturedImage();
-
                 try {
                     // now call the function createImage() and pass the uri object (line no. 90-100)
                     geoTagImage.createImage(fileUri);
@@ -184,6 +185,10 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
 
                     // after the geotagged photo is created, get the new image path by using getImagePath() method
                     imageStoragePath = geoTagImage.getImagePath();
+
+                    /* The time it takes for a Canvas to draw items on a blank Bitmap can vary depending on several factors, 
+                    * such as the complexity of the items being drawn, the size of the Bitmap, and the processing power of the device.*/
+                    new Handler().postDelayed(this::previewCapturedImage, 3000);
 
 
                 } catch (GTIException e) {
@@ -235,5 +240,29 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
     }
 ```
     
+#### LICENSE
+```
+MIT License
+
+Copyright (c) 2023 Ashish Dangi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
 
         
