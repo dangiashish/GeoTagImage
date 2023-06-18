@@ -40,7 +40,7 @@ Add dependency in your `build.gradle` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.0.7'
+    implementation 'com.github.dangiashish:GeoTagImage:1.0.8'
 }
 ```
 #### Add file provider in [AndroidManifest.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/AndroidManifest.xml#L34)
