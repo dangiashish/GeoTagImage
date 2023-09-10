@@ -3,7 +3,7 @@
 </p>
 
 <div align = "center">
-<h1 align="center"> 💫 GeoTagImage 📸🌍 </h1>
+<h1 align="center"> 💫 GeoTagImage (GTI) 📸🌍 </h1>
 
 <a href="https://jitpack.io/#dangiashish/GeoTagImage"><img src="https://jitpack.io/v/dangiashish/GeoTagImage.svg"/></a>
 <a href="(https://developer.android.com/tools/sdkmanager"><img src="https://img.shields.io/badge/android--sdk-24%2B-green"/></a>
