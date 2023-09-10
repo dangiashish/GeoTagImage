@@ -4,7 +4,7 @@
 
 <div align = "center">
 <h1 align="center"> 💫 GeoTagImage (GTI) 📸🌍 </h1>
-
+<a href="https://www.codefactor.io/repository/github/dangiashish/geotagimage/overview/master"><img src="https://www.codefactor.io/repository/github/dangiashish/geotagimage/badge/master" alt="CodeFactor" /></a>
 <a href="https://jitpack.io/#dangiashish/GeoTagImage"><img src="https://jitpack.io/v/dangiashish/GeoTagImage.svg"/></a>
 <a href="(https://developer.android.com/tools/sdkmanager"><img src="https://img.shields.io/badge/android--sdk-24%2B-green"/></a>
 <a href="https://www.java.com/"><img src="https://img.shields.io/badge/compatible-java-blue"/></a>
