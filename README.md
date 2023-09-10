@@ -1,14 +1,17 @@
-# GeoTagImage
+<p align="center">
+<img src="https://github.com/dangiashish/GeoTagImage/assets/70362030/88c3e47a-0029-4d90-8276-540558137ccc"/>
+</p>
 
+<div align = "center">
+<h1 align="center"> 💫 GeoTagImage 📸🌍 </h1>
 
-[![](https://jitpack.io/v/dangiashish/GeoTagImage.svg)](https://jitpack.io/#dangiashish/GeoTagImage)
-[![](https://img.shields.io/badge/android--sdk-24%2B-green)](https://developer.android.com/tools/sdkmanager)
-[![](https://img.shields.io/badge/compatible-java-blue)](https://www.java.com/)
-[![](https://img.shields.io/badge/compatible-kotlin-blueviolet)](https://kotlinlang.org/)
+<a href="https://jitpack.io/#dangiashish/GeoTagImage"><img src="https://jitpack.io/v/dangiashish/GeoTagImage.svg"/></a>
+<a href="(https://developer.android.com/tools/sdkmanager"><img src="https://img.shields.io/badge/android--sdk-24%2B-green"/></a>
+<a href="https://www.java.com/"><img src="https://img.shields.io/badge/compatible-java-blue"/></a>
+<a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/compatible-kotlin-blueviolet"/></a>
 
-[](https://miro.medium.com/v2/resize:fit:720/format:webp/1*rcAxNUUVIi4yZ_sBI_vTRw.jpeg)
-
-#### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f)
+#### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f) 
+</div>
 
 ### Gradle
 
