@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         }
     }
 ```
-#### priview the original image
+#### preview the original image
 ```groovy
         // preview of the original image
     private void previewCapturedImage() {
