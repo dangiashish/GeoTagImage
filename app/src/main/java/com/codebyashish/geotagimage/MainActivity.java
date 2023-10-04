@@ -28,7 +28,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity implements PermissionCallback {
     private ImageView ivCamera, ivImage, ivClose;
     private static String imageStoragePath;
-    public static final String IMAGE_EXTENSION = ".jpg";
+    public static final String IMAGE_EXTENSION = ".png";
     private Uri fileUri;
     private static final int CAMERA_IMAGE_REQUEST_CODE = 2000;
     private static final int PERMISSION_REQUEST_CODE = 100;
