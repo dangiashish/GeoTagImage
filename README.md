@@ -1,14 +1,17 @@
-# GeoTagImage
+<p align="center">
+<img src="https://github.com/dangiashish/GeoTagImage/assets/70362030/88c3e47a-0029-4d90-8276-540558137ccc"/>
+</p>
 
+<div align = "center">
+<h1 align="center"> 💫 GeoTagImage (GTI) 📸🌍 </h1>
+<a href="https://www.codefactor.io/repository/github/dangiashish/geotagimage/overview/master"><img src="https://www.codefactor.io/repository/github/dangiashish/geotagimage/badge/master" alt="CodeFactor" /></a>
+<a href="https://jitpack.io/#dangiashish/GeoTagImage"><img src="https://jitpack.io/v/dangiashish/GeoTagImage.svg"/></a>
+<a href="(https://developer.android.com/tools/sdkmanager"><img src="https://img.shields.io/badge/android--sdk-24%2B-green"/></a>
+<a href="https://www.java.com/"><img src="https://img.shields.io/badge/compatible-java-blue"/></a>
+<a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/compatible-kotlin-blueviolet"/></a>
 
-[![](https://jitpack.io/v/dangiashish/GeoTagImage.svg)](https://jitpack.io/#dangiashish/GeoTagImage)
-[![](https://img.shields.io/badge/android--sdk-24%2B-green)](https://developer.android.com/tools/sdkmanager)
-[![](https://img.shields.io/badge/compatible-java-blue)](https://www.java.com/)
-[![](https://img.shields.io/badge/compatible-kotlin-blueviolet)](https://kotlinlang.org/)
-
-[](https://miro.medium.com/v2/resize:fit:720/format:webp/1*rcAxNUUVIi4yZ_sBI_vTRw.jpeg)
-
-#### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f)
+#### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f) 
+</div>
 
 ### Gradle
 
@@ -40,7 +43,7 @@ Add dependency in your `build.gradle` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.0.7'
+    implementation 'com.github.dangiashish:GeoTagImage:1.0.8'
 }
 ```
 #### Add file provider in [AndroidManifest.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/AndroidManifest.xml#L34)
@@ -205,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         }
     }
 ```
-#### priview the original image
+#### preview the original image
 ```groovy
         // preview of the original image
     private void previewCapturedImage() {

@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         File file;
 
         // before adding GeoTags, generate or create an original image file
-        // TODO-Note : we need to create an original image to add geotags by copying this file.
+        // We need to create an original image to add geotags by copying this file.
         file = GTIUtility.generateOriginalFile(mContext, IMAGE_EXTENSION);
         if (file != null) {
             // if file has been created, then will catch its path for future reference.
