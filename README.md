@@ -11,6 +11,10 @@
 <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/compatible-kotlin-blueviolet"/></a>
 
 #### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f) 
+<br/>
+
+<a href="https://github.com/dangiashish/GeoTagImage/suites/18288405030/artifacts/1057546785"><img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Download_apk.png" width="300px" height="80"/></a>
+
 </div>
 
 ### Gradle
