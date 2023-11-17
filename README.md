@@ -70,25 +70,42 @@ dependencies{
 ```groovy
 public class MainActivity extends AppCompatActivity implements PermissionCallback {
     private ImageView ivCamera, ivImage, ivClose;
-    private static String imageStoragePath;
-    public static final String IMAGE_EXTENSION = ".jpg";
+    private TextView tvOriginal, tvGtiImg;
+    private static String originalImgStoragePath, gtiImageStoragePath;
+    public static final String IMAGE_EXTENSION = ".png";
     private Uri fileUri;
-    private static final int CAMERA_IMAGE_REQUEST_CODE = 2000;
     private static final int PERMISSION_REQUEST_CODE = 100;
 
     static FragmentActivity mContext;
     private GeoTagImage geoTagImage;
-    private PermissionCallback permissionCallback;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // initialize the xml buttons.
+        ivCamera = findViewById(R.id.ivCamera);
+        ivImage = findViewById(R.id.ivImage);
+        ivClose = findViewById(R.id.ivClose);
+        progressBar = findViewById(R.id.progressBar);
+        tvOriginal = findViewById(R.id.tvOriginalPath);
+        tvGtiImg = findViewById(R.id.tvGTIPath);
+        AppCompatButton btnGit = findViewById(R.id.btnGithub);
+
+        btnGit.setOnClickListener(c -> {
+            String url = "https://github.com/dangiashish/GeoTagImage";
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+
+        });
+
         // initialize the context
         mContext = MainActivity.this;
         // initialize the permission callback listener
-        permissionCallback = this;
+        PermissionCallback permissionCallback = this;
 
         // initialize the GeoTagImage class object with context and callback
         // use try/catch block to handle exceptions.
@@ -97,11 +114,6 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         } catch (GTIException e) {
             throw new RuntimeException(e);
         }
-
-        // initialize the xml buttons.
-        ivCamera = findViewById(R.id.ivCamera);
-        ivImage = findViewById(R.id.ivImage);
-        ivClose = findViewById(R.id.ivClose);
 
         // setOnClickListener on camera button.
         ivCamera.setOnClickListener(click -> {
@@ -117,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
             }
         });
     }
-}
+
 ```
 #### openCamera()
 ```groovy
@@ -130,11 +142,12 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         File file;
 
         // before adding GeoTags, generate or create an original image file
-        // TODO-Note : we need to create an original image to add geotags by copying this file.
+        // We need to create an original image to add geotags by copying this file.
         file = GTIUtility.generateOriginalFile(mContext, IMAGE_EXTENSION);
         if (file != null) {
             // if file has been created, then will catch its path for future reference.
-            imageStoragePath = file.getPath();
+            gtiImageStoragePath = file.getPath();
+            originalImgStoragePath = file.getPath();
         }
 
         // now get Uri from this created image file by using GTIUtility.getFileUri() function.
@@ -143,9 +156,52 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         // pass this uri file into intent filters while opening camera.
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 
-        // call startActivityForResult method by passing the intent filter with a request code.
-        startActivityForResult(intent, CAMERA_IMAGE_REQUEST_CODE);
-        }
+        // call ActivityResultLauncher by passing the intent request.
+        activityResultLauncher.launch(intent);
+    }
+```
+#### handle onActivityResult method
+```groovy
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // Handle the result here
+
+                    try {
+                        progressBar.setVisibility(View.VISIBLE);
+                        ivCamera.setVisibility(View.GONE);
+
+                        // TODO : START THE MAIN FUNCTIONALITY
+
+                        // now call the function createImage() and pass the uri object (line no. 100-110)
+                        geoTagImage.createImage(fileUri);
+
+                        // set all the customizations for geotagging as per your requirements.
+                        geoTagImage.setTextSize(30f);
+                        geoTagImage.setBackgroundRadius(5f);
+                        geoTagImage.setBackgroundColor(Color.parseColor("#66000000"));
+                        geoTagImage.setTextColor(android.R.color.white);
+                        geoTagImage.setAuthorName("Ashish");
+                        geoTagImage.showAuthorName(true);
+                        geoTagImage.showAppName(true);
+                        geoTagImage.setImageQuality(ImageQuality.LOW);
+                        geoTagImage.setImageExtension(PNG);
+
+                        // after geotagged photo is created, get the new image path by using getImagePath() method
+                        gtiImageStoragePath = geoTagImage.getImagePath();
+
+                        /* The time it takes for a Canvas to draw items on a blank Bitmap can vary depending on several factors,
+                         * such as the complexity of the items being drawn, the size of the Bitmap, and the processing power of the device.*/
+                        new Handler().postDelayed(this::previewCapturedImage, 3000);
+
+
+                    } catch (GTIException e) {
+                       e.printStackTrace();
+                    }
+                }
+            });
+
 ```
 #### handle request permisson result
 ```groovy
@@ -163,75 +219,33 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         }
     }
  ```
-#### handle onActivityResult method
-```groovy
-    // override the onActivityResult method
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // check the request code for the result
-        if (requestCode == CAMERA_IMAGE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-
-                try {
-                    // now call the function createImage() and pass the uri object (line no. 90-100)
-                    geoTagImage.createImage(fileUri);
-
-                    // set all the customizations for geotagging as per your requirements.
-                    geoTagImage.setTextSize(25f);
-                    geoTagImage.setBackgroundRadius(5f);
-                    geoTagImage.setBackgroundColor(Color.parseColor("#66000000"));
-                    geoTagImage.setTextColor(getColor(android.R.color.white));
-                    geoTagImage.setAuthorName("Ashish");
-                    geoTagImage.showAuthorName(true);
-                    geoTagImage.showAppName(true);
-
-                    // after the geotagged photo is created, get the new image path by using getImagePath() method
-                    imageStoragePath = geoTagImage.getImagePath();
-
-                    /* The time it takes for a Canvas to draw items on a blank Bitmap can vary depending on several factors, 
-                    * such as the complexity of the items being drawn, the size of the Bitmap, and the processing power of the device.*/
-                    new Handler().postDelayed(this::previewCapturedImage, 3000);
-
-
-                } catch (GTIException e) {
-                    throw new RuntimeException(e);
-                }
-
-
-                // handle the error or cancel events
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(mContext, "Cancelled image capture", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(mContext, "Sorry! Failed to capture image", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-```
 #### preview the original image
 ```groovy
         // preview of the original image
     private void previewCapturedImage() {
         try {
-            ivCamera.setVisibility(View.GONE);
-            Bitmap bitmap = GTIUtility.optimizeBitmap(imageStoragePath);
+            Bitmap bitmap = GTIUtility.optimizeBitmap(gtiImageStoragePath);
             ivImage.setImageBitmap(bitmap);
 
             if (ivImage.getDrawable() != null) {
                 ivClose.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
             }
             ivClose.setOnClickListener(v -> {
                 ivImage.setImageBitmap(null);
                 ivCamera.setVisibility(View.VISIBLE);
                 ivClose.setVisibility(View.GONE);
                 ivImage.setImageDrawable(null);
-
             });
+
+            tvGtiImg.setText(gtiImageStoragePath);
+            tvOriginal.setText(originalImgStoragePath);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @Override
     public void onPermissionGranted() {
         openCamera();
