@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2023 Ashish Dangi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.codebyashish.geotagimage;
 
 import static com.codebyashish.geotagimage.GeoTagImage.PNG;
@@ -6,6 +30,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
     private ImageView ivCamera, ivImage, ivClose;
     private TextView tvOriginal, tvGtiImg;
     private static String originalImgStoragePath, gtiImageStoragePath;
-    public static final String IMAGE_EXTENSION = ".png";
     private Uri fileUri;
     private static final int PERMISSION_REQUEST_CODE = 100;
 
@@ -101,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
 
         // before adding GeoTags, generate or create an original image file
         // We need to create an original image to add geotags by copying this file.
-        file = GTIUtility.generateOriginalFile(mContext, IMAGE_EXTENSION);
+        file = GTIUtility.generateOriginalFile(mContext, GeoTagImage.PNG);
         if (file != null) {
             // if file has been created, then will catch its path for future reference.
             gtiImageStoragePath = file.getPath();
@@ -137,8 +161,8 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
                         // set all the customizations for geotagging as per your requirements.
                         geoTagImage.setTextSize(30f);
                         geoTagImage.setBackgroundRadius(5f);
-//                        geoTagImage.setBackgroundColor(Color.parseColor("#66000000"));
-                        geoTagImage.setTextColor(android.R.color.white);
+                        geoTagImage.setBackgroundColor(Color.parseColor("#66000000"));
+                        geoTagImage.setTextColor(Color.WHITE);
                         geoTagImage.setAuthorName("Ashish");
                         geoTagImage.showAuthorName(true);
                         geoTagImage.showAppName(true);
@@ -176,6 +200,8 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
                 ivCamera.setVisibility(View.VISIBLE);
                 ivClose.setVisibility(View.GONE);
                 ivImage.setImageDrawable(null);
+                tvGtiImg.setText("");
+                tvOriginal.setText("");
             });
 
             tvGtiImg.setText(gtiImageStoragePath);
