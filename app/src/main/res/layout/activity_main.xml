@@ -21,8 +21,9 @@
 
 
         <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
             android:visibility="visible"
             app:cardElevation="1dp"
             android:layout_margin="5dp"
@@ -41,7 +42,7 @@
                     android:scaleType="fitXY"
                     android:visibility="visible" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -58,7 +59,14 @@
                         android:visibility="visible"
                         />
 
-                </LinearLayout>
+                    <ProgressBar
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/progressBar"
+                        android:layout_centerInParent="true"/>
+
+                </RelativeLayout>
 
                 <ImageView
                     android:id="@+id/ivClose"
@@ -77,6 +85,63 @@
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutImage">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_margin="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Original Path : " />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvOriginalPath"
+                android:layout_margin="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_margin="3dp"
+                android:layout_height="wrap_content"
+                android:text="GTI Image Path : " />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvGTIPath"
+                android:layout_margin="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnGithub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Find On Github"
+        android:textAllCaps="false"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvLibName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tvLibName"

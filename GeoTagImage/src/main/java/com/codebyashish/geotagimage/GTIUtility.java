@@ -80,7 +80,7 @@ public class GTIUtility {
     public static File generateOriginalFile(FragmentActivity mContext, String IMAGE_EXTENSION) {
         File file = null;
         try {
-            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Camera");
+            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
             if (!mediaStorageDir.exists()) {
                 if (!mediaStorageDir.mkdirs()) {
                     return null;
@@ -106,11 +106,8 @@ public class GTIUtility {
                 mContext,
                 new String[]{file.getAbsolutePath()},
                 null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    @Override
-                    public void onScanCompleted(String path, Uri uri) {
+                (path, uri) -> {
 
-                    }
                 }
         );
     }
