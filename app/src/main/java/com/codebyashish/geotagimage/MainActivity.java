@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
         file = GTIUtility.generateOriginalFile(mContext, GeoTagImage.PNG);
         if (file != null) {
             // if file has been created, then will catch its path for future reference.
-            gtiImageStoragePath = file.getPath();
             originalImgStoragePath = file.getPath();
         }
 

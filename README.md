@@ -182,45 +182,44 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
 #### handle onActivityResult method
 ```groovy
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    // Handle the result here
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                // Handle the result here
 
-                    try {
-                        progressBar.setVisibility(View.VISIBLE);
-                        ivCamera.setVisibility(View.GONE);
+                try {
+                    progressBar.setVisibility(View.VISIBLE);
+                    ivCamera.setVisibility(View.GONE);
 
-                        // TODO : START THE MAIN FUNCTIONALITY
+                    // TODO : START THE MAIN FUNCTIONALITY
 
-                        // now call the function createImage() and pass the uri object (line no. 100-110)
-                        geoTagImage.createImage(fileUri);
+                    // now call the function createImage() and pass the uri object (line no. 100-110)
+                    geoTagImage.createImage(fileUri);
 
-                        // set all the customizations for geotagging as per your requirements.
-                        geoTagImage.setTextSize(30f);
-                        geoTagImage.setBackgroundRadius(5f);
-                        geoTagImage.setBackgroundColor(Color.parseColor("#66000000"));
-                        geoTagImage.setTextColor(android.R.color.white);
-                        geoTagImage.setAuthorName("Ashish");
-                        geoTagImage.showAuthorName(true);
-                        geoTagImage.showAppName(true);
-                        geoTagImage.setImageQuality(ImageQuality.LOW);
-                        geoTagImage.setImageExtension(PNG);
+                    // set all the customizations for geotagging as per your requirements.
+                    geoTagImage.setTextSize(30f);
+                    geoTagImage.setBackgroundRadius(5f);
+                    geoTagImage.setBackgroundColor(Color.parseColor("#66000000"));
+                    geoTagImage.setTextColor(Color.WHITE);
+                    geoTagImage.setAuthorName("Ashish");
+                    geoTagImage.showAuthorName(true);
+                    geoTagImage.showAppName(true);
+                    geoTagImage.setImageQuality(ImageQuality.LOW);
+                    geoTagImage.setImageExtension(PNG);
 
-                        // after geotagged photo is created, get the new image path by using getImagePath() method
-                        gtiImageStoragePath = geoTagImage.getImagePath();
+                    // after geotagged photo is created, get the new image path by using getImagePath() method
+                    gtiImageStoragePath = geoTagImage.getImagePath();
 
-                        /* The time it takes for a Canvas to draw items on a blank Bitmap can vary depending on several factors,
-                         * such as the complexity of the items being drawn, the size of the Bitmap, and the processing power of the device.*/
-                        new Handler().postDelayed(this::previewCapturedImage, 3000);
+                    /* The time it takes for a Canvas to draw items on a blank Bitmap can vary depending on several factors,
+                     * such as the complexity of the items being drawn, the size of the Bitmap, and the processing power of the device.*/
+                    new Handler().postDelayed(this::previewCapturedImage, 3000);
 
 
-                    } catch (GTIException e) {
-                       e.printStackTrace();
-                    }
+                } catch (GTIException e) {
+                    e.printStackTrace();
                 }
-            });
-
+            }
+        });
 ```
 #### handle request permisson result
 ```groovy
@@ -241,31 +240,34 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
 #### preview the original image
 ```groovy
         // preview of the original image
-    private void previewCapturedImage() {
-        try {
-            Bitmap bitmap = GTIUtility.optimizeBitmap(gtiImageStoragePath);
-            ivImage.setImageBitmap(bitmap);
+private void previewCapturedImage() {
+    try {
+        Bitmap bitmap = GTIUtility.optimizeBitmap(gtiImageStoragePath);
+        ivImage.setImageBitmap(bitmap);
 
-            if (ivImage.getDrawable() != null) {
-                ivClose.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-            }
-            ivClose.setOnClickListener(v -> {
-                ivImage.setImageBitmap(null);
-                ivCamera.setVisibility(View.VISIBLE);
-                ivClose.setVisibility(View.GONE);
-                ivImage.setImageDrawable(null);
-            });
-
-            tvGtiImg.setText(gtiImageStoragePath);
-            tvOriginal.setText(originalImgStoragePath);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (ivImage.getDrawable() != null) {
+            ivClose.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         }
-    }
+        ivClose.setOnClickListener(v -> {
+            ivImage.setImageBitmap(null);
+            ivCamera.setVisibility(View.VISIBLE);
+            ivClose.setVisibility(View.GONE);
+            ivImage.setImageDrawable(null);
+            tvGtiImg.setText("");
+            tvOriginal.setText("");
+        });
 
-    @Override
+        tvGtiImg.setText(gtiImageStoragePath);
+        tvOriginal.setText(originalImgStoragePath);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+
+@Override
     public void onPermissionGranted() {
         openCamera();
     }
