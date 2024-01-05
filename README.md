@@ -71,6 +71,10 @@ dependencies{
     <external-path name="external_files" path="."/>
 </paths>
 ```
+
+#### XML : 
+ Go to here --> [activity_main.xml](https://github.com/dangiashish/GeoTagImage/blob/master/app/src/main/res/layout/activity_main.xml)
+
 #### Java : [MainActivity.java](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/java/com/codebyashish/geotagimage/MainActivity.java)
 ```groovy
 public class MainActivity extends AppCompatActivity implements PermissionCallback {
