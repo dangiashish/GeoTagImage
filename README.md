@@ -20,26 +20,26 @@
 
 ### Gradle
 
-Add repository in your `build.gradle` (project-level) file :
-```gradle
-allprojects {
-      repositories {
-	...
-	maven { url 'https://jitpack.io' }
-	}
-}
-```
-##### OR 
-in your `settings.gradle`
+Add repository in your `settings.gradle`
  
 ```gradle
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        ...
         maven { url "https://jitpack.io" }
     }
 }
+```
+#### OR 
+in your `settings.gradle.kts`
+```gradle
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven( url = "https://jitpack.io")
+    }
+}
+
 ```
 ### Add dependency :
 
