@@ -21,28 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.codebyashish.geotagimage
 
-package com.codebyashish.geotagimage;
+class GTIException : Exception {
+    constructor(message: String?) : super(message)
+    constructor(message: String?, cause: Throwable?) : super(message, cause)
 
-public class GTIException extends Exception {
+    var errorCode = 0
+        private set
 
-    public GTIException(String message) {
-        super(message);
-    }
-
-    public GTIException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    private int errorCode;
-
-    public GTIException(String message, int errorCode) {
-        super(message);
-        this.errorCode = errorCode;
-    }
-
-
-    public int getErrorCode() {
-        return errorCode;
+    constructor(message: String?, errorCode: Int) : super(message) {
+        this.errorCode = errorCode
     }
 }

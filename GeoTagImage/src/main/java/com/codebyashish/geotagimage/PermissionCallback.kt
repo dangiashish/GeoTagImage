@@ -21,12 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.codebyashish.geotagimage
 
-package com.codebyashish.geotagimage;
-
-public interface PermissionCallback {
-    void onPermissionGranted();
-
-    void onPermissionDenied();
+interface PermissionCallback {
+    fun onPermissionGranted()
+    fun onPermissionDenied()
 }
-

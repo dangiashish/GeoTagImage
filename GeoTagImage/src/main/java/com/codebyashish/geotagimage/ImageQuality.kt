@@ -21,11 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.codebyashish.geotagimage
 
-package com.codebyashish.geotagimage;
-
-public class ImageQuality {
-
-    public static final String HIGH = "HIGH";
-    public static final String LOW = "LOW";
+object ImageQuality {
+    const val HIGH = "HIGH"
+    const val LOW = "LOW"
 }

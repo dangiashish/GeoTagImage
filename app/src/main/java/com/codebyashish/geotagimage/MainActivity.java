@@ -93,11 +93,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
 
         // initialize the GeoTagImage class object with context and callback
         // use try/catch block to handle exceptions.
-        try {
-            geoTagImage = new GeoTagImage(mContext, permissionCallback);
-        } catch (GTIException e) {
-            throw new RuntimeException(e);
-        }
+        geoTagImage = new GeoTagImage(mContext, permissionCallback);
 
         // setOnClickListener on camera button.
         ivCamera.setOnClickListener(click -> {
@@ -148,37 +144,33 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     // Handle the result here
 
-                    try {
-                        progressBar.setVisibility(View.VISIBLE);
-                        ivCamera.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    ivCamera.setVisibility(View.GONE);
 
-                        // TODO : START THE MAIN FUNCTIONALITY
+                    // TODO : START THE MAIN FUNCTIONALITY
 
-                        // now call the function createImage() and pass the uri object (line no. 100-110)
-                        geoTagImage.createImage(fileUri);
+                    // now call the function createImage() and pass the uri object (line no. 100-110)
+                    geoTagImage.createImage(fileUri);
 
-                        // set all the customizations for geotagging as per your requirements.
-                        geoTagImage.setTextSize(30f);
-                        geoTagImage.setBackgroundRadius(5f);
-                        geoTagImage.setBackgroundColor(Color.parseColor("#66000000"));
-                        geoTagImage.setTextColor(Color.WHITE);
-                        geoTagImage.setAuthorName("Ashish");
-                        geoTagImage.showAuthorName(true);
-                        geoTagImage.showAppName(true);
-                        geoTagImage.setImageQuality(ImageQuality.LOW);
-                        geoTagImage.setImageExtension(PNG);
+                    // set all the customizations for geotagging as per your requirements.
+                   geoTagImage.setTextSize(30f);
+                    geoTagImage.setBackgroundRadius(5f);
+                    geoTagImage.setBackgroundColor(Color.parseColor("#66000000"));
+                    geoTagImage.setTextColor(Color.WHITE);
+                    geoTagImage.setAuthorName("Ashish");
+                    geoTagImage.showAuthorName(true);
+                    geoTagImage.showAppName(true);
+                    geoTagImage.setImageQuality(ImageQuality.LOW);
+                    geoTagImage.setImageExtension(PNG);
 
-                        // after geotagged photo is created, get the new image path by using getImagePath() method
-                        gtiImageStoragePath = geoTagImage.getImagePath();
+                    // after geotagged photo is created, get the new image path by using getImagePath() method
+                    gtiImageStoragePath = geoTagImage.imagePath();
 
-                        /* The time it takes for a Canvas to draw items on a blank Bitmap can vary depending on several factors,
-                         * such as the complexity of the items being drawn, the size of the Bitmap, and the processing power of the device.*/
-                        new Handler().postDelayed(this::previewCapturedImage, 3000);
+                    /* The time it takes for a Canvas to draw items on a blank Bitmap can vary depending on several factors,
+                     * such as the complexity of the items being drawn, the size of the Bitmap, and the processing power of the device.*/
+                    new Handler().postDelayed(this::previewCapturedImage, 3000);
 
 
-                    } catch (GTIException e) {
-                       e.printStackTrace();
-                    }
                 }
             });
 
