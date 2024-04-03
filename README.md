@@ -49,7 +49,7 @@ Add dependency in your `build.gradle` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.1.0'
+    implementation 'com.github.dangiashish:GeoTagImage:1.1.1'
 }
 ```
 #### OR
