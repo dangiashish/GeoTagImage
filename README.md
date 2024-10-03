@@ -6,16 +6,16 @@
 <div align = "center">
 <h1 align="center"> 💫 GeoTagImage (GTI) 📸🌍 </h1>
 <a href="https://www.codefactor.io/repository/github/dangiashish/geotagimage/overview/master"><img src="https://www.codefactor.io/repository/github/dangiashish/geotagimage/badge/master" alt="CodeFactor" /></a>
-<a href="https://jitpack.io/#dangiashish/GeoTagImage"><img src="https://jitpack.io/v/dangiashish/GeoTagImage.svg"/></a>
-<a href="(https://developer.android.com/tools/sdkmanager"><img src="https://img.shields.io/badge/android--sdk-24%2B-green"/></a>
-<a href="https://www.java.com/"><img src="https://img.shields.io/badge/compatible-java-blue"/></a>
-<a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/compatible-kotlin-blueviolet"/></a>
+<a href="https://jitpack.io/#dangiashish/GeoTagImage"><img src="https://jitpack.io/v/dangiashish/GeoTagImage.svg" alt=""/></a>
+<a href="(https://developer.android.com/tools/sdkmanager"><img src="https://img.shields.io/badge/android--sdk-24%2B-green" alt=""/></a>
+<a href="https://www.java.com/"><img src="https://img.shields.io/badge/compatible-java-blue" alt=""/></a>
+<a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/compatible-kotlin-blueviolet" alt=""/></a>
 
 #### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f) 
 
 <br/>
 
-<a href="https://github.com/dangiashish/GeoTagImage/suites/18290122215/artifacts/1057687744"><img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Download_apk.png" width="300px" height="80"/></a>
+<a href="https://github.com/dangiashish/GeoTagImage/actions/runs/11164378309/artifacts/2011456675"><img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Download_apk.png" width="300px" height="80"/></a>
 
 </div>
 
@@ -76,7 +76,7 @@ Add dependency in your `build.gradle` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.1.1'
+    implementation 'com.github.dangiashish:GeoTagImage:1.1.2'
 }
 ```
 #### OR
@@ -85,7 +85,7 @@ Add dependency in your `build.gradle.kts` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation("com.github.dangiashish:GeoTagImage:1.1.1")
+    implementation("com.github.dangiashish:GeoTagImage:1.1.2")
 }
 ```
 
@@ -234,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallbac
                     geoTagImage.showAppName(true);
                     geoTagImage.setImageQuality(ImageQuality.LOW);
                     geoTagImage.setImageExtension(PNG);
+                    geoTagImage.enableGTIService(false); // Enable/Disable GTI Features
 
                     // after geotagged photo is created, get the new image path by using getImagePath() method
                     gtiImageStoragePath = geoTagImage.getImagePath();
