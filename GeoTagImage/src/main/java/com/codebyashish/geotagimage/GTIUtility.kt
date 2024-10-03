@@ -118,7 +118,7 @@ object GTIUtility {
         MediaScannerConnection.scanFile(
             mContext, arrayOf(file.absolutePath),
             null
-        ) { path: String?, uri: Uri? -> }
+        ) { _: String?, _: Uri? -> }
     }
 
     /** Optimize bitmap to prevent OutOfMemory Exception */

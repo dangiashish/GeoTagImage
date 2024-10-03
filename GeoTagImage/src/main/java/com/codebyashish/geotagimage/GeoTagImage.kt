@@ -37,11 +37,11 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
-import com.codebyashish.geotagimage.GTIException
 import com.codebyashish.geotagimage.GTIPermissions.checkCameraLocationPermission
 import com.codebyashish.geotagimage.GTIUtility.getApplicationName
 import com.codebyashish.geotagimage.GTIUtility.getMapKey
 import com.codebyashish.geotagimage.GTIUtility.isGoogleMapsLinked
+import com.codebyashish.geotagimage.ImageQuality.AVERAGE
 import com.codebyashish.geotagimage.ImageQuality.HIGH
 import com.codebyashish.geotagimage.ImageQuality.LOW
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -53,10 +53,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
 import java.text.SimpleDateFormat
-import java.util.Arrays
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 class GeoTagImage(context: Context, callback: PermissionCallback) {
@@ -103,9 +101,9 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
     private var markerUrl: String? = null
     private var imageQuality: String? = null
     private val permissionCallback: PermissionCallback
-    private val executor: Executor = Executors.newSingleThreadExecutor()
     private val executorService = Executors.newSingleThreadExecutor()
     private val TAG = Companion::class.java.simpleName
+    private var isActive = true
 
     init {
         this.context = context
@@ -134,7 +132,26 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
         mapHeight = backgroundHeight.toInt()
         mapWidth = 120
         imageQuality = null
-        initialization()
+        if (isActive) {
+            initialization()
+        } else {
+            bypassImage()
+        }
+    }
+
+    private fun bypassImage() {
+        if (imageQuality == null) {
+            bitmapWidth = 960 * 2
+            bitmapHeight = 1280 * 2
+            backgroundHeight = (backgroundHeight * 2)
+            mapWidth = 120 * 2
+            mapHeight = backgroundHeight.toInt()
+            textSize *= 2
+            textTopMargin = (50 * 2).toFloat()
+            radius *= 2
+        }
+        val bitmap = createBitmap()
+        storeBitmapInternally(bitmap)
     }
 
     private fun initialization() {
@@ -285,62 +302,64 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
         if (showLatLng) {
             backgroundHeight += textTopMargin
         }
-        if (isGoogleMapsLinked(context)) {
-            if (mapBitmap != null) {
-                if (showGoogleMap) {
-                    val mapLeft = 10f
-                    backgroundLeft = (mapBitmap!!.width + 20).toFloat()
-                    canvas.drawRoundRect(
-                        backgroundLeft,
-                        canvas.height - backgroundHeight,
-                        (canvas.width - 10).toFloat(),
-                        (canvas.height - 10).toFloat(),
-                        dpToPx(radius),
-                        dpToPx(radius),
-                        rectPaint
-                    )
-                    val scaledbmp2 = Bitmap.createScaledBitmap(
-                        mapBitmap!!, mapWidth, mapHeight, false
-                    )
-                    canvas.drawBitmap(
-                        scaledbmp2,
-                        mapLeft,
-                        canvas.height - backgroundHeight + (backgroundHeight - mapBitmap!!.height) / 2,
-                        design
-                    )
-                    val textX = backgroundLeft + 10
-                    val textY = canvas.height - (backgroundHeight - textTopMargin)
-                    drawText(textX, textY, canvas)
-                } else {
-                    backgroundLeft = 10f
-                    canvas.drawRoundRect(
-                        backgroundLeft,
-                        canvas.height - backgroundHeight,
-                        (canvas.width - 10).toFloat(),
-                        (canvas.height - 10).toFloat(),
-                        dpToPx(radius),
-                        dpToPx(radius),
-                        rectPaint
-                    )
-                    val textX = backgroundLeft + 10
-                    val textY = canvas.height - (backgroundHeight - textTopMargin)
-                    drawText(textX, textY, canvas)
+        if (isActive) {
+            if (isGoogleMapsLinked(context)) {
+                if (mapBitmap != null) {
+                    if (showGoogleMap) {
+                        val mapLeft = 10f
+                        backgroundLeft = (mapBitmap!!.width + 20).toFloat()
+                        canvas.drawRoundRect(
+                            backgroundLeft,
+                            canvas.height - backgroundHeight,
+                            (canvas.width - 10).toFloat(),
+                            (canvas.height - 10).toFloat(),
+                            dpToPx(radius),
+                            dpToPx(radius),
+                            rectPaint
+                        )
+                        val scaledbmp2 = Bitmap.createScaledBitmap(
+                            mapBitmap!!, mapWidth, mapHeight, false
+                        )
+                        canvas.drawBitmap(
+                            scaledbmp2,
+                            mapLeft,
+                            canvas.height - backgroundHeight + (backgroundHeight - mapBitmap!!.height) / 2,
+                            design
+                        )
+                        val textX = backgroundLeft + 10
+                        val textY = canvas.height - (backgroundHeight - textTopMargin)
+                        drawText(textX, textY, canvas)
+                    } else {
+                        backgroundLeft = 10f
+                        canvas.drawRoundRect(
+                            backgroundLeft,
+                            canvas.height - backgroundHeight,
+                            (canvas.width - 10).toFloat(),
+                            (canvas.height - 10).toFloat(),
+                            dpToPx(radius),
+                            dpToPx(radius),
+                            rectPaint
+                        )
+                        val textX = backgroundLeft + 10
+                        val textY = canvas.height - (backgroundHeight - textTopMargin)
+                        drawText(textX, textY, canvas)
+                    }
                 }
+            } else {
+                backgroundLeft = 10f
+                canvas.drawRoundRect(
+                    backgroundLeft,
+                    canvas.height - backgroundHeight,
+                    (canvas.width - 10).toFloat(),
+                    (canvas.height - 10).toFloat(),
+                    dpToPx(radius),
+                    dpToPx(radius),
+                    rectPaint
+                )
+                val textX = backgroundLeft + 10
+                val textY = canvas.height - (backgroundHeight - textTopMargin)
+                drawText(textX, textY, canvas)
             }
-        } else {
-            backgroundLeft = 10f
-            canvas.drawRoundRect(
-                backgroundLeft,
-                canvas.height - backgroundHeight,
-                (canvas.width - 10).toFloat(),
-                (canvas.height - 10).toFloat(),
-                dpToPx(radius),
-                dpToPx(radius),
-                rectPaint
-            )
-            val textX = backgroundLeft + 10
-            val textY = canvas.height - (backgroundHeight - textTopMargin)
-            drawText(textX, textY, canvas)
         }
     }
 
@@ -385,6 +404,17 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
                 when (imageQuality) {
                     LOW -> {
                         textTopMargin = 50f
+                        textPaint.textSize = textSize / 3
+                        textY = (canvas.height - 20).toFloat()
+                        canvas.drawText(
+                            appName,
+                            canvas.width - 10 - 10 - textPaint.measureText(appName),
+                            textY,
+                            textPaint
+                        )
+                    }
+                    AVERAGE -> {
+                        textTopMargin = 50f
                         textPaint.textSize = textSize / 2
                         textY = (canvas.height - 20).toFloat()
                         canvas.drawText(
@@ -396,7 +426,7 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
                     }
 
                     HIGH -> {
-                        textSize = textSize / 2
+                        textSize /= 2
                         textTopMargin = (50 * 3.6).toFloat()
                         textPaint.textSize = textSize
                         textY = (canvas.height - 40).toFloat()
@@ -409,7 +439,7 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
                     }
                 }
             } else {
-                textSize = textSize / 2
+                textSize /= 2
                 textTopMargin = (50 * 2).toFloat()
                 textY = (canvas.height - 20).toFloat()
                 textPaint.textSize = textSize
@@ -515,6 +545,16 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
         this.imageQuality = imageQuality
         when (imageQuality) {
             LOW -> {
+                textSize = 20f
+                bitmapWidth = (960/1.5).toInt()
+                bitmapHeight = (1280/1.5).toInt()
+                textTopMargin = (50f/1.5).toFloat()
+                backgroundHeight = (150f/1.5).toFloat()
+                mapWidth = 120
+                mapHeight = (backgroundHeight.toInt()/1.5).toInt()
+            }
+
+            AVERAGE -> {
                 bitmapWidth = 960
                 bitmapHeight = 1280
                 textTopMargin = 50f
@@ -559,9 +599,7 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
         val mImageName = "IMG_$timeStamp$IMAGE_EXTENSION"
         val ImagePath = mediaStorageDir.path + File.separator + mImageName
         val media = File(ImagePath)
-        MediaScannerConnection.scanFile(
-            context, arrayOf(media.absolutePath), null
-        ) { path, uri -> }
+        MediaScannerConnection.scanFile(context, arrayOf(media.absolutePath), null) { path, uri -> }
         return ImagePath
     }
 
@@ -585,6 +623,10 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
 
     fun handlePermissionGrantResult() {
         permissionCallback.onPermissionGranted()
+    }
+
+    fun enableGTIService(isActive: Boolean) {
+        this.isActive = isActive
     }
 
     companion object {

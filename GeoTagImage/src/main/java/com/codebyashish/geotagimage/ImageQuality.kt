@@ -26,4 +26,5 @@ package com.codebyashish.geotagimage
 object ImageQuality {
     const val HIGH = "HIGH"
     const val LOW = "LOW"
+    const val AVERAGE = "AVERAGE"
 }
