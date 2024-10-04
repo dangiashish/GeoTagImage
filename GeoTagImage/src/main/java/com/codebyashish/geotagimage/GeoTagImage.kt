@@ -69,7 +69,7 @@ class GeoTagImage(private val context: Context, callback: PermissionCallback) {
     private var bitmap: Bitmap? = null
     private var mapBitmap: Bitmap? = null
     private var addresses: List<Address>? = null
-    var IMAGE_EXTENSION = ".png"
+   private var IMAGE_EXTENSION = ".png"
     private var fileUri: Uri? = null
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var geocoder: Geocoder? = null
@@ -580,7 +580,7 @@ class GeoTagImage(private val context: Context, callback: PermissionCallback) {
         }
     }
 
-    fun imagePath(): String? {
+    fun getImagePath(): String? {
         val mediaStorageDir = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
             "/"
@@ -599,7 +599,7 @@ class GeoTagImage(private val context: Context, callback: PermissionCallback) {
         return ImagePath
     }
 
-    fun imageUri(): Uri? {
+    fun getImageUri(): Uri? {
 
         val mediaStorageDir = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
