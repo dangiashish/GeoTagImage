@@ -27,34 +27,43 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.ViewStub
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
 import com.codebyashish.geotagimage.GTIPermissions.checkCameraLocationPermission
 import com.codebyashish.geotagimage.GTIPermissions.requestCameraLocationPermission
 import com.codebyashish.geotagimage.GTIUtility.generateOriginalFile
 import com.codebyashish.geotagimage.GTIUtility.getFileUri
 import com.codebyashish.geotagimage.GTIUtility.optimizeBitmap
+import com.codebyashish.geotagimage.GeoTagImage.Companion.JPEG
+import com.codebyashish.geotagimage.GeoTagImage.Companion.JPG
+import com.codebyashish.geotagimage.GeoTagImage.Companion.PNG
 import com.codebyashish.geotagimage.databinding.ActivityMainBinding
 import java.io.File
+import java.text.DecimalFormat
 
 class MainActivity : AppCompatActivity(), PermissionCallback {
     private var fileUri: Uri? = null
     private lateinit var geoTagImage: GeoTagImage
+    private val TAG = "GeoTagImageLog"
+    private var imageQuality = ""
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-
         binding.btnGithub.setOnClickListener {
             val url = "https://github.com/dangiashish/GeoTagImage"
             val intent = Intent(Intent.ACTION_VIEW)
@@ -71,7 +80,6 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         geoTagImage = GeoTagImage(mContext as MainActivity, this)
 
 
-
         // setOnClickListener on camera button.
         binding.ivCamera.setOnClickListener {
             // first check permission for camera and location by using GTIPermission class.
@@ -84,6 +92,88 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
                 requestCameraLocationPermission(mContext, PERMISSION_REQUEST_CODE)
             }
         }
+
+        binding.sFeatures.setOnCheckedChangeListener { _, isChecked ->
+            geoTagImage.enableGTIService(isChecked)  // Enable/Disable GTI Features.
+        }
+
+        binding.sAuthor.setOnCheckedChangeListener { _, isChecked ->
+            geoTagImage.showAuthorName(isChecked)
+            binding.etAuthorName.visibility = if (isChecked) View.VISIBLE else View.GONE
+
+        }
+
+        binding.etAuthorName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                geoTagImage.setAuthorName(s.toString().trim())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+
+        binding.sApp.setOnCheckedChangeListener { _, isChecked ->
+            geoTagImage.showAppName(isChecked)
+        }
+
+        binding.sLatLng.setOnCheckedChangeListener { _, isChecked ->
+            geoTagImage.showLatLng(isChecked)
+        }
+
+        binding.sDate.setOnCheckedChangeListener { _, isChecked ->
+            geoTagImage.showDate(isChecked)
+        }
+
+        binding.sMap.setOnCheckedChangeListener { _, isChecked ->
+            geoTagImage.showGoogleMap(isChecked)
+        }
+
+        binding.toggleAppearanceRandom.check(R.id.button_ext_png)
+        binding.toggleAppearanceRandom.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.button_ext_png -> {
+                        geoTagImage.setImageExtension(PNG)
+                    }
+
+                    R.id.button_ext_jpeg -> {
+                        geoTagImage.setImageExtension(JPEG)
+                    }
+
+                    R.id.button_ext_jpg -> {
+                        geoTagImage.setImageExtension(JPG)
+                    }
+                }
+            }
+        }
+
+        binding.toggleImageQuality.check(R.id.button_img_low)
+        if (binding.toggleImageQuality.checkedButtonId == R.id.button_img_low){
+            imageQuality = ImageQuality.LOW
+        }
+        binding.toggleImageQuality.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.button_img_low -> {
+                        imageQuality = ImageQuality.LOW
+                    }
+
+                    R.id.button_img_average -> {
+                        imageQuality = ImageQuality.AVERAGE
+                    }
+
+                    R.id.button_img_high -> {
+                        imageQuality = ImageQuality.HIGH
+                    }
+                }
+            }
+        }
+        Log.i(TAG, "onCreate: imgQuality  $imageQuality")
+
     }
 
     // if permissions are granted for camera and location.
@@ -95,7 +185,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
 
         // before adding GeoTags, generate or create an original image file
         // We need to create an original image to add geotags by copying this file.
-        val file: File? = generateOriginalFile(mContext, GeoTagImage.PNG)
+        val file: File? = generateOriginalFile(mContext, PNG)
         if (file != null) {
             // if file has been created, then will catch its path for future reference.
             originalImgStoragePath = file.path
@@ -121,6 +211,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
 
             // TODO : START THE MAIN FUNCTIONALITY
 
+
             // now call the function createImage() and pass the uri object (line no. 100-110)
             geoTagImage.createImage(fileUri)
 
@@ -129,12 +220,9 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
             geoTagImage.setBackgroundRadius(5f)
             geoTagImage.setBackgroundColor(Color.parseColor("#66000000"))
             geoTagImage.setTextColor(Color.WHITE)
-            geoTagImage.setAuthorName("Ashish")
-            geoTagImage.showAuthorName(true)
-            geoTagImage.showAppName(true)
-            geoTagImage.setImageQuality(ImageQuality.HIGH)
-            geoTagImage.setImageExtension(GeoTagImage.PNG)
-            geoTagImage.enableGTIService(true)  // Enable/Disable GTI Features.
+            Log.d(TAG, "imgQuality : $imageQuality")
+            geoTagImage.setImageQuality(imageQuality)
+
 
             // after geotagged photo is created, get the new image path by using getImagePath() method
             gtiImageStoragePath = geoTagImage.imagePath().toString()
@@ -167,13 +255,40 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
                 binding.ivImage.setImageDrawable(null)
                 binding.tvGTIPath.text = ""
                 binding.tvOriginalPath.text = ""
+                binding.tvImgSize.text = ""
             }
             binding.tvGTIPath.text = gtiImageStoragePath
+            binding.tvImgSize.text = getFileSize(gtiImageStoragePath)
             binding.tvOriginalPath.text = originalImgStoragePath
+
+            viewInGallery(gtiImageStoragePath)
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.e("GeoTagImage", "previewCapturedImage: ${e.message}", )
+            Log.e("GeoTagImage", "previewCapturedImage: ${e.message}")
         }
+    }
+
+    private fun viewInGallery(gtiImageStoragePath: String) {
+        val file = File(gtiImageStoragePath)
+        if (file.exists()) {
+            val uri: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                FileProvider.getUriForFile(
+                    mContext,
+                    "${applicationContext.packageName}.provider",
+                    file
+                )
+            } else {
+                Uri.fromFile(file)
+            }
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "image/*")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(intent)
+        } else {
+            Log.e(TAG, "viewInGallery: file not exist")
+        }
+
     }
 
     override fun onRequestPermissionsResult(
@@ -206,4 +321,26 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         private const val PERMISSION_REQUEST_CODE = 100
         lateinit var mContext: FragmentActivity
     }
+
+    private fun getFileSize(filePath: String): String {
+        val file = File(filePath)
+
+        if (file.exists()) {
+            val fileSizeInBytes = file.length()
+            val fileSizeInKB = fileSizeInBytes / 1024.0
+            val fileSizeInMB = fileSizeInKB / 1024.0
+
+            val decimalFormat = DecimalFormat("#.##")
+
+            return when {
+                fileSizeInMB >= 1 -> "~ ${decimalFormat.format(fileSizeInMB)} MB"
+                fileSizeInKB >= 1 -> "~ ${decimalFormat.format(fileSizeInKB)} KB"
+                else -> "~ $fileSizeInBytes Bytes" // Return size in Bytes
+            }
+        } else {
+            return ""
+        }
+    }
+
+
 }

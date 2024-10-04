@@ -56,20 +56,20 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.Executors
+import kotlin.time.times
 
-class GeoTagImage(context: Context, callback: PermissionCallback) {
+class GeoTagImage(private val context: Context, callback: PermissionCallback) {
     private var place = ""
     private var road = ""
     private var latlng = ""
     private var date = ""
     private var originalImageHeight = 0
     private var originalImageWidth = 0
-    private val context: Context
     private var returnFile: File? = null
     private var bitmap: Bitmap? = null
     private var mapBitmap: Bitmap? = null
     private var addresses: List<Address>? = null
-    private var IMAGE_EXTENSION = ".png"
+    var IMAGE_EXTENSION = ".png"
     private var fileUri: Uri? = null
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var geocoder: Geocoder? = null
@@ -83,12 +83,12 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
     private var textColor = 0
     private var backgroundHeight = 0f
     private var backgroundLeft = 0f
-    private var authorName: String? = null
+    private var authorName: String = ""
     private var showAuthorName = false
-    private var showAppName = false
-    private var showLatLng = false
-    private var showDate = false
-    private var showGoogleMap = false
+    private var showAppName = true
+    private var showLatLng = true
+    private var showDate = true
+    private var showGoogleMap = true
     private val elementsList = ArrayList<String>()
     private var mapHeight = 0
     private var mapWidth = 0
@@ -100,15 +100,10 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
     private var dimension: String? = null
     private var markerUrl: String? = null
     private var imageQuality: String? = null
-    private val permissionCallback: PermissionCallback
+    private val permissionCallback: PermissionCallback = callback
     private val executorService = Executors.newSingleThreadExecutor()
     private val TAG = Companion::class.java.simpleName
     private var isActive = true
-
-    init {
-        this.context = context
-        permissionCallback = callback
-    }
 
     fun createImage(fileUri: Uri?) {
         if (fileUri == null) {
@@ -123,15 +118,15 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
         backgroundColor = Color.parseColor("#66000000")
         textColor = context.getColor(android.R.color.white)
         backgroundHeight = 150f
-        authorName = ""
-        showAuthorName = false
-        showAppName = false
-        showGoogleMap = true
-        showLatLng = true
-        showDate = true
+//        authorName = ""
+//        showAuthorName = false
+//        showAppName = false
+//        showGoogleMap = true
+//        showLatLng = true
+//        showDate = true
         mapHeight = backgroundHeight.toInt()
         mapWidth = 120
-        imageQuality = null
+//        imageQuality = null
         if (isActive) {
             initialization()
         } else {
@@ -299,6 +294,7 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
         if (showDate) {
             backgroundHeight += textTopMargin
         }
+        Log.d(TAG, "copyTheImage: showAppName $showAppName")
         if (showLatLng) {
             backgroundHeight += textTopMargin
         }
@@ -376,11 +372,11 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
         textPaint.setTypeface(typeface)
         textPaint.textSize = textSize
         if (addresses != null) {
-            place =
-                addresses!![0].locality + ", " + addresses!![0].adminArea + ", " + addresses!![0].countryName
+            place = addresses!![0].locality + ", " + addresses!![0].adminArea + ", " + addresses!![0].countryName
             road = addresses!![0].getAddressLine(0)
             elementsList.add(place)
             elementsList.add(road)
+            Log.d(TAG, "drawText: imgQuality $imageQuality")
             if (showLatLng) {
                 latlng = "Lat Lng : $latitude, $longitude"
                 elementsList.add(latlng)
@@ -391,8 +387,7 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
             elementsList.add(date)
         }
         if (showAuthorName) {
-            authorName = "Clicked by : $authorName"
-            elementsList.add(authorName!!)
+            elementsList.add("Clicked by : $authorName")
         }
         for (item in elementsList) {
             canvas.drawText(item, textX, textY, textPaint)
@@ -413,6 +408,7 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
                             textPaint
                         )
                     }
+
                     AVERAGE -> {
                         textTopMargin = 50f
                         textPaint.textSize = textSize / 2
@@ -537,7 +533,7 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
         this.showGoogleMap = showGoogleMap
     }
 
-    fun setAuthorName(authorName: String?) {
+    fun setAuthorName(authorName: String) {
         this.authorName = authorName
     }
 
@@ -546,12 +542,12 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
         when (imageQuality) {
             LOW -> {
                 textSize = 20f
-                bitmapWidth = (960/1.5).toInt()
-                bitmapHeight = (1280/1.5).toInt()
-                textTopMargin = (50f/1.5).toFloat()
-                backgroundHeight = (150f/1.5).toFloat()
+                bitmapWidth = (960 / 1.5).toInt()
+                bitmapHeight = (1280 / 1.5).toInt()
+                textTopMargin = (50f / 1.5).toFloat()
+                backgroundHeight = (150f / 1.5).toFloat()
                 mapWidth = 120
-                mapHeight = (backgroundHeight.toInt()/1.5).toInt()
+                mapHeight = (backgroundHeight.toInt() / 1.5).toInt()
             }
 
             AVERAGE -> {
@@ -566,7 +562,7 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
             HIGH -> {
                 bitmapWidth = (960 * 3.6).toInt()
                 bitmapHeight = (1280 * 3.6).toInt()
-                backgroundHeight = (backgroundHeight * 1.5).toFloat()
+                backgroundHeight = (backgroundHeight * 2).toFloat()
                 textSize = (textSize * 3.6).toFloat()
                 textTopMargin = (50 * 3.6).toFloat()
                 radius = (radius * 3.6).toFloat()
@@ -577,7 +573,6 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
     }
 
     fun setImageExtension(imgExtension: String) {
-        IMAGE_EXTENSION = imgExtension
         when (imgExtension) {
             JPG -> IMAGE_EXTENSION = ".jpg"
             PNG -> IMAGE_EXTENSION = ".png"
@@ -597,6 +592,7 @@ class GeoTagImage(context: Context, callback: PermissionCallback) {
         }
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
         val mImageName = "IMG_$timeStamp$IMAGE_EXTENSION"
+        Log.d(TAG, "imagePath: $IMAGE_EXTENSION")
         val ImagePath = mediaStorageDir.path + File.separator + mImageName
         val media = File(ImagePath)
         MediaScannerConnection.scanFile(context, arrayOf(media.absolutePath), null) { path, uri -> }

@@ -31,6 +31,7 @@ import android.graphics.BitmapFactory
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
 import java.io.File
@@ -39,6 +40,8 @@ import java.util.Date
 import java.util.Locale
 
 object GTIUtility {
+    private val TAG = "GTIUtility"
+    
     /** Check for Map SDK Integration */
     @JvmStatic
     fun isGoogleMapsLinked(context: Context): Boolean {
@@ -79,8 +82,7 @@ object GTIUtility {
     @JvmStatic
     fun getApplicationName(context: Context): String {
         val packageManager = context.packageManager
-        val applicationInfo: ApplicationInfo?
-        applicationInfo = try {
+        val applicationInfo: ApplicationInfo? = try {
             packageManager.getApplicationInfo(context.applicationInfo.packageName, 0)
         } catch (e: PackageManager.NameNotFoundException) {
             null
@@ -92,25 +94,27 @@ object GTIUtility {
     @JvmStatic
     fun generateOriginalFile(mContext: FragmentActivity, IMAGE_EXTENSION: String): File? {
         var file: File? = null
+        Log.i(TAG, "generateOriginalFile: Step 1")
         try {
             val mediaStorageDir = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
                 "Camera"
             )
+            Log.w(TAG, "generateOriginalFile: Step 2 : $mediaStorageDir", )
             if (!mediaStorageDir.exists()) {
                 if (!mediaStorageDir.mkdirs()) {
                     return null
                 }
             }
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
-            file =
-                File(mediaStorageDir.path + File.separator + "IMG_" + timeStamp + IMAGE_EXTENSION)
+            file = File(mediaStorageDir.path + File.separator + "IMG_" + timeStamp + IMAGE_EXTENSION)
         } catch (e: Exception) {
             e.printStackTrace()
         }
         if (file != null) {
             scanMediaFIle(mContext, file)
         }
+        Log.w(TAG, "generateOriginalFile: Step 3 $file", )
         return file
     }
 
