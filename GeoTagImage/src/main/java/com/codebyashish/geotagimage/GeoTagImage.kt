@@ -553,14 +553,14 @@ class GeoTagImage(private val context: Context, callback: PermissionCallback) {
         }
     }
 
-    fun getImagePath(): String? {
+    fun getImagePath(): String {
         val mediaStorageDir = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
             "/"
         )
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                return null
+                return ""
             }
         }
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())

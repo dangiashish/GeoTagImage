@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
 
 
             // after geotagged photo is created, get the new image path by using getImagePath() method
-            gtiImageStoragePath = geoTagImage.imagePath().toString()
+            gtiImageStoragePath = geoTagImage.getImagePath()
 
             Log.i("GTIPath", "$gtiImageStoragePath: ")
 
