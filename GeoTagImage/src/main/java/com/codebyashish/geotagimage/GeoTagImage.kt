@@ -48,7 +48,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
@@ -56,15 +55,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.Executors
-import kotlin.time.times
 
 class GeoTagImage(private val context: Context, callback: PermissionCallback) {
     private var place = ""
     private var road = ""
     private var latlng = ""
     private var date = ""
-    private var originalImageHeight = 0
-    private var originalImageWidth = 0
     private var returnFile: File? = null
     private var bitmap: Bitmap? = null
     private var mapBitmap: Bitmap? = null
@@ -240,29 +236,6 @@ class GeoTagImage(private val context: Context, callback: PermissionCallback) {
             e.printStackTrace()
         }
         return null
-    }
-
-    fun shutdown() {
-        executorService.shutdown()
-    }
-
-    fun dimension() {
-        val options = BitmapFactory.Options()
-        options.inJustDecodeBounds = true
-        try {
-            BitmapFactory.decodeStream(
-                context.contentResolver.openInputStream(fileUri!!),
-                null,
-                options
-            )
-            originalImageHeight = options.outHeight
-            originalImageWidth = options.outWidth
-            Log.d(TAG, "$originalImageHeight & $originalImageWidth")
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-            throw GTIException("File Not Found : " + e.message)
-
-        }
     }
 
     private fun createBitmap(): Bitmap {
@@ -562,7 +535,7 @@ class GeoTagImage(private val context: Context, callback: PermissionCallback) {
             HIGH -> {
                 bitmapWidth = (960 * 3.6).toInt()
                 bitmapHeight = (1280 * 3.6).toInt()
-                backgroundHeight = (backgroundHeight * 2).toFloat()
+                backgroundHeight = (backgroundHeight * 2)
                 textSize = (textSize * 3.6).toFloat()
                 textTopMargin = (50 * 3.6).toFloat()
                 radius = (radius * 3.6).toFloat()
