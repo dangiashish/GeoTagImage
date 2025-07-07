@@ -38,8 +38,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-internal object GTIUtility {
+object GTIUtility {
     private val TAG = "GTIUtility"
     
     /** Check for Map SDK Integration */

@@ -23,7 +23,7 @@
  */
 package com.codebyashish.geotagimage
 
-internal class GTIException : Exception {
+class GTIException : Exception {
     constructor(message: String?) : super(message)
     constructor(message: String?, cause: Throwable?) : super(message, cause)
 
