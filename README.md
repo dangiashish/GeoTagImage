@@ -76,7 +76,7 @@ Add dependency in your `build.gradle` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.1.2'
+    implementation 'com.github.dangiashish:GeoTagImage:1.1.5'
 }
 ```
 #### OR
@@ -85,7 +85,7 @@ Add dependency in your `build.gradle.kts` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation("com.github.dangiashish:GeoTagImage:1.1.2")
+    implementation("com.github.dangiashish:GeoTagImage:1.1.5")
 }
 ```
 
@@ -113,198 +113,106 @@ dependencies{
 #### XML : 
  Go to here --> [activity_main.xml](https://github.com/dangiashish/GeoTagImage/blob/master/app/src/main/res/layout/activity_main.xml)
 
-#### Java : [MainActivity.java](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/java/com/codebyashish/geotagimage/MainActivity.java)
+#### Kotlin : [MainActivity.kt](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/java/com/codebyashish/geotagimage/MainActivity.kt)
 ```groovy
-public class MainActivity extends AppCompatActivity implements PermissionCallback {
-    private ImageView ivCamera, ivImage, ivClose;
-    private TextView tvOriginal, tvGtiImg;
-    private static String originalImgStoragePath, gtiImageStoragePath;
-    public static final String IMAGE_EXTENSION = ".png";
-    private Uri fileUri;
-    private static final int PERMISSION_REQUEST_CODE = 100;
+class MainActivity : AppCompatActivity(), PermissionCallback{
+    // create global variables
+    private var gtiUri: Uri? = null
+    private lateinit var geoTagImage: GeoTagImage
+    private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+}
 
-    static FragmentActivity mContext;
-    private GeoTagImage geoTagImage;
-    private ProgressBar progressBar;
+```
+### `onCreate()`
+```kotlin
+cameraLauncher =
+            registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+                if (success) {
+                    gtiUri = geoTagImage.processCapturedImage()
+                    previewCapturedImage()
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+                } else {
+                    Toast.makeText(mContext, "Image capture failed", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-        // initialize the xml buttons.
-        ivCamera = findViewById(R.id.ivCamera);
-        ivImage = findViewById(R.id.ivImage);
-        ivClose = findViewById(R.id.ivClose);
-        progressBar = findViewById(R.id.progressBar);
-        tvOriginal = findViewById(R.id.tvOriginalPath);
-        tvGtiImg = findViewById(R.id.tvGTIPath);
-        AppCompatButton btnGit = findViewById(R.id.btnGithub);
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val allGranted = permissions.all { it.value }
 
-        btnGit.setOnClickListener(c -> {
-            String url = "https://github.com/dangiashish/GeoTagImage";
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
-
-        });
-
-        // initialize the context
-        mContext = MainActivity.this;
-        // initialize the permission callback listener
-        PermissionCallback permissionCallback = this;
-
-        // initialize the GeoTagImage class object with context and callback
-        // use try/catch block to handle exceptions.
-        try {
-            geoTagImage = new GeoTagImage(mContext, permissionCallback);
-        } catch (GTIException e) {
-            throw new RuntimeException(e);
+            if (allGranted) {
+                // All permissions granted
+                onPermissionGranted()
+            } else {
+                // One or more permissions denied
+                onPermissionDenied()
+            }
         }
 
-        // setOnClickListener on camera button.
-        ivCamera.setOnClickListener(click -> {
-            // first check permission for camera and location by using GTIPermission class.
-            if (GTIPermissions.checkCameraLocationPermission(mContext)) {
+// initialize the GeoTagImage class object with context and callback
+// use try/catch block to handle exceptions.
+geoTagImage = GeoTagImage(this, permissionLauncher)
 
-                // if permissions are granted, than open camera.
-                openCamera();
-
-            } else {
-                // otherwise request for the permissions by using GTIPermission class.
-                GTIPermissions.requestCameraLocationPermission(mContext, PERMISSION_REQUEST_CODE);
-            }
-        });
-    }
-
+geoTagImage.requestCameraAndLocationPermissions()
 ```
 #### openCamera()
 ```groovy
-    // if permissions are granted for camera and location.
-    private void openCamera() {
-        // call Intent for ACTION_IMAGE_CAPTURE which will redirect to device camera.
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        // create a file object
-        File file;
-
-        // before adding GeoTags, generate or create an original image file
-        // We need to create an original image to add geotags by copying this file.
-        file = GTIUtility.generateOriginalFile(mContext, IMAGE_EXTENSION);
-        if (file != null) {
-            // if file has been created, then will catch its path for future reference.
-            gtiImageStoragePath = file.getPath();
-            originalImgStoragePath = file.getPath();
-        }
-
-        // now get Uri from this created image file by using GTIUtility.getFileUri() function.
-        fileUri = GTIUtility.getFileUri(mContext, file);
-
-        // pass this uri file into intent filters while opening camera.
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
-        // call ActivityResultLauncher by passing the intent request.
-        activityResultLauncher.launch(intent);
+     // setOnClickListener on camera button.
+binding.ivCamera.setOnClickListener {
+    geoTagImage.preparePhotoUriAndLocation { uri ->
+        uri?.let { cameraLauncher.launch(it) }
     }
+}
 ```
-#### handle onActivityResult method
-```groovy
-    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(),
-        result -> {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-                // Handle the result here
+#### customize geo tags
+```kotlin
+     // set all the customizations for geotagging as per your requirements after initialization.
 
-                try {
-                    progressBar.setVisibility(View.VISIBLE);
-                    ivCamera.setVisibility(View.GONE);
+geoTagImage.enableGTIService(false) // Enable/Disable GTI Features
 
-                    // TODO : START THE MAIN FUNCTIONALITY
+geoTagImage.setTextSize(30f)
+geoTagImage.setBackgroundRadius(5f)
+geoTagImage.setBackgroundColor(Color.parseColor("#66000000"))
+geoTagImage.setTextColor(Color.WHITE)
+geoTagImage.setAuthorName("Ashish")
+geoTagImage.showAuthorName(true)
+geoTagImage.showAppName(true)
+geoTagImage.setImageQuality(ImageQuality.LOW)
+geoTagImage.setImageExtension(PNG)
+geoTagImage.setLabel("Clicked By")
 
-                    // now call the function createImage() and pass the uri object (line no. 100-110)
-                    geoTagImage.createImage(fileUri);
-
-                    // set all the customizations for geotagging as per your requirements.
-                    geoTagImage.setTextSize(30f);
-                    geoTagImage.setBackgroundRadius(5f);
-                    geoTagImage.setBackgroundColor(Color.parseColor("#66000000"));
-                    geoTagImage.setTextColor(Color.WHITE);
-                    geoTagImage.setAuthorName("Ashish");
-                    geoTagImage.showAuthorName(true);
-                    geoTagImage.showAppName(true);
-                    geoTagImage.setImageQuality(ImageQuality.LOW);
-                    geoTagImage.setImageExtension(PNG);
-                    geoTagImage.enableGTIService(false); // Enable/Disable GTI Features
-
-                    // after geotagged photo is created, get the new image path by using getImagePath() method
-                    gtiImageStoragePath = geoTagImage.getImagePath();
-
-                    /* The time it takes for a Canvas to draw items on a blank Bitmap can vary depending on several factors,
-                     * such as the complexity of the items being drawn, the size of the Bitmap, and the processing power of the device.*/
-                    new Handler().postDelayed(this::previewCapturedImage, 3000);
-
-
-                } catch (GTIException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 ```
-#### handle request permisson result
-```groovy
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                geoTagImage.handlePermissionGrantResult();
-                Toast.makeText(mContext, "Permission Granted", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(mContext, "Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
- ```
 #### preview the original image
 ```groovy
         // preview of the original image
-private void previewCapturedImage() {
+private fun previewCapturedImage() {
     try {
-        Bitmap bitmap = GTIUtility.optimizeBitmap(gtiImageStoragePath);
-        ivImage.setImageBitmap(bitmap);
+        val path = gtiUri?.path
+        val bitmap = optimizeBitmap(path)
+        binding.ivImage.setImageBitmap(bitmap)
+        
+      
+        val imgSize = getFileSize(path)
 
-        if (ivImage.getDrawable() != null) {
-            ivClose.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-        }
-        ivClose.setOnClickListener(v -> {
-            ivImage.setImageBitmap(null);
-            ivCamera.setVisibility(View.VISIBLE);
-            ivClose.setVisibility(View.GONE);
-            ivImage.setImageDrawable(null);
-            tvGtiImg.setText("");
-            tvOriginal.setText("");
-        });
-
-        tvGtiImg.setText(gtiImageStoragePath);
-        tvOriginal.setText(originalImgStoragePath);
-
-    } catch (Exception e) {
-        e.printStackTrace();
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Log.e("GeoTagImage", "previewCapturedImage: ${e.message}")
     }
 }
+```
 
+### Permission Callbacks
+```kotlin
+override fun onPermissionGranted() {
 
-@Override
-    public void onPermissionGranted() {
-        openCamera();
-    }
+}
 
-    @Override
-    public void onPermissionDenied() {
-        GTIPermissions.requestCameraLocationPermission(mContext, PERMISSION_REQUEST_CODE);
-    }
+override fun onPermissionDenied() {
+    geoTagImage.requestCameraAndLocationPermissions()
+}
 ```
     
 #### LICENSE

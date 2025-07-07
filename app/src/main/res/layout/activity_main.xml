@@ -170,33 +170,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="3dp"
-                            android:text="Original Path : "
-                            android:textStyle="bold" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tvOriginalPath"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="3dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    app:cardUseCompatPadding="true">
-
-                    <LinearLayout
-                        android:padding="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="3dp"
                             android:text="GTI Image Path : "
                             android:textStyle="bold" />
 
@@ -374,7 +347,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:checked="false" />
+                            android:checked="true" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
@@ -406,7 +379,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:checked="false" />
+                            android:checked="true" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
@@ -502,6 +475,7 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
+
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -514,6 +488,13 @@
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@Deprecated"
+                            android:textColor="#FF9800"
+                            />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"

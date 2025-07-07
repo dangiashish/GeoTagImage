@@ -23,6 +23,7 @@
  */
 package com.codebyashish.geotagimage
 
+@Deprecated("Standard picture size is 768x1024")
 object ImageQuality {
     const val HIGH = "HIGH"
     const val LOW = "LOW"

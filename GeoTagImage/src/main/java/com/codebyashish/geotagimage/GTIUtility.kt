@@ -39,7 +39,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-object GTIUtility {
+internal object GTIUtility {
     private val TAG = "GTIUtility"
     
     /** Check for Map SDK Integration */
@@ -90,6 +90,7 @@ object GTIUtility {
         return (if (applicationInfo != null) packageManager.getApplicationLabel(applicationInfo) else "Unknown") as String
     }
 
+    @Deprecated("")
     /** Save original image in camera directory  */
     @JvmStatic
     fun generateOriginalFile(mContext: FragmentActivity, IMAGE_EXTENSION: String): File? {
