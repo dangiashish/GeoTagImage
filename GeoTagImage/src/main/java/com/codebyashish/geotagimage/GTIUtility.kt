@@ -38,7 +38,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
 object GTIUtility {
     private val TAG = "GTIUtility"
     
@@ -90,6 +89,7 @@ object GTIUtility {
         return (if (applicationInfo != null) packageManager.getApplicationLabel(applicationInfo) else "Unknown") as String
     }
 
+    @Deprecated("")
     /** Save original image in camera directory  */
     @JvmStatic
     fun generateOriginalFile(mContext: FragmentActivity, IMAGE_EXTENSION: String): File? {

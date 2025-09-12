@@ -30,6 +30,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 
+@Deprecated("GTIPermissions has been deprecated due to lifecycle-aware risk, please read documentation carefully")
 object GTIPermissions {
     /**
      * Check Camera & Location Permission

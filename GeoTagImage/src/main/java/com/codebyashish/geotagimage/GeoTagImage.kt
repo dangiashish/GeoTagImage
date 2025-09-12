@@ -56,6 +56,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.Executors
 
+@Deprecated("geotagimage/GeoTagImage is deprecated, please use gti2/GeoTagImage")
 class GeoTagImage(private val context: Context, callback: PermissionCallback) {
     private var place = ""
     private var road = ""
@@ -65,7 +66,7 @@ class GeoTagImage(private val context: Context, callback: PermissionCallback) {
     private var bitmap: Bitmap? = null
     private var mapBitmap: Bitmap? = null
     private var addresses: List<Address>? = null
-   private var IMAGE_EXTENSION = ".png"
+    private var IMAGE_EXTENSION = ".png"
     private var fileUri: Uri? = null
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var geocoder: Geocoder? = null
