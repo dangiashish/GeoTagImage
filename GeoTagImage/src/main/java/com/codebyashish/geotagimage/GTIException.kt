@@ -23,6 +23,9 @@
  */
 package com.codebyashish.geotagimage
 
+import android.R.id.message
+
+@Deprecated("geotagimage/GTIException is deprecated")
 class GTIException : Exception {
     constructor(message: String?) : super(message)
     constructor(message: String?, cause: Throwable?) : super(message, cause)

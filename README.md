@@ -15,7 +15,7 @@
 
 <br/>
 
-<a href="https://github.com/dangiashish/GeoTagImage/actions/runs/11164378309/artifacts/2011456675"><img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Download_apk.png" width="300px" height="80"/></a>
+<a href="https://github.com/dangiashish/GeoTagImage/actions/runs/11164378309/artifacts/2011456675"><img src="https://www.nthlink.com/assets/images/apk-download.png" width="300px" height="80"/></a>
 
 </div>
 
@@ -76,7 +76,7 @@ Add dependency in your `build.gradle` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.1.5'
+    implementation 'com.github.dangiashish:GeoTagImage:1.1.6'
 }
 ```
 #### OR
@@ -85,7 +85,7 @@ Add dependency in your `build.gradle.kts` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation("com.github.dangiashish:GeoTagImage:1.1.5")
+    implementation("com.github.dangiashish:GeoTagImage:1.1.6")
 }
 ```
 
@@ -115,12 +115,19 @@ dependencies{
 
 #### Kotlin : [MainActivity.kt](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/java/com/codebyashish/geotagimage/MainActivity.kt)
 ```groovy
+import com.codebyashish.gti.GeoTagImage
+
 class MainActivity : AppCompatActivity(), PermissionCallback{
     // create global variables
     private var gtiUri: Uri? = null
     private lateinit var geoTagImage: GeoTagImage
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ...
+    }
 }
 
 ```
@@ -153,7 +160,7 @@ cameraLauncher =
 
 // initialize the GeoTagImage class object with context and callback
 // use try/catch block to handle exceptions.
-geoTagImage = GeoTagImage(this, permissionLauncher)
+geoTagImage = GeoTagImage(this, permissionLauncher) // this || context || requireContext() || requireActivity()
 
 geoTagImage.requestCameraAndLocationPermissions()
 ```
@@ -179,9 +186,9 @@ geoTagImage.setTextColor(Color.WHITE)
 geoTagImage.setAuthorName("Ashish")
 geoTagImage.showAuthorName(true)
 geoTagImage.showAppName(true)
-geoTagImage.setImageQuality(ImageQuality.LOW)
+geoTagImage.setImageQuality(ImageQuality.LOW) // Deprecated
 geoTagImage.setImageExtension(PNG)
-geoTagImage.setLabel("Clicked By")
+geoTagImage.setLabel("Clicked By") // Upload By || Author || Captured By
 
 ```
 
@@ -190,7 +197,7 @@ geoTagImage.setLabel("Clicked By")
         // preview of the original image
 private fun previewCapturedImage() {
     try {
-        val path = gtiUri?.path
+        val path = gtiUri?.path!!
         val bitmap = optimizeBitmap(path)
         binding.ivImage.setImageBitmap(bitmap)
         

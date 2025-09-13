@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.codebyashish.geotagimage
+package com.codebyashish.gti
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
@@ -38,7 +38,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-@Deprecated("geotagimage/GTIUtility is deprecated")
 object GTIUtility {
     private val TAG = "GTIUtility"
     

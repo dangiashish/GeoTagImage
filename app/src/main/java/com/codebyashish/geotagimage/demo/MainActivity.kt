@@ -21,7 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.codebyashish.geotagimage
+
+package com.codebyashish.geotagimage.demo
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -39,11 +40,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
-import com.codebyashish.geotagimage.databinding.ActivityMainBinding
-import com.codebyashish.gti2.GeoTagImage
-import com.codebyashish.gti2.GeoTagImage.Companion.JPEG
-import com.codebyashish.gti2.GeoTagImage.Companion.JPG
-import com.codebyashish.gti2.GeoTagImage.Companion.PNG
+import com.codebyashish.geotagimage.ImageQuality
+import com.codebyashish.gti.PermissionCallback
+import com.codebyashish.geotagimage.demo.databinding.ActivityMainBinding
+import com.codebyashish.gti.GeoTagImage
 import java.io.File
 import java.text.DecimalFormat
 
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         binding.btnGithub.setOnClickListener {
             val url = "https://github.com/dangiashish/GeoTagImage"
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.setData(url.toUri())
+            intent.data = url.toUri()
             startActivity(intent)
         }
 
@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
             registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
                 if (success) {
                     gtiUri = geoTagImage.processCapturedImage()
+                    Log.d(TAG, "onCreate: $gtiUri")
                     previewCapturedImage()
 
                 } else {
@@ -93,11 +94,8 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         geoTagImage = GeoTagImage(this, permissionLauncher)
         geoTagImage.requestCameraAndLocationPermissions()
 
-
-
         // initialize the context
         mContext = this@MainActivity
-
 
 
         // setOnClickListener on camera button.
@@ -109,6 +107,20 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
 
         binding.sFeatures.setOnCheckedChangeListener { _, isChecked ->
             geoTagImage.enableGTIService(isChecked)  // Enable/Disable GTI Features.
+            if (!isChecked) {
+                geoTagImage.showAuthorName(false)
+                binding.etAuthorName.visibility = View.GONE
+                binding.sAuthor.isChecked = false
+                geoTagImage.showAppName(false)
+                binding.sApp.isChecked = false
+                geoTagImage.showLatLng(false)
+                binding.sLatLng.isChecked = false
+                geoTagImage.showDate(false)
+                binding.sDate.isChecked = false
+                geoTagImage.showGoogleMap(false)
+                binding.sMap.isChecked = false
+
+            }
         }
 
         binding.sAuthor.setOnCheckedChangeListener { _, isChecked ->
@@ -146,27 +158,27 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
             geoTagImage.showGoogleMap(isChecked)
         }
 
-        binding.toggleAppearanceRandom.check(R.id.button_ext_png)
+        binding.toggleAppearanceRandom.check(R.id.button_ext_jpeg)
         binding.toggleAppearanceRandom.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
                 when (checkedId) {
                     R.id.button_ext_png -> {
-                        geoTagImage.setImageExtension(PNG)
+                        geoTagImage.setImageExtension(GeoTagImage.Companion.PNG)
                     }
 
                     R.id.button_ext_jpeg -> {
-                        geoTagImage.setImageExtension(JPEG)
+                        geoTagImage.setImageExtension(GeoTagImage.Companion.JPEG)
                     }
 
                     R.id.button_ext_jpg -> {
-                        geoTagImage.setImageExtension(JPG)
+                        geoTagImage.setImageExtension(GeoTagImage.Companion.JPG)
                     }
                 }
             }
         }
 
         binding.toggleImageQuality.check(R.id.button_img_low)
-        if (binding.toggleImageQuality.checkedButtonId == R.id.button_img_low){
+        if (binding.toggleImageQuality.checkedButtonId == R.id.button_img_low) {
             imageQuality = ImageQuality.LOW
         }
         binding.toggleImageQuality.addOnButtonCheckedListener { group, checkedId, isChecked ->

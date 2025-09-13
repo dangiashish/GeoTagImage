@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.codebyashish.geotagimage
+package com.codebyashish.gti
 
 import android.Manifest
 import android.content.Context
@@ -40,12 +40,8 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.pow
 
-internal object LocationUtil {
-
+internal object GTILocationUtility {
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
 
     fun fetchLocation(context: Context, callback: (Location?) -> Unit) {
@@ -56,7 +52,7 @@ internal object LocationUtil {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED &&
+            ) != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_COARSE_LOCATION

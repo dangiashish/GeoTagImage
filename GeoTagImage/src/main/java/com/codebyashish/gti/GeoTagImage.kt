@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.codebyashish.gti2
+package com.codebyashish.gti
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -33,12 +34,13 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
-import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -46,14 +48,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.graphics.scale
 import androidx.core.graphics.toColorInt
-import com.codebyashish.geotagimage.GTIUtility.getApplicationName
-import com.codebyashish.geotagimage.GTIUtility.getMapKey
-import com.codebyashish.geotagimage.GTIUtility.isGoogleMapsLinked
+import androidx.exifinterface.media.ExifInterface
 import com.codebyashish.geotagimage.ImageQuality.AVERAGE
 import com.codebyashish.geotagimage.ImageQuality.HIGH
 import com.codebyashish.geotagimage.ImageQuality.LOW
-import com.codebyashish.geotagimage.LocationUtil
+import com.codebyashish.gti.GTIUtility.getApplicationName
+import com.codebyashish.gti.GTIUtility.getMapKey
+import com.codebyashish.gti.GTIUtility.isGoogleMapsLinked
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -65,13 +68,11 @@ class GeoTagImage(
     private val context: Context,
     private val permissionLauncher: ActivityResultLauncher<Array<String>>
 ) {
-    private var place = ""
-    private var road = ""
+    private var address: String = ""
     private var latlng = ""
     private var date = ""
     private var mapBitmap: Bitmap? = null
-    private var addresses: List<Address>? = null
-    private var IMAGE_EXTENSION = ".png"
+    private var IMAGE_EXTENSION = ".jpeg"
     private var fileUri: Uri? = null
     private var geocoder: Geocoder? = null
     private var latitude = 0.0
@@ -101,10 +102,11 @@ class GeoTagImage(
     private var markerUrl: String? = null
     private var imageQuality: String? = null
     private val executorService = Executors.newSingleThreadExecutor()
-    private val TAG = Companion::class.java.simpleName
+    private val TAG = "GTILogs"
     private var isActive = true
     private var currentPhotoPath: String? = null
     private var latestLocation: Location? = null
+    private val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
 
     fun preparePhotoUriAndLocation(onReady: (Uri?) -> Unit) {
         if (ContextCompat.checkSelfPermission(
@@ -135,7 +137,9 @@ class GeoTagImage(
             longitude = location.longitude
             geocoder = Geocoder(context, Locale.getDefault())
             try {
-                addresses = geocoder!!.getFromLocation(latitude, longitude, 1)
+                address = geocoder!!.getFromLocation(latitude, longitude, 1)?.firstOrNull()
+                    ?.getAddressLine(0)
+                    ?: "Location: Not available"
                 if (isGoogleMapsLinked(context)) {
                     if (getMapKey(context) == null) {
                         processCapturedImage()
@@ -167,7 +171,6 @@ class GeoTagImage(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Log.e("error ", "${e.message}")
             }
         }
 
@@ -179,8 +182,6 @@ class GeoTagImage(
                 val bitmap = loadImageFromUrl(imageUrl)
                 if (bitmap != null) {
                     mapBitmap = bitmap
-//                    val newBitmap = createBitmap()
-//                    storeBitmapInternally(newBitmap)
                     processCapturedImage()
                 }
             } catch (e: Exception) {
@@ -205,40 +206,141 @@ class GeoTagImage(
     fun processCapturedImage(geoTagged: Boolean = isActive): Uri? {
         currentPhotoPath?.let { filePath ->
             val file = File(filePath)
-            val bitmap = BitmapFactory.decodeFile(filePath)
+
+            latestLocation?.let { embedGeoTagInExif(filePath, it) }
+
+            var bitmap = BitmapFactory.decodeFile(filePath)
+
+            bitmap = setExifInfo(filePath, bitmap)
 
             val resizedBitmap = bitmap.scale(768, 1024)
 
             if (!geoTagged) {
-                val outputStream = file.outputStream()
-                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
-                outputStream.close()
+                saveImageToGallery(resizedBitmap)
+                file.outputStream().use { out ->
+                    resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out)
+                }
                 return Uri.fromFile(file)
             }
 
             val geoTaggedBitmap = drawTextOnBitmap(resizedBitmap)
 
-            val outputStream = file.outputStream()
-            geoTaggedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
-            outputStream.close()
+            saveImageToGallery(geoTaggedBitmap)
+
+            file.outputStream().use { out ->
+                geoTaggedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out)
+            }
 
             return Uri.fromFile(file)
         }
         return null
     }
 
+    private fun embedGeoTagInExif(filePath: String, location: Location) {
+        try {
+            val exif = ExifInterface(filePath)
+
+            // GPS info
+            exif.setGpsInfo(location)
+
+            // Date/time
+            exif.setAttribute(
+                ExifInterface.TAG_DATETIME,
+                SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).format(Date())
+            )
+
+            // Device info
+            exif.setAttribute(ExifInterface.TAG_MAKE, Build.MANUFACTURER)
+            exif.setAttribute(ExifInterface.TAG_MODEL, Build.MODEL)
+            exif.setAttribute(ExifInterface.TAG_SOFTWARE, "Android ${Build.VERSION.RELEASE}")
+
+            // Camera info (these may not always be available programmatically; storing placeholders)
+            exif.setAttribute(ExifInterface.TAG_FOCAL_LENGTH, "4.25 mm")
+            exif.setAttribute(ExifInterface.TAG_F_NUMBER, "f/1.8")
+            exif.setAttribute(ExifInterface.TAG_EXPOSURE_TIME, "1/50")
+            exif.setAttribute(ExifInterface.TAG_ISO_SPEED_RATINGS, "100")
+
+            // Extra: put human-readable location into UserComment
+            val userComment =
+                "Lat:${location.latitude}, Lng:${location.longitude}, " + "Accuracy:${location.accuracy}m"
+            exif.setAttribute(ExifInterface.TAG_USER_COMMENT, userComment)
+
+            exif.saveAttributes()
+            Log.d(TAG, "EXIF metadata written successfully")
+
+        } catch (e: IOException) {
+            Log.e(TAG, "Error writing EXIF data: ${e.localizedMessage}")
+        }
+    }
+
+    private fun saveImageToGallery(bitmap: Bitmap): Uri? {
+        val resolver = context.contentResolver
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val contentValues = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${timeStamp}.jpeg")
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + "/Camera")
+                put(MediaStore.Images.Media.IS_PENDING, 1)
+            }
+
+            val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            uri?.let {
+                resolver.openOutputStream(it)?.use { out ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+                }
+                contentValues.clear()
+                contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+                resolver.update(uri, contentValues, null, null)
+            }
+            uri
+        } else {
+            val imagesDir =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                    .toString() + "/Camera"
+            val file = File(imagesDir, "IMG_${timeStamp}.jpeg")
+
+            file.parentFile?.mkdirs()
+            FileOutputStream(file).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+            }
+
+            val values = ContentValues().apply {
+                put(MediaStore.Images.Media.DATA, file.absolutePath)
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            }
+            resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        }
+    }
+
+    private fun setExifInfo(path: String, bitmap: Bitmap): Bitmap {
+        return try {
+            val exif = ExifInterface(path)
+            val orientation = exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            )
+
+            val matrix = android.graphics.Matrix()
+            when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+                ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+            }
+
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            bitmap
+        }
+    }
+
     private fun drawTextOnBitmap(bitmap: Bitmap): Bitmap {
         elementsList.clear()
-        if (addresses != null) {
-            place = addresses!![0].locality + ", " + addresses!![0].adminArea + ", " + addresses!![0].countryName
-            road = addresses!![0].getAddressLine(0)
-            elementsList.add(place)
-            elementsList.add(road)
-            Log.d(TAG, "drawText: imgQuality $imageQuality")
-            if (showLatLng) {
-                latlng = "Lat Lng : $latitude, $longitude"
-                elementsList.add(latlng)
-            }
+        elementsList.add(address)
+        if (showLatLng) {
+            latlng = "Lat Lng : $latitude, $longitude"
+            elementsList.add(latlng)
         }
         if (showDate) {
             date = SimpleDateFormat("dd/MM/yyyy hh:mm a z", Locale.getDefault()).format(Date())
@@ -248,7 +350,7 @@ class GeoTagImage(
             elementsList.add("$label : $authorName")
         }
 
-        if (showAppName){
+        if (showAppName) {
             elementsList.add(getApplicationName(context))
         }
 
@@ -274,7 +376,7 @@ class GeoTagImage(
             mapWidth = 0
         }
 
-        if (!showGoogleMap){
+        if (!showGoogleMap) {
             mapWidth = 0
         }
 
@@ -337,8 +439,6 @@ class GeoTagImage(
 
     private fun createImageInternally(): File? {
         return try {
-            val timeStamp: String =
-                SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val storageDir: File =
                 context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: return null
             File.createTempFile("IMG_${timeStamp}_", IMAGE_EXTENSION, storageDir).apply {
@@ -356,11 +456,14 @@ class GeoTagImage(
 
     private fun fetchCurrentLocation(onLocationReady: () -> Unit) {
         try {
-            LocationUtil.fetchLocation(context) { location ->
-                latestLocation = location
-                deviceLocation(location)
+            GTILocationUtility.fetchLocation(context) { location ->
+                if (location != null) {
+                    latestLocation = location
+                    deviceLocation(location)
+                } else {
+                    Toast.makeText(context, "Location not available", Toast.LENGTH_SHORT).show()
+                }
                 onLocationReady()
-
             }
         } catch (e: SecurityException) {
             Toast.makeText(context, "Location permission not granted", Toast.LENGTH_SHORT).show()
@@ -471,6 +574,16 @@ class GeoTagImage(
     }
 
     fun requestCameraAndLocationPermissions() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) { // Android 9 or below
+            val permissionsToRequest = mutableListOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            )
+            permissionLauncher.launch(permissionsToRequest.toTypedArray())
+            return
+        }
         val permissionsToRequest = mutableListOf(
             Manifest.permission.CAMERA,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -493,7 +606,6 @@ class GeoTagImage(
         }
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
         val mImageName = "IMG_$timeStamp$IMAGE_EXTENSION"
-        Log.d(TAG, "imagePath: $IMAGE_EXTENSION")
         val ImagePath = mediaStorageDir.path + File.separator + mImageName
         val media = File(ImagePath)
         MediaScannerConnection.scanFile(context, arrayOf(media.absolutePath), null) { path, uri -> }

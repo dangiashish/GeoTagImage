@@ -21,9 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.codebyashish.geotagimage
+package com.codebyashish.gti
 
-@Deprecated("geotagimage/PermissionCallback is deprecated")
 interface PermissionCallback {
     fun onPermissionGranted()
     fun onPermissionDenied()
