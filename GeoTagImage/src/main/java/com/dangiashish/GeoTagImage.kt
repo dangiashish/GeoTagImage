@@ -39,22 +39,22 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.location.Geocoder
 import android.location.Location
+import android.media.MediaPlayer
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.view.Gravity
-import android.view.ViewGroup
+import android.view.LayoutInflater
 import android.view.Window
 import android.widget.FrameLayout
-import android.widget.ImageButton
-import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -67,9 +67,9 @@ import androidx.core.content.FileProvider
 import androidx.core.graphics.scale
 import androidx.core.graphics.toColorInt
 import androidx.exifinterface.media.ExifInterface
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.codebyashish.geotagimage.ImageQuality
+import com.codebyashish.geotagimage.R
 import com.codebyashish.gti.GTILocationUtility
 import com.codebyashish.gti.GTIUtility
 import java.io.File
@@ -99,11 +99,12 @@ class GeoTagImage(
     private var textTopMargin = 0f
     private var typeface = Typeface.DEFAULT
     private var radius = dpToPx(6f)
-    private var backgroundColor = "#66000000".toColorInt()
+    private var backgroundColor = "#70000000".toColorInt()
     private var textColor = Color.WHITE
     private var backgroundHeight = 150f
     private var authorName: String = ""
-    private var label: String = "Clicked By"
+    private var label: String = "Captured By"
+    private var exifAppName: String? = null
     private var showAuthorName = false
     private var showAppName = false
     private var showLatLng = true
@@ -111,7 +112,7 @@ class GeoTagImage(
     private var showGoogleMap = true
     private val elementsList = ArrayList<String>()
     private var mapHeight = backgroundHeight.toInt()
-    private var mapWidth = 120
+    private var mapWidth = 140
     private var bitmapWidth = 0
     private var bitmapHeight = 0
     private var apiKey: String? = null
@@ -135,19 +136,8 @@ class GeoTagImage(
     // Camera UI components (managed internally)
     private var cameraDialog: Dialog? = null
     private var previewView: PreviewView? = null
-    private var captureButton: ImageButton? = null
-    private var closeButton: ImageButton? = null
-    private var flipCameraButton: ImageButton? = null
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var pendingCallback: ((Uri?) -> Unit)? = null
-
-    /**
-     * Enable or disable CameraX usage
-     * @param useCameraX true to use CameraX, false to use system camera
-     */
-    fun enableCameraX(useCameraX: Boolean) {
-        this.useCameraX = useCameraX
-    }
 
     /**
      * Launch camera interface
@@ -171,9 +161,6 @@ class GeoTagImage(
             }
         } else {
             pendingCallback = onImageCaptured
-//            preparePhotoUriAndLocation { uri ->
-//                uri?.let { cameraLauncher.launch(it) }
-//            }
             preparePhotoUriAndLocation(onImageCaptured)
         }
     }
@@ -213,86 +200,73 @@ class GeoTagImage(
     }
 
     private fun createCameraDialog(onImageCaptured: (Uri?) -> Unit) {
+        var captureButton: FrameLayout? = null
+        var closeButton: AppCompatImageView? = null
+        var flipCameraButton: AppCompatImageView? = null
+        var mediaPlayer: MediaPlayer? = null
         cameraDialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setCancelable(true)
 
-            // Create main container
-            val container = FrameLayout(context).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                setBackgroundColor(Color.BLACK)
+            val view = LayoutInflater.from(context).inflate(R.layout.camera_layout, null)
+            setContentView(view)
+
+            previewView = view.findViewById(R.id.previewView)
+            captureButton = view.findViewById(R.id.btnCapture)
+            closeButton = view.findViewById(R.id.btnClose)
+            flipCameraButton = view.findViewById(R.id.btnFlip)
+            val zoomSeekBar = view.findViewById<SeekBar>(R.id.zoomSeekBar)
+
+            previewView.apply {
+                previewView?.scaleType = PreviewView.ScaleType.FIT_CENTER
             }
 
-            // Create PreviewView
-            previewView = PreviewView(context).apply {
-                layoutParams = FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT
-                )
-                scaleType = PreviewView.ScaleType.FIT_CENTER
+            captureButton!!.setOnClickListener {
+                if (mediaPlayer == null) {
+                    mediaPlayer = MediaPlayer.create(context, R.raw.sound_shutter)
+                }
+                mediaPlayer?.start()
+                it.animate()
+                    .scaleX(0.85f)
+                    .scaleY(0.85f)
+                    .setDuration(100)
+                    .withEndAction {
+                        it.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(100)
+                            .start()
+                    }
+                    .start()
+                capturePhotoWithCameraX(onImageCaptured)
             }
-            container.addView(previewView)
 
-            // Create capture button
-            captureButton = ImageButton(context).apply {
-                layoutParams = FrameLayout.LayoutParams(
-                    dpToPx(70f).toInt(),
-                    dpToPx(70f).toInt()
-                ).apply {
-                    gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-                    bottomMargin = dpToPx(50f).toInt()
-                }
-                setImageResource(android.R.drawable.ic_menu_camera)
-                setBackgroundResource(android.R.drawable.btn_default)
-                scaleType = ImageView.ScaleType.CENTER_INSIDE
-                setOnClickListener {
-                    capturePhotoWithCameraX(onImageCaptured)
-                }
-            }
-            container.addView(captureButton)
+            closeButton!!.setOnClickListener { closeCameraDialog() }
 
-            // Create close button
-            closeButton = ImageButton(context).apply {
-                layoutParams = FrameLayout.LayoutParams(
-                    dpToPx(50f).toInt(),
-                    dpToPx(50f).toInt()
-                ).apply {
-                    gravity = Gravity.TOP or Gravity.END
-                    topMargin = dpToPx(30f).toInt()
-                    rightMargin = dpToPx(20f).toInt()
-                }
-                setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
-                setBackgroundResource(android.R.drawable.btn_default)
-                scaleType = ImageView.ScaleType.CENTER_INSIDE
-                setOnClickListener {
-                    closeCameraDialog()
-                }
-            }
-            container.addView(closeButton)
+            flipCameraButton!!.setOnClickListener { flipCamera() }
 
-            // Create flip camera button
-            flipCameraButton = ImageButton(context).apply {
-                layoutParams = FrameLayout.LayoutParams(
-                    dpToPx(50f).toInt(),
-                    dpToPx(50f).toInt()
-                ).apply {
-                    gravity = Gravity.BOTTOM or Gravity.END
-                    bottomMargin = dpToPx(60f).toInt()
-                    rightMargin = dpToPx(20f).toInt()
-                }
-                setImageResource(android.R.drawable.ic_menu_rotate)
-                setBackgroundResource(android.R.drawable.btn_default)
-                scaleType = ImageView.ScaleType.CENTER_INSIDE
-                setOnClickListener {
-                    flipCamera()
-                }
-            }
-            container.addView(flipCameraButton)
+            zoomSeekBar.max = 100
+            zoomSeekBar.progress = 0
 
-            setContentView(container)
+            zoomSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    val zoomState = camera?.cameraInfo?.zoomState?.value
+                    zoomState?.let {
+                        val minZoom = it.minZoomRatio
+                        val maxZoom = it.maxZoomRatio
+                        val zoomRatio = minZoom + (progress / 100f) * (maxZoom - minZoom)
+                        camera?.cameraControl?.setZoomRatio(zoomRatio)
+                    }
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            })
+
             show()
         }
     }
@@ -465,7 +439,7 @@ class GeoTagImage(
                         Locale.getDefault(),
                         "https://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=%d&size=%s&%s&maptype=%s&key=%s",
                         center,
-                        15,
+                        17,
                         dimension,
                         markerUrl,
                         "satellite",
@@ -513,11 +487,9 @@ class GeoTagImage(
         currentPhotoPath?.let { filePath ->
             val file = File(filePath)
 
-            latestLocation?.let { embedGeoTagInExif(filePath, it) }
-
             var bitmap = BitmapFactory.decodeFile(filePath)
 
-            bitmap = setExifInfo(filePath, bitmap)
+            bitmap = setOrientation(filePath, bitmap)
 
             val resizedBitmap = bitmap.scale(768, 1024)
 
@@ -542,51 +514,36 @@ class GeoTagImage(
         return null
     }
 
-    private fun embedGeoTagInExif(filePath: String, location: Location) {
-        try {
-            val exif = ExifInterface(filePath)
-
-            // GPS info
-            exif.setGpsInfo(location)
-
-            // Date/time
-            exif.setAttribute(
-                ExifInterface.TAG_DATETIME,
-                SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).format(Date())
-            )
-
-            // Device info
-            exif.setAttribute(ExifInterface.TAG_MAKE, Build.MANUFACTURER)
-            exif.setAttribute(ExifInterface.TAG_MODEL, Build.MODEL)
-            exif.setAttribute(ExifInterface.TAG_SOFTWARE, "Android ${Build.VERSION.RELEASE}")
-
-            // Camera info (these may not always be available programmatically; storing placeholders)
-            exif.setAttribute(ExifInterface.TAG_FOCAL_LENGTH, "4.25 mm")
-            exif.setAttribute(ExifInterface.TAG_F_NUMBER, "f/1.8")
-            exif.setAttribute(ExifInterface.TAG_EXPOSURE_TIME, "1/50")
-            exif.setAttribute(ExifInterface.TAG_ISO_SPEED_RATINGS, "100")
-
-            // Extra: put human-readable location into UserComment
-            val userComment =
-                "Lat:${location.latitude}, Lng:${location.longitude}, " + "Accuracy:${location.accuracy}m"
-            exif.setAttribute(ExifInterface.TAG_USER_COMMENT, userComment)
-
-            exif.saveAttributes()
-            Log.d(TAG, "EXIF metadata written successfully")
-
-        } catch (e: IOException) {
-            Log.e(TAG, "Error writing EXIF data: ${e.localizedMessage}")
+    /**
+     * Set EXIF data for the captured image.
+     */
+    private fun setExif(exif: ExifInterface, location: Location) {
+        val label = if (!exifAppName.isNullOrEmpty()){
+            ", Captured via $exifAppName"
+        } else {
+            ", Captured via GeoTagImage App"
         }
+        exif.setAttribute(
+            ExifInterface.TAG_DATETIME,
+            SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).format(Date())
+        )
+        exif.setAttribute(ExifInterface.TAG_MAKE, Build.MANUFACTURER)
+        exif.setAttribute(ExifInterface.TAG_MODEL, Build.MODEL + label)
+        exif.setAttribute(ExifInterface.TAG_SOFTWARE, "Android ${Build.VERSION.RELEASE}")
+
+        exif.setGpsInfo(location)
+        exif.saveAttributes()
     }
 
     private fun saveImageToGallery(bitmap: Bitmap): Uri? {
         val resolver = context.contentResolver
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val timeStamp: String =
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val contentValues = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${timeStamp}.jpg")
-                put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
                 put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + "/Camera")
                 put(MediaStore.Images.Media.IS_PENDING, 1)
             }
@@ -600,6 +557,21 @@ class GeoTagImage(
                 contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
                 resolver.update(uri, contentValues, null, null)
             }
+            latestLocation?.let { location ->
+                uri?.let {
+                    try {
+                        context.contentResolver.openFileDescriptor(it, "rw")?.use { pfd ->
+                            val exif = ExifInterface(pfd.fileDescriptor)
+                            setExif(exif, location)
+//                            exif.setGpsInfo(location)
+//                            exif.saveAttributes()
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, ">Q Error writing EXIF via URI: ${e.localizedMessage}")
+                    }
+                }
+            }
+
             uri
         } else {
             val imagesDir =
@@ -614,13 +586,23 @@ class GeoTagImage(
 
             val values = ContentValues().apply {
                 put(MediaStore.Images.Media.DATA, file.absolutePath)
-                put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            }
+            latestLocation?.let { location ->
+                file.let {
+                    try {
+                        val exif = ExifInterface(file.absolutePath)
+                        setExif(exif, location)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "<Q Error writing EXIF via URI: ${e.localizedMessage}")
+                    }
+                }
             }
             resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         }
     }
 
-    private fun setExifInfo(path: String, bitmap: Bitmap): Bitmap {
+    private fun setOrientation(path: String, bitmap: Bitmap): Bitmap {
         return try {
             val exif = ExifInterface(path)
             val orientation = exif.getAttributeInt(
@@ -654,11 +636,11 @@ class GeoTagImage(
             elementsList.add(date)
         }
         if (showAuthorName) {
-            elementsList.add("$label : $authorName")
+            elementsList.add("$label $authorName")
         }
 
         if (showAppName) {
-            elementsList.add(GTIUtility.getApplicationName(context))
+            elementsList.add("Captured via $exifAppName")
         }
 
         val result = bitmap.copy(Bitmap.Config.ARGB_8888, true)
@@ -690,8 +672,10 @@ class GeoTagImage(
         val maxTextWidth = result.width - mapWidth - 60
 
         mapBitmap?.let {
-            val scaledMap = it.scale(mapWidth, mapHeight, false)
-            canvas.drawBitmap(scaledMap, 10f, canvas.height - 220f, design)
+            if (mapWidth > 0 && mapHeight > 0) {
+                val scaledMap = it.scale(mapWidth, mapHeight, false)
+                canvas.drawBitmap(scaledMap, 10f, canvas.height - 160f, design)
+            }
         }
         fun wrapText(line: String, paint: Paint, maxWidth: Int): List<String> {
             val words = line.split(" ")
@@ -724,9 +708,9 @@ class GeoTagImage(
         val blockHeight = allWrappedLines.size * (textHeight + lineSpacing)
         val blockWidth = maxTextWidth + padding * 2
 
-        val left = mapWidth + 10f
+        val left = mapWidth + 20f
         val top = result.height - blockHeight - 30f
-        val right = left + blockWidth
+        val right = left + blockWidth - 10f
         val bottom = top + blockHeight + padding
 
         canvas.drawRoundRect(RectF(left, top, right, bottom), 12f, 12f, bgPaint)
@@ -744,8 +728,13 @@ class GeoTagImage(
         return dp * context.resources.displayMetrics.density
     }
 
+    /**
+     * Create a temporary image file
+     * @return the file
+     */
     private fun createImageInternally(): File? {
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val timeStamp: String =
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         return try {
             val storageDir: File =
                 context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: return null
@@ -762,6 +751,10 @@ class GeoTagImage(
         }
     }
 
+    /**
+     * Get current location
+     * @param onLocationReady the callback to be called when location is ready
+     */
     private fun fetchCurrentLocation(onLocationReady: () -> Unit) {
         try {
             GTILocationUtility.fetchLocation(context) { location ->
@@ -779,52 +772,116 @@ class GeoTagImage(
         }
     }
 
+    /**
+     * Set the text size
+     * @param textSize the text size
+     */
     fun setTextSize(textSize: Float) {
         this.customTextSize = textSize
     }
 
+    /**
+     * Set the custom font to be used
+     * @param typeface the custom font to be used
+     */
     fun setCustomFont(typeface: Typeface?) {
         this.typeface = typeface
     }
 
+    /**
+     * Set the background radius
+     * @param radius the background radius
+     */
     fun setBackgroundRadius(radius: Float) {
         this.radius = radius
     }
 
+    /**
+     * Set the background color
+     * @param backgroundColor the background color
+     */
     fun setBackgroundColor(backgroundColor: Int) {
         this.backgroundColor = backgroundColor
     }
 
+    /**
+     * Set the text color
+     * @param textColor the text color
+     */
     fun setTextColor(textColor: Int) {
         this.textColor = textColor
     }
 
+    /**
+     * Set whether to show the author name
+     * @param showAuthorName true to show author name, false to hide author name
+     */
     fun showAuthorName(showAuthorName: Boolean) {
         this.showAuthorName = showAuthorName
     }
 
+    /**
+     * Set whether to show the app name
+     * @param showAppName true to show app name, false to hide app name
+     */
     fun showAppName(showAppName: Boolean) {
         this.showAppName = showAppName
     }
 
+    /**
+     * Set whether to show the latitude and longitude
+     * @param showLatLng true to show latitude and longitude, false to hide latitude and longitude
+     */
     fun showLatLng(showLatLng: Boolean) {
         this.showLatLng = showLatLng
     }
 
+    /**
+     * Set whether to show the date
+     * @param showDate true to show date, false to hide date
+     */
     fun showDate(showDate: Boolean) {
         this.showDate = showDate
     }
 
+    /**
+     * Set whether to show Google Maps in the image
+     * @param showGoogleMap true to show Google Maps, false to hide Google Maps
+     */
     fun showGoogleMap(showGoogleMap: Boolean) {
         this.showGoogleMap = showGoogleMap
     }
 
+    /**
+     * Set the author name to be displayed in the image
+     * @param authorName the author name to be displayed
+     */
     fun setAuthorName(authorName: String) {
         this.authorName = authorName
     }
 
+    /**
+     * Set the label to be displayed in the image
+     * @param label the label to be displayed
+     */
     fun setLabel(label: String) {
         this.label = label
+    }
+
+    /**
+     * Set the app name to be displayed in the image
+     * @param appName the app name to be displayed
+     */
+    fun setAppName(appName: String) {
+        this.exifAppName = appName
+    }
+
+    /**
+     * Enable or disable CameraX usage
+     * @param useCameraX true to use CameraX, false to use system camera
+     */
+    fun enableCameraX(useCameraX: Boolean) {
+        this.useCameraX = useCameraX
     }
 
     @Deprecated("This function is deprecated, standard picture size is 768x1024")

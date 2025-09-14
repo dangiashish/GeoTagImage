@@ -155,9 +155,9 @@
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:id="@+id/toggle_camera"
-                    app:checkedButton="@id/toggle_system_camera"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:checkedButton="@id/toggle_system_camera"
                     app:selectionRequired="true"
                     app:singleSelection="true">
 
@@ -325,30 +325,45 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:padding="8dp"
                     app:cardUseCompatPadding="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
+                        android:orientation="vertical">
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="3dp"
-                            android:text="Show app name : "
-                            android:textStyle="bold" />
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/sApp"
-                            android:layout_width="0dp"
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="3dp"
+                                android:text="Show app name : "
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/sApp"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="false" />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etAppName"
+                            style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:checked="false" />
+                            android:layout_margin="2dp"
+                            android:hint="Enter app name (custom)"
+                            android:visibility="gone" />
+
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
