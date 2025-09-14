@@ -99,7 +99,7 @@ class GeoTagImage(
     private var textTopMargin = 0f
     private var typeface = Typeface.DEFAULT
     private var radius = dpToPx(6f)
-    private var backgroundColor = "#70000000".toColorInt()
+    private var backgroundColor = "#66000000".toColorInt()
     private var textColor = Color.WHITE
     private var backgroundHeight = 150f
     private var authorName: String = ""

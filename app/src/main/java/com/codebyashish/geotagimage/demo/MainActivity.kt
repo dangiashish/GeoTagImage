@@ -101,8 +101,6 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
             geoTagImage.launchCamera { uri ->
                 if (uri != null) {
                     gtiUri = uri
-                    Log.d(TAG, "onCreate: $gtiUri")
-                    Log.d(TAG, "onCreate: ${gtiUri?.path!!}")
                     previewCapturedImage()
                 } else {
                     Toast.makeText(this, "Failed to capture photo", Toast.LENGTH_SHORT).show()

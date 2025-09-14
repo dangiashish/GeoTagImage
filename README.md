@@ -19,6 +19,23 @@
 
 </div>
 
+```json lines
+Key Features :
+
+- Request camera & location permission callback by itself.
+- CameraX api support.
+- Show location and address.
+- Show Lat Longs.
+- Show author name.
+- Show app name.
+- Show Google map snapshot.
+- Set Image Quality.
+- Set Image Extension Type.
+- Set Custom Typeface.
+- Control the features of GTI.
+- Set text size.
+```
+
 ### Gradle
 
 Add repository in your `settings.gradle`
