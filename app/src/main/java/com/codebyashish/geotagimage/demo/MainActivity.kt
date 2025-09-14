@@ -24,16 +24,21 @@
 
 package com.codebyashish.geotagimage.demo
 
+import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -43,7 +48,7 @@ import androidx.fragment.app.FragmentActivity
 import com.codebyashish.geotagimage.ImageQuality
 import com.codebyashish.gti.PermissionCallback
 import com.codebyashish.geotagimage.demo.databinding.ActivityMainBinding
-import com.codebyashish.gti.GeoTagImage
+import com.dangiashish.GeoTagImage
 import java.io.File
 import java.text.DecimalFormat
 
@@ -66,17 +71,10 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
             startActivity(intent)
         }
 
-        cameraLauncher =
-            registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-                if (success) {
-                    gtiUri = geoTagImage.processCapturedImage()
-                    Log.d(TAG, "onCreate: $gtiUri")
-                    previewCapturedImage()
-
-                } else {
-                    Toast.makeText(mContext, "Image capture failed", Toast.LENGTH_SHORT).show()
-                }
-            }
+        onBackPressedDispatcher.addCallback {
+            clearAppData(this@MainActivity)
+            finish()
+        }
 
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -93,6 +91,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         // initialize the GeoTagImage class object with context and callback
         geoTagImage = GeoTagImage(this, permissionLauncher)
         geoTagImage.requestCameraAndLocationPermissions()
+        geoTagImage.enableCameraX(false)
 
         // initialize the context
         mContext = this@MainActivity
@@ -100,8 +99,15 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
 
         // setOnClickListener on camera button.
         binding.ivCamera.setOnClickListener {
-            geoTagImage.preparePhotoUriAndLocation { uri ->
-                uri?.let { cameraLauncher.launch(it) }
+            geoTagImage.launchCamera { uri ->
+                if (uri != null) {
+                    gtiUri = uri
+                    Log.d(TAG, "onCreate: $gtiUri")
+                    Log.d(TAG, "onCreate: ${gtiUri?.path!!}")
+                    previewCapturedImage()
+                } else {
+                    Toast.makeText(this, "Failed to capture photo", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -169,9 +175,19 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
                     R.id.button_ext_jpeg -> {
                         geoTagImage.setImageExtension(GeoTagImage.Companion.JPEG)
                     }
+                }
+            }
+        }
 
-                    R.id.button_ext_jpg -> {
-                        geoTagImage.setImageExtension(GeoTagImage.Companion.JPG)
+        binding.toggleCamera.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.toggle_camera_x -> {
+                        geoTagImage.enableCameraX(true)
+                    }
+
+                    R.id.toggle_system_camera -> {
+                        geoTagImage.enableCameraX(false)
                     }
                 }
             }
@@ -201,14 +217,28 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
 
     }
 
-    // preview of the original image
     private fun previewCapturedImage() {
-        try {
-            val bitmap = BitmapFactory.decodeFile(gtiUri?.path)
-            binding.ivImage.setImageBitmap(bitmap)
-            if (binding.ivImage.drawable != null) {
-                binding.ivClose.visibility = View.VISIBLE
-                binding.progressBar.visibility = View.GONE
+        gtiUri?.let { uri ->
+            binding.ivImage.let { imageView ->
+                try {
+                    val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
+                    } else {
+                        @Suppress("DEPRECATION")
+                        MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                    }
+                    imageView.setImageBitmap(bitmap)
+                    imageView.visibility = View.VISIBLE
+                    binding.ivClose.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.GONE
+
+                    binding.tvGTIPath.text = gtiUri?.path
+                    binding.tvImgSize.text = getFileSize(gtiUri?.path!!)
+
+
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error loading image: ${e.message}")
+                }
             }
             binding.ivClose.setOnClickListener { v: View? ->
                 binding.ivImage.setImageBitmap(null)
@@ -218,13 +248,6 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
                 binding.tvGTIPath.text = ""
                 binding.tvImgSize.text = ""
             }
-            binding.tvGTIPath.text = gtiUri?.path
-            binding.tvImgSize.text = getFileSize(gtiUri?.path!!)
-
-            viewInGallery(gtiUri?.path!!)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e("GeoTagImage", "previewCapturedImage: ${e.message}")
         }
     }
 
@@ -281,6 +304,21 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
             }
         } else {
             return ""
+        }
+    }
+
+    fun clearAppData(context: Context) {
+        try {
+            val picturesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            var success = true
+            picturesDir?.listFiles()?.forEach { file ->
+                if (file.isFile) {
+                    success = success && file.delete()
+                }
+            }
+            Toast.makeText(context, "Deleted $success", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

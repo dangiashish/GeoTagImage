@@ -26,8 +26,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -46,13 +46,13 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="G\nT\nI"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="monospace"
             android:gravity="center"
+            android:text="G\nT\nI"
             android:textSize="44dp"
             android:textStyle="bold"
-            android:fontFamily="monospace"
-            android:layout_weight="1"
 
             />
 
@@ -105,13 +105,13 @@
 
                 </RelativeLayout>
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/ivClose"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:backgroundTint="@color/white"
+                    android:background="@color/white"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_close"
                     android:visibility="gone"
@@ -124,27 +124,60 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="G\nT\nI"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="monospace"
             android:gravity="center"
+            android:text="G\nT\nI"
             android:textSize="44dp"
             android:textStyle="bold"
-            android:fontFamily="monospace"
-            android:layout_weight="1"
 
             />
 
     </LinearLayout>
 
     <ScrollView
-        android:layout_below="@id/layoutImage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layoutImage">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggle_camera"
+                    app:checkedButton="@id/toggle_system_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/toggle_camera_x"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CameraX Api"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/toggle_system_camera"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="System Camera"
+                        android:textSize="12sp" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -162,10 +195,10 @@
                     app:cardUseCompatPadding="true">
 
                     <LinearLayout
-                        android:padding="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="5dp">
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
@@ -189,11 +222,11 @@
                     app:cardUseCompatPadding="true">
 
                     <LinearLayout
-                        android:padding="5dp"
-                        android:layout_gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
@@ -203,11 +236,11 @@
                             android:textStyle="bold" />
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:textAlignment="textEnd"
                             android:id="@+id/tvImgSize"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="3dp" />
+                            android:layout_margin="3dp"
+                            android:textAlignment="textEnd" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -254,37 +287,36 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="3dp"
-                            android:text="Show author name : "
-                            android:textStyle="bold" />
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/sAuthor"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:checked="false" />
-                    </LinearLayout>
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="3dp"
+                                android:text="Show author name : "
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/sAuthor"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="false" />
+                        </LinearLayout>
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etAuthorName"
-                            android:visibility="gone"
+                            style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Enter author name"
-                            style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
                             android:layout_margin="2dp"
-                            />
+                            android:hint="Enter author name"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
@@ -428,8 +460,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="5dp">
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
@@ -462,14 +494,6 @@
                                 android:layout_height="wrap_content"
                                 android:text="JPEG"
                                 android:textSize="12sp" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/button_ext_jpg"
-                                style="@style/Widget.Material3.Button.OutlinedButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="JPG"
-                                android:textSize="12sp" />
                         </com.google.android.material.button.MaterialButtonToggleGroup>
 
                     </LinearLayout>
@@ -487,15 +511,14 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="5dp">
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@Deprecated"
-                            android:textColor="#FF9800"
-                            />
+                            android:textColor="#FF9800" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
