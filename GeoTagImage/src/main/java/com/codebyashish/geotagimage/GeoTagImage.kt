@@ -56,7 +56,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.Executors
 
-@Deprecated("geotagimage/GeoTagImage is deprecated, please use gti/GeoTagImage")
+@Deprecated("com.codebyashish.geotagimage.GeoTagImage is deprecated, please use com.dangiashish.GeoTagImage")
 class GeoTagImage(private val context: Context, callback: PermissionCallback) {
     private var place = ""
     private var road = ""

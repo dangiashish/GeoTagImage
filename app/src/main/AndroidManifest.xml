@@ -20,6 +20,10 @@
         tools:replace="android:allowBackup"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".CustomFragmentActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

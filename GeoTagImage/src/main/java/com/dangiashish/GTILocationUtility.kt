@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.codebyashish.gti
+package com.dangiashish
 
 import android.Manifest
 import android.content.Context

@@ -21,7 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.codebyashish.gti
+
+package com.dangiashish
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
@@ -38,9 +39,10 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
 object GTIUtility {
     private val TAG = "GTIUtility"
-    
+
     /** Check for Map SDK Integration */
     @JvmStatic
     fun isGoogleMapsLinked(context: Context): Boolean {
@@ -107,7 +109,8 @@ object GTIUtility {
                 }
             }
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
-            file = File(mediaStorageDir.path + File.separator + "IMG_" + timeStamp + IMAGE_EXTENSION)
+            file =
+                File(mediaStorageDir.path + File.separator + "IMG_" + timeStamp + IMAGE_EXTENSION)
         } catch (e: Exception) {
             e.printStackTrace()
         }

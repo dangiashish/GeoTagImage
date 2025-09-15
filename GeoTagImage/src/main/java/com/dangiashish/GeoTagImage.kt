@@ -52,8 +52,6 @@ import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
@@ -67,11 +65,9 @@ import androidx.core.content.FileProvider
 import androidx.core.graphics.scale
 import androidx.core.graphics.toColorInt
 import androidx.exifinterface.media.ExifInterface
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
-import com.codebyashish.geotagimage.ImageQuality
 import com.codebyashish.geotagimage.R
-import com.codebyashish.gti.GTILocationUtility
-import com.codebyashish.gti.GTIUtility
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -82,9 +78,15 @@ import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+/**
+ * @param context FragmentActivity or AppCompatActivity
+ * @param permissionLauncher ActivityResultLauncher for camera and location permissions
+ * @param cameraLauncher ActivityResultLauncher for camera capture (mandatory, if app/developer required using system camera)
+ */
 class GeoTagImage(
-    private val context: AppCompatActivity,
-    private val permissionLauncher: ActivityResultLauncher<Array<String>>
+    private val context: FragmentActivity,
+    private val permissionLauncher: ActivityResultLauncher<Array<String>>,
+    private val cameraLauncher : ActivityResultLauncher<Uri>? = null
 ) {
     private var address: String = ""
     private var latlng = ""
@@ -96,7 +98,6 @@ class GeoTagImage(
     private var latitude = 0.0
     private var longitude = 0.0
     private var customTextSize = 25f
-    private var textTopMargin = 0f
     private var typeface = Typeface.DEFAULT
     private var radius = dpToPx(6f)
     private var backgroundColor = "#66000000".toColorInt()
@@ -113,13 +114,10 @@ class GeoTagImage(
     private val elementsList = ArrayList<String>()
     private var mapHeight = backgroundHeight.toInt()
     private var mapWidth = 140
-    private var bitmapWidth = 0
-    private var bitmapHeight = 0
     private var apiKey: String? = null
     private var center: String? = null
     private var dimension: String? = null
     private var markerUrl: String? = null
-    private var imageQuality: String? = null
     private val executorService = Executors.newSingleThreadExecutor()
     private val TAG = "GTILogs"
     private var isActive = true
@@ -145,40 +143,23 @@ class GeoTagImage(
      * If CameraX is disabled, uses system camera (original behavior)
      * @param onImageCaptured callback with captured image URI
      */
-    fun launchCamera(onImageCaptured: (Uri?) -> Unit) {
+    fun launchCamera(onImageCaptured: (Uri?) -> Unit, onFailure : (String?) -> Unit) {
         if (useCameraX) {
             val lifecycleOwner = getLifecycleOwner()
             if (lifecycleOwner != null) {
                 showCameraXInterface(onImageCaptured)
             } else {
                 Log.e(TAG, "Context must be FragmentActivity or AppCompatActivity for CameraX")
-                Toast.makeText(
-                    context,
-                    "CameraX requires FragmentActivity context",
-                    Toast.LENGTH_SHORT
-                ).show()
                 onImageCaptured(null)
+                onFailure.invoke("Context must be FragmentActivity or AppCompatActivity for CameraX")
             }
         } else {
+            if (cameraLauncher == null){
+                onFailure.invoke("CameraLauncher is not initialized")
+                return
+            }
             pendingCallback = onImageCaptured
             preparePhotoUriAndLocation(onImageCaptured)
-        }
-    }
-
-    val cameraLauncher = context.registerForActivityResult(
-        ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success) {
-            val uri = processCapturedImage()
-            (context as? Activity)?.runOnUiThread {
-                pendingCallback?.invoke(uri)   // use stored callback
-                pendingCallback = null         // clear after use
-            }
-            Log.d(TAG, "System Camera - Image captured: $uri")
-        } else {
-            Toast.makeText(context, "Image capture failed", Toast.LENGTH_SHORT).show()
-            pendingCallback?.invoke(null)
-            pendingCallback = null
         }
     }
 
@@ -208,10 +189,11 @@ class GeoTagImage(
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setCancelable(true)
 
-            val view = LayoutInflater.from(context).inflate(R.layout.camera_layout, null)
+            val parent = FrameLayout(context)
+            val view = LayoutInflater.from(context).inflate(R.layout.camera_layout, parent, false)
             setContentView(view)
 
-            previewView = view.findViewById(R.id.previewView)
+        previewView = view.findViewById(R.id.previewView)
             captureButton = view.findViewById(R.id.btnCapture)
             closeButton = view.findViewById(R.id.btnClose)
             flipCameraButton = view.findViewById(R.id.btnFlip)
@@ -403,7 +385,7 @@ class GeoTagImage(
                 fileUri = createImageInternally()?.let {
                     FileProvider.getUriForFile(context, "${context.packageName}.provider", it)
                 }
-                cameraLauncher.launch(fileUri)
+                cameraLauncher?.launch(fileUri!!)
                 onReady(fileUri)
             }
         } else {
@@ -540,10 +522,17 @@ class GeoTagImage(
         val timeStamp: String =
             SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
 
+        var MIME_TYPE = "image/jpeg"
+        when (IMAGE_EXTENSION) {
+            PNG -> MIME_TYPE = "image/png"
+            JPEG -> MIME_TYPE = "image/jpeg"
+        }
+
+
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val contentValues = ContentValues().apply {
-                put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${timeStamp}.jpg")
-                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${timeStamp}${IMAGE_EXTENSION}")
+                put(MediaStore.Images.Media.MIME_TYPE, MIME_TYPE)
                 put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + "/Camera")
                 put(MediaStore.Images.Media.IS_PENDING, 1)
             }
@@ -563,21 +552,18 @@ class GeoTagImage(
                         context.contentResolver.openFileDescriptor(it, "rw")?.use { pfd ->
                             val exif = ExifInterface(pfd.fileDescriptor)
                             setExif(exif, location)
-//                            exif.setGpsInfo(location)
-//                            exif.saveAttributes()
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, ">Q Error writing EXIF via URI: ${e.localizedMessage}")
                     }
                 }
             }
-
             uri
         } else {
             val imagesDir =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
                     .toString() + "/Camera"
-            val file = File(imagesDir, "IMG_${timeStamp}.jpg")
+            val file = File(imagesDir, "IMG_${timeStamp}${IMAGE_EXTENSION}")
 
             file.parentFile?.mkdirs()
             FileOutputStream(file).use { out ->
@@ -586,7 +572,7 @@ class GeoTagImage(
 
             val values = ContentValues().apply {
                 put(MediaStore.Images.Media.DATA, file.absolutePath)
-                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                put(MediaStore.Images.Media.MIME_TYPE, MIME_TYPE)
             }
             latestLocation?.let { location ->
                 file.let {
@@ -884,42 +870,10 @@ class GeoTagImage(
         this.useCameraX = useCameraX
     }
 
-    @Deprecated("This function is deprecated, standard picture size is 768x1024")
-    fun setImageQuality(imageQuality: String?) {
-        this.imageQuality = imageQuality
-        when (imageQuality) {
-            ImageQuality.LOW -> {
-                customTextSize = 20f
-                bitmapWidth = (960 / 1.5).toInt()
-                bitmapHeight = (1280 / 1.5).toInt()
-                textTopMargin = (50f / 1.5).toFloat()
-                backgroundHeight = (150f / 1.5).toFloat()
-                mapWidth = 120
-                mapHeight = (backgroundHeight.toInt() / 1.5).toInt()
-            }
-
-            ImageQuality.AVERAGE -> {
-                bitmapWidth = 960
-                bitmapHeight = 1280
-                textTopMargin = 50f
-                backgroundHeight = 150f
-                mapWidth = 120
-                mapHeight = backgroundHeight.toInt()
-            }
-
-            ImageQuality.HIGH -> {
-                bitmapWidth = (960 * 3.6).toInt()
-                bitmapHeight = (1280 * 3.6).toInt()
-                backgroundHeight = (backgroundHeight * 2)
-                customTextSize = (customTextSize * 3.6).toFloat()
-                textTopMargin = (50 * 3.6).toFloat()
-                radius = (radius * 3.6).toFloat()
-                mapWidth = (mapWidth * 2)
-                mapHeight = (backgroundHeight.toInt() * 1.5).toInt()
-            }
-        }
-    }
-
+    /**
+     * Set the image extension
+     * @param imgExtension the image extension
+     */
     fun setImageExtension(imgExtension: String) {
         when (imgExtension) {
             PNG -> IMAGE_EXTENSION = ".png"
@@ -927,6 +881,10 @@ class GeoTagImage(
         }
     }
 
+    /**
+     * Enable or disable GeoTagService
+     * @param isActive true to enable GeoTagService, false to disable GeoTagService
+     */
     fun enableGTIService(isActive: Boolean) {
         this.isActive = isActive
     }
