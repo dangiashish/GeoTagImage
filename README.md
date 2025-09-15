@@ -19,7 +19,7 @@
 
 </div>
 
-```json lines
+```
 Key Features :
 
 - Request camera & location permission callback by itself.
@@ -93,7 +93,7 @@ Add dependency in your `build.gradle` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.1.8'
+    implementation 'com.github.dangiashish:GeoTagImage:1.1.6'
 }
 ```
 #### OR
@@ -102,7 +102,7 @@ Add dependency in your `build.gradle.kts` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation("com.github.dangiashish:GeoTagImage:1.1.8")
+    implementation("com.github.dangiashish:GeoTagImage:1.1.6")
 }
 ```
 
@@ -131,10 +131,8 @@ dependencies{
  Go to here --> [activity_main.xml](https://github.com/dangiashish/GeoTagImage/blob/master/app/src/main/res/layout/activity_main.xml)
 
 #### Kotlin : [MainActivity.kt](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/java/com/codebyashish/geotagimage/MainActivity.kt)
-```kotlin
-import com.dangiashish.GeoTagImage
-import com.dangiashish.PermissionCallback
-
+```groovy
+import com.codebyashish.gti.GeoTagImage
 
 class MainActivity : AppCompatActivity(), PermissionCallback{
     // create global variables
@@ -152,52 +150,44 @@ class MainActivity : AppCompatActivity(), PermissionCallback{
 ```
 ### `onCreate()`
 ```kotlin
-permissionLauncher = registerForActivityResult(
-    ActivityResultContracts.RequestMultiplePermissions()
-) { permissions ->
-    val allGranted = permissions.all { it.value }
-
-    if (allGranted) {
-        onPermissionGranted()
-    } else {
-        onPermissionDenied()
-    }
-}
-
-// cameraLauncher callback is required to capture the image from system camera.
 cameraLauncher =
-    registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) {
-            gtiUri = geoTagImage.processCapturedImage() // if captured via system camera
-            previewCapturedImage()
-        } else {
-            Toast.makeText(mContext, "Image capture failed", Toast.LENGTH_SHORT).show()
+            registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+                if (success) {
+                    gtiUri = geoTagImage.processCapturedImage()
+                    previewCapturedImage()
+
+                } else {
+                    Toast.makeText(mContext, "Image capture failed", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val allGranted = permissions.all { it.value }
+
+            if (allGranted) {
+                // All permissions granted
+                onPermissionGranted()
+            } else {
+                // One or more permissions denied
+                onPermissionDenied()
+            }
         }
-    }
 
 // initialize the GeoTagImage class object with context and callback
 // use try/catch block to handle exceptions.
-geoTagImage = GeoTagImage(this, permissionLauncher, cameraLauncher) // this || context || requireContext() || requireActivity()
-geoTagImage.requestCameraAndLocationPermissions()
+geoTagImage = GeoTagImage(this, permissionLauncher) // this || context || requireContext() || requireActivity()
 
+geoTagImage.requestCameraAndLocationPermissions()
 ```
 #### openCamera()
-```kotlin
+```groovy
      // setOnClickListener on camera button.
 binding.ivCamera.setOnClickListener {
-    geoTagImage.launchCamera(
-            onImageCaptured = { uri ->  // if captured via CameraX api
-                if (uri != null) {
-                    gtiUri = uri
-                    previewCapturedImage()
-                } else {
-                    Toast.makeText(mContext, "Failed to capture photo", Toast.LENGTH_SHORT).show()
-                }
-            },
-            onFailure = {
-                Toast.makeText(mContext, it, Toast.LENGTH_SHORT).show()
-            }
-    )
+    geoTagImage.preparePhotoUriAndLocation { uri ->
+        uri?.let { cameraLauncher.launch(it) }
+    }
 }
 ```
 #### customize geo tags
@@ -220,25 +210,20 @@ geoTagImage.setLabel("Clicked By") // Upload By || Author || Captured By
 ```
 
 #### preview the original image
-```kotlin
+```groovy
         // preview of the original image
 private fun previewCapturedImage() {
-    gtiUri?.let { uri ->
-        binding.ivImage.let { imageView ->
-            try {
-                val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
-                } else {
-                    @Suppress("DEPRECATION")
-                    MediaStore.Images.Media.getBitmap(contentResolver, uri)
-                }
-                imageView.setImageBitmap(bitmap)
-                imageView.visibility = View.VISIBLE
+    try {
+        val path = gtiUri?.path!!
+        val bitmap = optimizeBitmap(path)
+        binding.ivImage.setImageBitmap(bitmap)
+        
+      
+        val imgSize = getFileSize(path)
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error loading image: ${e.message}")
-            }
-        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Log.e("GeoTagImage", "previewCapturedImage: ${e.message}")
     }
 }
 ```
