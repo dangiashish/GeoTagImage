@@ -15,7 +15,7 @@
 
 <br/>
 
-<a href="https://github.com/dangiashish/GeoTagImage/actions/runs/11164378309/artifacts/2011456675"><img src="https://www.nthlink.com/assets/images/apk-download.png" width="300px" height="80"/></a>
+<a href="https://github.com/dangiashish/GeoTagImage/actions/runs/18504814655/artifacts/4268116577"><img src="https://www.nthlink.com/assets/images/apk-download.png" width="300px" height="80"/></a>
 
 </div>
 
@@ -34,6 +34,7 @@ Key Features :
 - Set Custom Typeface.
 - Control the features of GTI.
 - Set text size.
+- Image File GeoTagging
 ```
 
 ### Gradle
@@ -93,7 +94,7 @@ Add dependency in your `build.gradle` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.1.8'
+    implementation 'com.github.dangiashish:GeoTagImage:1.2.1'
 }
 ```
 #### OR
@@ -102,7 +103,7 @@ Add dependency in your `build.gradle.kts` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation("com.github.dangiashish:GeoTagImage:1.1.8")
+    implementation("com.github.dangiashish:GeoTagImage:1.2.1")
 }
 ```
 
