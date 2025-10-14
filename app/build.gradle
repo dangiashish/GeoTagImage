@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace 'com.codebyashish.geotagimage.demo'
-    compileSdk 36
+    compileSdk = 36
 
     defaultConfig {
         applicationId "com.codebyashish.geotagimage.demo"
         minSdk 23
         targetSdk 36
-        versionCode 117
-        versionName "1.1.7"
+        versionCode 119
+        versionName "1.1.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -24,11 +24,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     buildFeatures {
         viewBinding = true
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
     }
 }
 

@@ -89,10 +89,10 @@ class GeoTagImage(
     private val cameraLauncher : ActivityResultLauncher<Uri>? = null
 ) {
     private var address: String = ""
-    private var latlng = ""
+    private var latLong = ""
     private var date = ""
     private var mapBitmap: Bitmap? = null
-    private var IMAGE_EXTENSION = ".jpg"
+    private var imageExtension = ".jpg"
     private var fileUri: Uri? = null
     private var geocoder: Geocoder? = null
     private var latitude = 0.0
@@ -477,9 +477,9 @@ class GeoTagImage(
 
             if (!geoTagged) {
                 saveImageToGallery(resizedBitmap)
-                file.outputStream().use { out ->
-                    resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out)
-                }
+                val outputStream = file.outputStream()
+                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+                outputStream.close()
                 return Uri.fromFile(file)
             }
 
@@ -487,13 +487,39 @@ class GeoTagImage(
 
             saveImageToGallery(geoTaggedBitmap)
 
-            file.outputStream().use { out ->
-                geoTaggedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out)
-            }
+            val outputStream = file.outputStream()
+            geoTaggedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+            outputStream.close()
+
+            latestLocation?.let { embedGeoTagInExif(filePath, it) }
 
             return Uri.fromFile(file)
         }
         return null
+    }
+
+    private fun embedGeoTagInExif(filePath: String, location: Location) {
+        try {
+            val exif = ExifInterface(filePath)
+
+            val label = if (!exifAppName.isNullOrEmpty()){
+                ", Captured via $exifAppName"
+            } else {
+                ", Captured via GeoTagImage App"
+            }
+            exif.setAttribute(
+                ExifInterface.TAG_DATETIME,
+                SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).format(Date())
+            )
+            exif.setAttribute(ExifInterface.TAG_MAKE, Build.MANUFACTURER)
+            exif.setAttribute(ExifInterface.TAG_MODEL, Build.MODEL + label)
+            exif.setAttribute(ExifInterface.TAG_SOFTWARE, "Android ${Build.VERSION.RELEASE}")
+
+            exif.setGpsInfo(location)
+            exif.saveAttributes()
+        } catch (e: IOException) {
+            Log.e(TAG, "Error writing EXIF data: ${e.localizedMessage}")
+        }
     }
 
     /**
@@ -523,7 +549,7 @@ class GeoTagImage(
             SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
 
         var MIME_TYPE = "image/jpeg"
-        when (IMAGE_EXTENSION) {
+        when (imageExtension) {
             PNG -> MIME_TYPE = "image/png"
             JPEG -> MIME_TYPE = "image/jpeg"
         }
@@ -531,7 +557,7 @@ class GeoTagImage(
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val contentValues = ContentValues().apply {
-                put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${timeStamp}${IMAGE_EXTENSION}")
+                put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${timeStamp}${imageExtension}")
                 put(MediaStore.Images.Media.MIME_TYPE, MIME_TYPE)
                 put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + "/Camera")
                 put(MediaStore.Images.Media.IS_PENDING, 1)
@@ -563,7 +589,7 @@ class GeoTagImage(
             val imagesDir =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
                     .toString() + "/Camera"
-            val file = File(imagesDir, "IMG_${timeStamp}${IMAGE_EXTENSION}")
+            val file = File(imagesDir, "IMG_${timeStamp}${imageExtension}")
 
             file.parentFile?.mkdirs()
             FileOutputStream(file).use { out ->
@@ -614,8 +640,8 @@ class GeoTagImage(
         elementsList.clear()
         elementsList.add(address)
         if (showLatLng) {
-            latlng = "Lat Lng : $latitude, $longitude"
-            elementsList.add(latlng)
+            latLong = "Lat Lng : $latitude, $longitude"
+            elementsList.add(latLong)
         }
         if (showDate) {
             date = SimpleDateFormat("dd/MM/yyyy hh:mm a z", Locale.getDefault()).format(Date())
@@ -724,7 +750,7 @@ class GeoTagImage(
         return try {
             val storageDir: File =
                 context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: return null
-            File.createTempFile("IMG_${timeStamp}_", IMAGE_EXTENSION, storageDir).apply {
+            File.createTempFile("IMG_${timeStamp}_", imageExtension, storageDir).apply {
                 currentPhotoPath = absolutePath
             }
         } catch (ex: IOException) {
@@ -876,8 +902,8 @@ class GeoTagImage(
      */
     fun setImageExtension(imgExtension: String) {
         when (imgExtension) {
-            PNG -> IMAGE_EXTENSION = ".png"
-            JPEG -> IMAGE_EXTENSION = ".jpg"
+            PNG -> imageExtension = ".png"
+            JPEG -> imageExtension = ".jpg"
         }
     }
 
@@ -936,7 +962,7 @@ class GeoTagImage(
             }
         }
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
-        val mImageName = "IMG_$timeStamp$IMAGE_EXTENSION"
+        val mImageName = "IMG_$timeStamp$imageExtension"
         val ImagePath = mediaStorageDir.path + File.separator + mImageName
         val media = File(ImagePath)
         MediaScannerConnection.scanFile(context, arrayOf(media.absolutePath), null) { path, uri -> }
@@ -956,7 +982,7 @@ class GeoTagImage(
             }
         }
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
-        val mImageName = "IMG_$timeStamp$IMAGE_EXTENSION"
+        val mImageName = "IMG_$timeStamp$imageExtension"
         val imagePath = mediaStorageDir.path + File.separator + mImageName
         val media = File(imagePath)
         return Uri.fromFile(media)

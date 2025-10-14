@@ -36,6 +36,7 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
 import java.io.File
+import java.security.cert.Extension
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -94,7 +95,7 @@ object GTIUtility {
     @Deprecated("")
     /** Save original image in camera directory  */
     @JvmStatic
-    fun generateOriginalFile(mContext: FragmentActivity, IMAGE_EXTENSION: String): File? {
+    fun generateOriginalFile(mContext: FragmentActivity, imageExtension: String): File? {
         var file: File? = null
         Log.i(TAG, "generateOriginalFile: Step 1")
         try {
@@ -110,7 +111,7 @@ object GTIUtility {
             }
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
             file =
-                File(mediaStorageDir.path + File.separator + "IMG_" + timeStamp + IMAGE_EXTENSION)
+                File(mediaStorageDir.path + File.separator + "IMG_" + timeStamp + imageExtension)
         } catch (e: Exception) {
             e.printStackTrace()
         }
