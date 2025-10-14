@@ -1,11 +1,12 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
 }
 
 android {
     namespace 'com.codebyashish.geotagimage'
-    compileSdk  = 36
+    compileSdk = 36
 
     defaultConfig {
         minSdkVersion 23
@@ -27,16 +28,14 @@ android {
         }
     }
 
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+        jvmTarget = "17"
     }
-
 
     libraryVariants.configureEach { variant ->
         variant.outputs.all { output ->
@@ -47,6 +46,26 @@ android {
 }
 
 version = "1.1.9"
+group = "com.github.dangiashish"
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.dangiashish'
+                artifactId = 'GeoTagImage'
+                version = project.version
+            }
+        }
+    }
+
+    tasks.matching { it.name == "generateMetadataFileForGeoTagImagePublication" }.configureEach {
+        dependsOn tasks.named("bundleReleaseAar")
+    }
+}
+
+
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1'
@@ -66,7 +85,7 @@ dependencies {
     implementation "androidx.camera:camera-video:${camerax_version}"
     implementation "androidx.camera:camera-view:${camerax_version}"
     implementation "androidx.camera:camera-extensions:${camerax_version}"
+
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.4'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4'
 }
-
