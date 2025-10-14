@@ -15,4 +15,4 @@
 local.properties
 
 # Ignore local library module
-/GeoTagImage/src/main/java/com/dangiashish/GeoTagImage.kt
+/GeoTagImage/src/main/java/com/dangiashish/
