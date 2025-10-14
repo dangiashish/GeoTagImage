@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'maven-publish'
 }
 
 android {
@@ -35,29 +34,6 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
-    }
-
-    libraryVariants.configureEach { variant ->
-        variant.outputs.all { output ->
-            def libVersion = project.version ?: ""
-            output.outputFileName = "${project.name}-${libVersion}.aar"
-        }
-    }
-}
-
-version = "1.2.0"
-group = "com.github.dangiashish"
-
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-                groupId = 'com.github.dangiashish'
-                artifactId = 'GeoTagImage'
-                version = project.version
-            }
-        }
     }
 }
 
