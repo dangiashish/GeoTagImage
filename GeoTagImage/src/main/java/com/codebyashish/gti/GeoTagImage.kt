@@ -49,13 +49,13 @@ import androidx.core.content.FileProvider
 import androidx.core.graphics.scale
 import androidx.core.graphics.toColorInt
 import androidx.exifinterface.media.ExifInterface
+import com.codebyashish.geotagimage.GTIUtility.getApplicationName
+import com.codebyashish.geotagimage.GTIUtility.getMapKey
+import com.codebyashish.geotagimage.GTIUtility.isGoogleMapsLinked
 import com.codebyashish.geotagimage.ImageQuality.AVERAGE
 import com.codebyashish.geotagimage.ImageQuality.HIGH
 import com.codebyashish.geotagimage.ImageQuality.LOW
-import com.dangiashish.GTILocationUtility
-import com.dangiashish.GTIUtility.getApplicationName
-import com.dangiashish.GTIUtility.getMapKey
-import com.dangiashish.GTIUtility.isGoogleMapsLinked
+import com.codebyashish.geotagimage.GTILocationUtility
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
