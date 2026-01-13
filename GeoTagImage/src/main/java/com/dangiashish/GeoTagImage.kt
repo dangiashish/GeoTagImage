@@ -47,9 +47,12 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.Window
 import android.widget.FrameLayout
 import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.widget.AppCompatImageView
@@ -86,7 +89,7 @@ import java.util.concurrent.Executors
 class GeoTagImage(
     private val context: FragmentActivity,
     private val permissionLauncher: ActivityResultLauncher<Array<String>>,
-    private val cameraLauncher : ActivityResultLauncher<Uri>? = null
+    private val cameraLauncher: ActivityResultLauncher<Uri>? = null
 ) {
     private var address: String = ""
     private var latLong = ""
@@ -136,6 +139,9 @@ class GeoTagImage(
     private var previewView: PreviewView? = null
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var pendingCallback: ((Uri?) -> Unit)? = null
+    private var scaleGestureDetector: ScaleGestureDetector? = null
+    private var currentZoomRatio = 1f
+
 
     /**
      * Launch camera interface
@@ -143,7 +149,7 @@ class GeoTagImage(
      * If CameraX is disabled, uses system camera (original behavior)
      * @param onImageCaptured callback with captured image URI
      */
-    fun launchCamera(onImageCaptured: (Uri?) -> Unit, onFailure : (String?) -> Unit) {
+    fun launchCamera(onImageCaptured: (Uri?) -> Unit, onFailure: (String?) -> Unit) {
         if (useCameraX) {
             val lifecycleOwner = getLifecycleOwner()
             if (lifecycleOwner != null) {
@@ -154,7 +160,7 @@ class GeoTagImage(
                 onFailure.invoke("Context must be FragmentActivity or AppCompatActivity for CameraX")
             }
         } else {
-            if (cameraLauncher == null){
+            if (cameraLauncher == null) {
                 onFailure.invoke("CameraLauncher is not initialized")
                 return
             }
@@ -185,6 +191,7 @@ class GeoTagImage(
         var closeButton: AppCompatImageView? = null
         var flipCameraButton: AppCompatImageView? = null
         var mediaPlayer: MediaPlayer? = null
+
         cameraDialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setCancelable(true)
@@ -193,61 +200,80 @@ class GeoTagImage(
             val view = LayoutInflater.from(context).inflate(R.layout.camera_layout, parent, false)
             setContentView(view)
 
-        previewView = view.findViewById(R.id.previewView)
+            previewView = view.findViewById(R.id.previewView)
             captureButton = view.findViewById(R.id.btnCapture)
             closeButton = view.findViewById(R.id.btnClose)
             flipCameraButton = view.findViewById(R.id.btnFlip)
             val zoomSeekBar = view.findViewById<SeekBar>(R.id.zoomSeekBar)
+            val zoomValue = view.findViewById<TextView>(R.id.zoomValue)
 
-            previewView.apply {
-                previewView?.scaleType = PreviewView.ScaleType.FIT_CENTER
-            }
-
-            captureButton!!.setOnClickListener {
-                if (mediaPlayer == null) {
-                    mediaPlayer = MediaPlayer.create(context, R.raw.sound_shutter)
-                }
-                mediaPlayer?.start()
-                it.animate()
-                    .scaleX(0.85f)
-                    .scaleY(0.85f)
-                    .setDuration(100)
-                    .withEndAction {
-                        it.animate()
-                            .scaleX(1f)
-                            .scaleY(1f)
-                            .setDuration(100)
-                            .start()
-                    }
-                    .start()
-                capturePhotoWithCameraX(onImageCaptured)
-            }
-
-            closeButton!!.setOnClickListener { closeCameraDialog() }
-
-            flipCameraButton!!.setOnClickListener { flipCamera() }
-
-            zoomSeekBar.max = 100
+            zoomSeekBar.max = 90
             zoomSeekBar.progress = 0
+            zoomValue.text = "1.0x"
+
+            previewView?.scaleType = PreviewView.ScaleType.FIT_CENTER
+
+            scaleGestureDetector = ScaleGestureDetector(context,
+                object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                    override fun onScale(detector: ScaleGestureDetector): Boolean {
+                        val zoomState = camera?.cameraInfo?.zoomState?.value ?: return false
+
+                        val minZoom = zoomState.minZoomRatio
+                        val maxZoom = zoomState.maxZoomRatio
+
+                        currentZoomRatio *= detector.scaleFactor
+                        currentZoomRatio = currentZoomRatio.coerceIn(minZoom, maxZoom)
+                        camera?.cameraControl?.setZoomRatio(currentZoomRatio)
+
+                        val uiZoom = 1f + ((currentZoomRatio - minZoom) / (maxZoom - minZoom)) * 9f
+                        zoomSeekBar.progress = ((uiZoom - 1f) * 10).toInt()
+                        zoomValue.text = String.format(Locale.US, "%.1fx", uiZoom)
+
+                        return true
+                    }
+                })
+
+            previewView?.setOnTouchListener { v, event ->
+                scaleGestureDetector?.onTouchEvent(event)
+                if (event.action == MotionEvent.ACTION_UP) v.performClick()
+                true
+            }
 
             zoomSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    val zoomState = camera?.cameraInfo?.zoomState?.value
-                    zoomState?.let {
-                        val minZoom = it.minZoomRatio
-                        val maxZoom = it.maxZoomRatio
-                        val zoomRatio = minZoom + (progress / 100f) * (maxZoom - minZoom)
-                        camera?.cameraControl?.setZoomRatio(zoomRatio)
-                    }
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                    val zoomState = camera?.cameraInfo?.zoomState?.value ?: return
+
+                    val minZoom = zoomState.minZoomRatio
+                    val maxZoom = zoomState.maxZoomRatio
+
+                    // UI zoom 1x to 10x
+                    val uiZoom = 1f + (progress / 10f)
+
+                    val cameraZoom = minZoom + ((uiZoom - 1f) / 9f) * (maxZoom - minZoom)
+
+                    camera?.cameraControl?.setZoomRatio(cameraZoom)
+                    currentZoomRatio = cameraZoom
+
+                    zoomValue.text = String.format(Locale.US, "%.1fx", uiZoom)
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {}
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {}
             })
+
+            captureButton?.setOnClickListener {
+                if (mediaPlayer == null) mediaPlayer = MediaPlayer.create(context, R.raw.sound_shutter)
+                mediaPlayer?.start()
+
+                it.animate().scaleX(0.85f).scaleY(0.85f).setDuration(100).withEndAction {
+                    it.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+                }.start()
+
+                capturePhotoWithCameraX(onImageCaptured)
+            }
+
+            closeButton?.setOnClickListener { closeCameraDialog() }
+            flipCameraButton?.setOnClickListener { flipCamera() }
 
             show()
         }
@@ -502,7 +528,7 @@ class GeoTagImage(
         try {
             val exif = ExifInterface(filePath)
 
-            val label = if (!exifAppName.isNullOrEmpty()){
+            val label = if (!exifAppName.isNullOrEmpty()) {
                 ", Captured via $exifAppName"
             } else {
                 ", Captured via GeoTagImage App"
@@ -526,7 +552,7 @@ class GeoTagImage(
      * Set EXIF data for the captured image.
      */
     private fun setExif(exif: ExifInterface, location: Location) {
-        val label = if (!exifAppName.isNullOrEmpty()){
+        val label = if (!exifAppName.isNullOrEmpty()) {
             ", Captured via $exifAppName"
         } else {
             ", Captured via GeoTagImage App"
