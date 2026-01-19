@@ -27,6 +27,7 @@
     android:id="@+id/cameraContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="#000">
 
     <androidx.camera.view.PreviewView
@@ -35,9 +36,32 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/previewView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+         />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:padding="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="fitCenter" />
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivFlash"
+            app:srcCompat="@drawable/baseline_flash_off_24"
+            android:tint="@android:color/white"
+
+            />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <LinearLayout
         android:orientation="vertical"
@@ -49,7 +73,6 @@
         android:paddingHorizontal="100dp"
         android:paddingBottom="15dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         >
 
         <TextView
@@ -86,8 +109,7 @@
         android:layout_marginBottom="40dp"
         android:background="@android:color/transparent"
         android:src="@drawable/outline_close_24"
-        android:tint="@android:color/white"
-        android:layout_gravity="bottom|start" />
+        android:tint="@android:color/white" />
 
     <androidx.appcompat.widget.AppCompatImageView
         app:layout_constraintBottom_toBottomOf="parent"
@@ -95,7 +117,6 @@
         android:id="@+id/btnFlip"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_gravity="bottom|end"
         android:layout_marginBottom="40dp"
         android:layout_marginEnd="30dp"
         android:background="@android:color/transparent"
@@ -109,7 +130,6 @@
         android:id="@+id/btnCapture"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="30dp">
 
         <View

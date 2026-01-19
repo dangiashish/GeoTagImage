@@ -38,6 +38,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -103,7 +104,6 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         // initialize the GeoTagImage class object with context and callback
         geoTagImage = GeoTagImage(this, permissionLauncher, cameraLauncher)
         geoTagImage.requestCameraAndLocationPermissions()
-        geoTagImage.enableCameraX(false)
 
 
         // setOnClickListener on camera button.
@@ -204,6 +204,28 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
                 }
             }
         }
+
+        binding.toggleCameraRatio.check(R.id.button_rat_2)
+        binding.toggleCameraRatio.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.button_rat_1 -> {
+                        geoTagImage.setCameraAspectRatio(GeoTagImage.RATIO_1X1)
+                    }
+                    R.id.button_rat_2 -> {
+                        geoTagImage.setCameraAspectRatio(GeoTagImage.RATIO_4X3)
+                    }
+                    R.id.button_rat_3 -> {
+                        geoTagImage.setCameraAspectRatio(GeoTagImage.RATIO_16X9)
+                    }
+                    R.id.button_rat_4 -> {
+                        geoTagImage.setCameraAspectRatio(GeoTagImage.RATIO_FULL)
+                    }
+                }
+            }
+        }
+
+
 
         binding.toggleCamera.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {

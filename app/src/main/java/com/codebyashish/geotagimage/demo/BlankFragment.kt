@@ -93,7 +93,10 @@ class BlankFragment : Fragment(), PermissionCallback {
         // initialize the GeoTagImage class object with context and callback
         geoTagImage = GeoTagImage(mContext as AppCompatActivity, permissionLauncher, cameraLauncher)
         geoTagImage.requestCameraAndLocationPermissions()
-        geoTagImage.enableCameraX(false)
+
+
+
+
 
         binding.ivCamera.setOnClickListener {
             geoTagImage.launchCamera(
