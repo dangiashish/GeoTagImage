@@ -69,8 +69,8 @@ import androidx.core.graphics.toColorInt
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
-import com.codebyashish.geotagimage.R
-import com.codebyashish.geotagimage.databinding.CameraLayoutBinding
+import com.dangiashish.geotagimage.R
+import com.dangiashish.geotagimage.databinding.CameraLayoutBinding
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
