@@ -1,4 +1,4 @@
-package com.codebyashish.geotagimage.demo
+package com.dangiashish.geotagimage.demo
 /*
  * MIT License
  *
@@ -41,7 +41,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
-import com.codebyashish.geotagimage.demo.databinding.FragmentBlankBinding
+import com.dangiashish.geotagimage.demo.databinding.FragmentBlankBinding
 import com.dangiashish.PermissionCallback
 import com.dangiashish.GeoTagImage
 import java.io.File

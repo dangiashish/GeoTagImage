@@ -5,15 +5,15 @@ plugins {
 }
 
 android {
-    namespace 'com.codebyashish.geotagimage.demo'
+    namespace 'com.dangiashish.geotagimage.demo'
     compileSdk = 36
 
     defaultConfig {
         applicationId "com.codebyashish.geotagimage.demo"
         minSdk 23
         targetSdk 36
-        versionCode 120
-        versionName "1.2.0"
+        versionCode 1
+        versionName "1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,7 +43,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation project(path: ':GeoTagImage')
     implementation 'androidx.core:core-ktx:1.17.0'
-    implementation 'androidx.activity:activity-ktx:1.11.0'
+    implementation 'androidx.activity:activity-ktx:1.12.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
