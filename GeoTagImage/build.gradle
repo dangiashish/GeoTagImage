@@ -62,17 +62,3 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.10.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0'
 }
-
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-
-                groupId = "com.dangiashish"
-                artifactId = "geotagimage"
-                version = "1.2.3"
-            }
-        }
-    }
-}
