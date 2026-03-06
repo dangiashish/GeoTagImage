@@ -47,6 +47,12 @@ import androidx.fragment.app.FragmentActivity
 import com.dangiashish.PermissionCallback
 import com.codebyashish.geotagimage.demo.databinding.ActivityMainBinding
 import com.dangiashish.GeoTagImage
+import com.dangiashish.GeoTagImage.Companion.JPEG
+import com.dangiashish.GeoTagImage.Companion.PNG
+import com.dangiashish.GeoTagImage.Companion.RATIO_16X9
+import com.dangiashish.GeoTagImage.Companion.RATIO_1X1
+import com.dangiashish.GeoTagImage.Companion.RATIO_4X3
+import com.dangiashish.GeoTagImage.Companion.RATIO_FULL
 import java.io.File
 import java.text.DecimalFormat
 
@@ -103,7 +109,8 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         // initialize the GeoTagImage class object with context and callback
         geoTagImage = GeoTagImage(this, permissionLauncher, cameraLauncher)
         geoTagImage.requestCameraAndLocationPermissions()
-        geoTagImage.enableCameraX(false)
+        geoTagImage.enableCameraX(true)  // enable cameraX as default
+        geoTagImage.setDateFormat("yyyy-MM-dd HH:mm:ss") // default date format
 
 
         // setOnClickListener on camera button.
@@ -123,7 +130,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
             )
         }
 
-        binding.sFeatures.setOnCheckedChangeListener { _, isChecked ->
+        binding.gtiFeature.setOnCheckedChangeListener { _, isChecked ->
             geoTagImage.enableGTIService(isChecked)  // Enable/Disable GTI Features.
             if (!isChecked) {
                 geoTagImage.showAuthorName(false)
@@ -137,13 +144,16 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
                 binding.sDate.isChecked = false
                 geoTagImage.showGoogleMap(false)
                 binding.sMap.isChecked = false
-
+                binding.cardPreview.visibility = View.GONE
+            } else {
+                binding.cardPreview.visibility = View.VISIBLE
             }
         }
 
         binding.sAuthor.setOnCheckedChangeListener { _, isChecked ->
             geoTagImage.showAuthorName(isChecked)
             binding.etAuthorName.visibility = if (isChecked) View.VISIBLE else View.GONE
+            binding.tvAuthor.visibility = if (isChecked) View.VISIBLE else View.GONE
 
         }
 
@@ -153,6 +163,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 geoTagImage.setAuthorName(s.toString().trim())
+                binding.tvAuthor.text = "Clicked by $s"
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -163,6 +174,8 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         binding.sApp.setOnCheckedChangeListener { _, isChecked ->
             geoTagImage.showAppName(isChecked)
             binding.etAppName.visibility = if (isChecked) View.VISIBLE else View.GONE
+            binding.tvAppName.visibility = if (isChecked) View.VISIBLE else View.GONE
+
         }
 
         binding.etAppName.addTextChangedListener(object : TextWatcher {
@@ -171,6 +184,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 geoTagImage.setAppName(s.toString().trim())
+                binding.tvAppName.text = "Captured via $s"
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -180,10 +194,12 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
 
         binding.sLatLng.setOnCheckedChangeListener { _, isChecked ->
             geoTagImage.showLatLng(isChecked)
+            binding.tvLatLong.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
         binding.sDate.setOnCheckedChangeListener { _, isChecked ->
             geoTagImage.showDate(isChecked)
+            binding.tvDate.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
         binding.sMap.setOnCheckedChangeListener { _, isChecked ->
@@ -195,16 +211,17 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
             if (isChecked) {
                 when (checkedId) {
                     R.id.button_ext_png -> {
-                        geoTagImage.setImageExtension(GeoTagImage.Companion.PNG)
+                        geoTagImage.setImageExtension(PNG)
                     }
 
                     R.id.button_ext_jpeg -> {
-                        geoTagImage.setImageExtension(GeoTagImage.Companion.JPEG)
+                        geoTagImage.setImageExtension(JPEG)
                     }
                 }
             }
         }
 
+        binding.toggleCamera.check(R.id.toggle_camera_x)
         binding.toggleCamera.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
                 when (checkedId) {
@@ -218,6 +235,62 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
                 }
             }
         }
+
+        binding.toggleAppearanceRandom.check(R.id.button_ext_png)
+        binding.toggleAppearanceRandom.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.button_ext_png -> {
+                        geoTagImage.setImageExtension(PNG)
+                    }
+
+                    R.id.button_ext_jpeg -> {
+                        geoTagImage.setImageExtension(JPEG)
+                    }
+                }
+            }
+        }
+
+        binding.toggleCameraRatio.check(R.id.button_rat_1)
+        binding.toggleCameraRatio.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.button_rat_1 -> {
+                        geoTagImage.setCameraAspectRatio(RATIO_1X1)
+                    }
+                    R.id.button_rat_2 -> {
+                        geoTagImage.setCameraAspectRatio(RATIO_4X3)
+                    }
+                    R.id.button_rat_3 -> {
+                        geoTagImage.setCameraAspectRatio(RATIO_16X9)
+                    }
+                    R.id.button_rat_4 -> {
+                        geoTagImage.setCameraAspectRatio(RATIO_FULL)
+                    }
+                }
+            }
+        }
+
+        binding.toggleMapView.check(R.id.button_satellite)
+        binding.toggleCameraRatio.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.button_satellite -> {
+                        geoTagImage.setMapView(GeoTagImage.MapViewType.SATELLITE)
+                    }
+                    R.id.button_hybrid -> {
+                        geoTagImage.setMapView(GeoTagImage.MapViewType.HYBRID)
+                    }
+                    R.id.button_terrain -> {
+                        geoTagImage.setMapView(GeoTagImage.MapViewType.TERRAIN)
+                    }
+                    R.id.button_roadmap -> {
+                        geoTagImage.setMapView(GeoTagImage.MapViewType.ROADMAP)
+                    }
+                }
+            }
+        }
+
 
     }
 

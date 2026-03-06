@@ -142,4 +142,53 @@ object GTIUtility {
     fun getFileUri(context: Context, file: File?): Uri {
         return FileProvider.getUriForFile(context, context.packageName + ".provider", file!!)
     }
+
+    /** get country flags based on country code */
+    @JvmStatic
+    fun getCountryWithFlag(countryName: String, countryCode: String): String {
+        if (countryCode.length != 2) return countryName
+
+        val firstChar = Character.codePointAt(countryCode, 0) - 65 + 0x1F1E6
+        val secondChar = Character.codePointAt(countryCode, 1) - 65 + 0x1F1E6
+
+        val flag = String(Character.toChars(firstChar)) +
+                String(Character.toChars(secondChar))
+
+        return "$countryName $flag "
+    }
+
+    val dateFormats = listOf(
+        "dd/MM/yyyy",
+        "dd-MM-yyyy",
+        "yyyy-MM-dd",
+        "MM/dd/yyyy",
+        "dd MMM yyyy",
+        "dd MMMM yyyy",
+
+        "dd/MM/yyyy HH:mm",
+        "dd/MM/yyyy hh:mm a",
+        "dd/MM/yyyy HH:mm:ss",
+        "dd/MM/yyyy hh:mm:ss a",
+
+        "yyyy-MM-dd HH:mm:ss",
+        "yyyy-MM-dd'T'HH:mm:ss",
+
+        "EEE, dd MMM yyyy",
+        "EEEE, dd MMMM yyyy",
+
+        "dd/MM/yyyy hh:mm a z",
+        "dd MMM yyyy hh:mm a z",
+
+        "HH:mm",
+        "hh:mm a",
+
+        "HH:mm:ss",
+        "hh:mm:ss a",
+
+        "yyyyMMdd",
+        "ddMMyyyy",
+
+        "yyyy-MM-dd HH:mm:ss.SSS",
+        "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    )
 }

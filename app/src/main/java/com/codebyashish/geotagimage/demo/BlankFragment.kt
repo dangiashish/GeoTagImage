@@ -126,7 +126,7 @@ class BlankFragment : Fragment(), PermissionCallback {
             }
         }
 
-        binding.sFeatures.setOnCheckedChangeListener { _, isChecked ->
+        binding.gtiFeature.setOnCheckedChangeListener { _, isChecked ->
             geoTagImage.enableGTIService(isChecked)  // Enable/Disable GTI Features.
             if (!isChecked) {
                 geoTagImage.showAuthorName(false)
