@@ -66,3 +66,17 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
     implementation "org.jetbrains.kotlin:kotlin-test:2.3.0"
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.github.dangiashish'
+                artifactId = 'GeoTagImage'
+                version = '1.2.3'
+            }
+        }
+    }
+}
