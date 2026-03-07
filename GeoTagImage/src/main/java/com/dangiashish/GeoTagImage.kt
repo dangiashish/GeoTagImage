@@ -263,7 +263,8 @@ class GeoTagImage(
                     // UI zoom 1x to 10x
                     val uiZoom = 1f + (progress / 10f)
 
-                    val cameraZoom = minZoom + ((uiZoom - 1f) / 9f) * (maxZoom - minZoom)
+            zoomSeekBar.max = 100
+            zoomSeekBar.progress = 0
 
                     camera?.cameraControl?.setZoomRatio(cameraZoom)
                     currentZoomRatio = cameraZoom
@@ -634,6 +635,7 @@ class GeoTagImage(
                 val bitmap = loadImageFromUrl(imageUrl)
                 if (bitmap != null) {
                     mapBitmap = bitmap
+                    processCapturedImage()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

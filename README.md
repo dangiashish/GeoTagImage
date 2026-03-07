@@ -35,6 +35,9 @@ Key Features :
 - Control the features of GTI.
 - Set text size.
 - Image File GeoTagging
+- Camera Aspect Ratio Customization
+- Camera Flash Customization
+- Camera Zoom Customization
 ```
 
 ### Gradle
@@ -94,7 +97,7 @@ Add dependency in your `build.gradle` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.2.1'
+    implementation 'com.github.dangiashish:GeoTagImage:1.2.2'
 }
 ```
 #### OR
@@ -103,7 +106,7 @@ Add dependency in your `build.gradle.kts` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation("com.github.dangiashish:GeoTagImage:1.2.1")
+    implementation("com.github.dangiashish:GeoTagImage:1.2.2")
 }
 ```
 
@@ -217,6 +220,7 @@ geoTagImage.showAppName(true)
 geoTagImage.setImageQuality(ImageQuality.LOW) // Deprecated
 geoTagImage.setImageExtension(PNG)
 geoTagImage.setLabel("Clicked By") // Upload By || Author || Captured By
+geoTagImage.setCameraAspectRatio(GeoTagImage.Ratio_4X3)
 
 ```
 

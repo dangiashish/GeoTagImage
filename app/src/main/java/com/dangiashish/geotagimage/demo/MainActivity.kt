@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.codebyashish.geotagimage.demo
+package com.dangiashish.geotagimage.demo
 
 import android.content.Context
 import android.content.Intent
@@ -46,7 +46,7 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import com.dangiashish.PermissionCallback
-import com.codebyashish.geotagimage.demo.databinding.ActivityMainBinding
+import com.dangiashish.geotagimage.demo.databinding.ActivityMainBinding
 import com.dangiashish.GeoTagImage
 import com.dangiashish.GeoTagImage.Companion.JPEG
 import com.dangiashish.GeoTagImage.Companion.PNG

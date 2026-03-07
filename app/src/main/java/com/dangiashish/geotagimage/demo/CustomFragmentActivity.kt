@@ -22,19 +22,25 @@
  * SOFTWARE.
  */
 
-package com.codebyashish.geotagimage.demo
+package com.dangiashish.geotagimage.demo
 
-import org.junit.Assert
-import org.junit.Test
+import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see [Testing documentation](http://d.android.com/tools/testing)
- */
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        Assert.assertEquals(4, (2 + 2).toLong())
+class CustomFragmentActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_custom_fragment)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        supportFragmentManager.beginTransaction().add(R.id.container, BlankFragment()).commit()
     }
 }

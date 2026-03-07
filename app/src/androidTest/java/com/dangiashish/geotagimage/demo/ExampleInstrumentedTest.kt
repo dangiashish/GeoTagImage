@@ -21,26 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.codebyashish.geotagimage
 
-package com.codebyashish.geotagimage.demo
+@Deprecated("geotagimage/PermissionCallback is deprecated")
+interface PermissionCallback {
+    fun onPermissionGranted()
+    fun onPermissionDenied()
+}
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-
-class CustomFragmentActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_custom_fragment)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        supportFragmentManager.beginTransaction().add(R.id.container, BlankFragment()).commit()
+/**
+ * Instrumented test, which will execute on an Android device.
+ *
+ * @see [Testing documentation](http://d.android.com/tools/testing)
+ */
+@RunWith(AndroidJUnit4::class)
+class ExampleInstrumentedTest {
+    @Test
+    fun useAppContext() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        Assert.assertEquals("com.codebyashish.geotagimage.demo", appContext.packageName)
     }
 }
