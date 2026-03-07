@@ -72,9 +72,9 @@ import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.codebyashish.geotagimage.R
-import com.codebyashish.geotagimage.databinding.CameraLayoutBinding
 import com.dangiashish.GTIUtility.decodeSampledBitmap
+import com.dangiashish.geotagimage.R
+import com.dangiashish.geotagimage.databinding.CameraLayoutBinding
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -263,8 +263,7 @@ class GeoTagImage(
                     // UI zoom 1x to 10x
                     val uiZoom = 1f + (progress / 10f)
 
-            zoomSeekBar.max = 100
-            zoomSeekBar.progress = 0
+                    val cameraZoom = minZoom + ((uiZoom - 1f) / 9f) * (maxZoom - minZoom)
 
                     camera?.cameraControl?.setZoomRatio(cameraZoom)
                     currentZoomRatio = cameraZoom

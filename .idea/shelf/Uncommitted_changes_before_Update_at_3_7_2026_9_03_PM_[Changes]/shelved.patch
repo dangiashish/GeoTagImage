@@ -1,0 +1,1351 @@
+Index: GeoTagImage/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'com.android.library'\r\n    id 'org.jetbrains.kotlin.android'\r\n}\r\n\r\nandroid {\r\n    namespace 'com.codebyashish.geotagimage'\r\n    compileSdk = 36\r\n\r\n    defaultConfig {\r\n        minSdkVersion 23\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n        consumerProguardFiles \"consumer-rules.pro\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n\r\n    publishing {\r\n        singleVariant(\"release\") {\r\n            withSourcesJar()\r\n            withJavadocJar()\r\n        }\r\n    }\r\n\r\n    buildFeatures {\r\n        viewBinding = true\r\n    }\r\n\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_17\r\n        targetCompatibility JavaVersion.VERSION_17\r\n    }\r\n\r\n    kotlinOptions {\r\n        jvmTarget = \"17\"\r\n    }\r\n}\r\n\r\n\r\n\r\ndependencies {\r\n    implementation 'androidx.appcompat:appcompat:1.7.1'\r\n    implementation 'com.google.android.material:material:1.13.0'\r\n    implementation 'com.google.android.gms:play-services-location:21.3.0'\r\n    implementation 'androidx.core:core-ktx:1.17.0'\r\n    implementation 'androidx.exifinterface:exifinterface:1.4.1'\r\n\r\n    testImplementation 'junit:junit:4.13.2'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.3.0'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'\r\n\r\n    def camerax_version = \"1.5.1\"\r\n    implementation \"androidx.camera:camera-core:${camerax_version}\"\r\n    implementation \"androidx.camera:camera-camera2:${camerax_version}\"\r\n    implementation \"androidx.camera:camera-lifecycle:${camerax_version}\"\r\n    implementation \"androidx.camera:camera-video:${camerax_version}\"\r\n    implementation \"androidx.camera:camera-view:${camerax_version}\"\r\n    implementation \"androidx.camera:camera-extensions:${camerax_version}\"\r\n\r\n    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.4'\r\n    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4'\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GeoTagImage/build.gradle b/GeoTagImage/build.gradle
+--- a/GeoTagImage/build.gradle	(revision e8b17e8dbddcee7ae75936711ad3957329bec629)
++++ b/GeoTagImage/build.gradle	(date 1772887399438)
+@@ -15,7 +15,7 @@
+ 
+     buildTypes {
+         release {
+-            minifyEnabled false
++            minifyEnabled true
+             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+         }
+     }
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><p align=\"center\">\r\n<img src=\"https://github.com/dangiashish/GeoTagImage/assets/70362030/88c3e47a-0029-4d90-8276-540558137ccc\"/>\r\n</p>\r\n\r\n\r\n<div align = \"center\">\r\n<h1 align=\"center\"> \uD83D\uDCAB GeoTagImage (GTI) \uD83D\uDCF8\uD83C\uDF0D </h1>\r\n<a href=\"https://www.codefactor.io/repository/github/dangiashish/geotagimage/overview/master\"><img src=\"https://www.codefactor.io/repository/github/dangiashish/geotagimage/badge/master\" alt=\"CodeFactor\" /></a>\r\n<a href=\"https://jitpack.io/#dangiashish/GeoTagImage\"><img src=\"https://jitpack.io/v/dangiashish/GeoTagImage.svg\" alt=\"\"/></a>\r\n<a href=\"(https://developer.android.com/tools/sdkmanager\"><img src=\"https://img.shields.io/badge/android--sdk-24%2B-green\" alt=\"\"/></a>\r\n<a href=\"https://www.java.com/\"><img src=\"https://img.shields.io/badge/compatible-java-blue\" alt=\"\"/></a>\r\n<a href=\"https://kotlinlang.org/\"><img src=\"https://img.shields.io/badge/compatible-kotlin-blueviolet\" alt=\"\"/></a>\r\n\r\n#### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f)\r\n\r\n<br/>\r\n\r\n<a href=\"https://github.com/dangiashish/GeoTagImage/actions/runs/18504814655/artifacts/4268116577\"><img src=\"https://www.nthlink.com/assets/images/apk-download.png\" width=\"300px\" height=\"80\"/></a>\r\n\r\n</div>\r\n\r\n```json lines\r\nKey Features :\r\n\r\n- Request camera & location permission callback by itself.\r\n- CameraX api support.\r\n- Show location and address.\r\n- Show Lat Longs.\r\n- Show author name.\r\n- Show app name.\r\n- Show Google map snapshot.\r\n- Set Image Quality.\r\n- Set Image Extension Type.\r\n- Set Custom Typeface.\r\n- Control the features of GTI.\r\n- Set text size.\r\n- Image File GeoTagging\r\n```\r\n\r\n### Gradle\r\n\r\nAdd repository in your `settings.gradle`\r\n\r\n```gradle\r\ndependencyResolutionManagement {\r\n    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)\r\n    repositories {\r\n        maven { url \"https://jitpack.io\" }\r\n    }\r\n}\r\n```\r\n#### OR\r\nin your `settings.gradle.kts`\r\n```gradle\r\ndependencyResolutionManagement {\r\n    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)\r\n    repositories {\r\n        maven( url = \"https://jitpack.io\")\r\n    }\r\n}\r\n\r\n```\r\n\r\nUpdated\r\n\r\n```gradle\r\npluginManagement {\r\n    repositories {\r\n        google {\r\n            content {\r\n                includeGroupByRegex(\"com\\\\.android.*\")\r\n                includeGroupByRegex(\"com\\\\.google.*\")\r\n                includeGroupByRegex(\"androidx.*\")\r\n            }\r\n        }\r\n        mavenCentral()\r\n        gradlePluginPortal()\r\n        maven( url = \"https://jitpack.io\")\r\n    }\r\n}\r\ndependencyResolutionManagement {\r\n    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)\r\n    repositories {\r\n        google()\r\n        mavenCentral()\r\n        maven( url = \"https://jitpack.io\")\r\n    }\r\n}\r\n```\r\n### Add dependency :\r\n\r\nAdd dependency in your `build.gradle` (module-level) file :\r\n\r\n```groovy\r\ndependencies{\r\n\r\n    implementation 'com.github.dangiashish:GeoTagImage:1.2.1'\r\n}\r\n```\r\n#### OR\r\nAdd dependency in your `build.gradle.kts` (module-level) file :\r\n\r\n```groovy\r\ndependencies{\r\n\r\n    implementation(\"com.github.dangiashish:GeoTagImage:1.2.1\")\r\n}\r\n```\r\n\r\n#### Add file provider in [AndroidManifest.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/AndroidManifest.xml#L34)\r\n```groovy\r\n<provider\r\n            android:name=\"androidx.core.content.FileProvider\"\r\n            android:authorities=\"${applicationId}.provider\"\r\n            android:exported=\"false\"\r\n            android:grantUriPermissions=\"true\">\r\n            <meta-data\r\n                android:name=\"android.support.FILE_PROVIDER_PATHS\"\r\n                android:resource=\"@xml/provider_paths\" />\r\n        </provider>\r\n\r\n```\r\n#### Create an xml file for path provider [@xml/provider_path.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/res/xml/provider_paths.xml)\r\n```groovy\r\n<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<paths xmlns:android=\"http://schemas.android.com/apk/res/android\">\r\n    <external-path name=\"external_files\" path=\".\"/>\r\n</paths>\r\n```\r\n\r\n#### XML :\r\nGo to here --> [activity_main.xml](https://github.com/dangiashish/GeoTagImage/blob/master/app/src/main/res/layout/activity_main.xml)\r\n\r\n#### Kotlin : [MainActivity.kt](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/java/com/codebyashish/geotagimage/MainActivity.kt)\r\n```kotlin\r\nimport com.dangiashish.GeoTagImage\r\nimport com.dangiashish.PermissionCallback\r\n\r\n\r\nclass MainActivity : AppCompatActivity(), PermissionCallback{\r\n    // create global variables\r\n    private var gtiUri: Uri? = null\r\n    private lateinit var geoTagImage: GeoTagImage\r\n    private lateinit var cameraLauncher: ActivityResultLauncher<Uri>\r\n    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        ...\r\n    }\r\n}\r\n\r\n```\r\n### `onCreate()`\r\n```kotlin\r\npermissionLauncher = registerForActivityResult(\r\n    ActivityResultContracts.RequestMultiplePermissions()\r\n) { permissions ->\r\n    val allGranted = permissions.all { it.value }\r\n\r\n    if (allGranted) {\r\n        onPermissionGranted()\r\n    } else {\r\n        onPermissionDenied()\r\n    }\r\n}\r\n\r\n// cameraLauncher callback is required to capture the image from system camera.\r\ncameraLauncher =\r\n    registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->\r\n        if (success) {\r\n            gtiUri = geoTagImage.processCapturedImage() // if captured via system camera\r\n            previewCapturedImage()\r\n        } else {\r\n            Toast.makeText(mContext, \"Image capture failed\", Toast.LENGTH_SHORT).show()\r\n        }\r\n    }\r\n\r\n// initialize the GeoTagImage class object with context and callback\r\n// use try/catch block to handle exceptions.\r\ngeoTagImage = GeoTagImage(this, permissionLauncher, cameraLauncher) // this || context || requireContext() || requireActivity()\r\ngeoTagImage.requestCameraAndLocationPermissions()\r\n\r\n```\r\n#### openCamera()\r\n```kotlin\r\n     // setOnClickListener on camera button.\r\nbinding.ivCamera.setOnClickListener {\r\n    geoTagImage.launchCamera(\r\n            onImageCaptured = { uri ->  // if captured via CameraX api\r\n                if (uri != null) {\r\n                    gtiUri = uri\r\n                    previewCapturedImage()\r\n                } else {\r\n                    Toast.makeText(mContext, \"Failed to capture photo\", Toast.LENGTH_SHORT).show()\r\n                }\r\n            },\r\n            onFailure = {\r\n                Toast.makeText(mContext, it, Toast.LENGTH_SHORT).show()\r\n            }\r\n    )\r\n}\r\n```\r\n#### customize geo tags\r\n```kotlin\r\n     // set all the customizations for geotagging as per your requirements after initialization.\r\n\r\ngeoTagImage.enableGTIService(false) // Enable/Disable GTI Features\r\n\r\ngeoTagImage.setTextSize(30f)\r\ngeoTagImage.setBackgroundRadius(5f)\r\ngeoTagImage.setBackgroundColor(Color.parseColor(\"#66000000\"))\r\ngeoTagImage.setTextColor(Color.WHITE)\r\ngeoTagImage.setAuthorName(\"Ashish\")\r\ngeoTagImage.showAuthorName(true)\r\ngeoTagImage.showAppName(true)\r\ngeoTagImage.setImageQuality(ImageQuality.LOW) // Deprecated\r\ngeoTagImage.setImageExtension(PNG)\r\ngeoTagImage.setLabel(\"Clicked By\") // Upload By || Author || Captured By\r\n\r\n```\r\n\r\n#### preview the original image\r\n```kotlin\r\n        // preview of the original image\r\nprivate fun previewCapturedImage() {\r\n    gtiUri?.let { uri ->\r\n        binding.ivImage.let { imageView ->\r\n            try {\r\n                val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {\r\n                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))\r\n                } else {\r\n                    @Suppress(\"DEPRECATION\")\r\n                    MediaStore.Images.Media.getBitmap(contentResolver, uri)\r\n                }\r\n                imageView.setImageBitmap(bitmap)\r\n                imageView.visibility = View.VISIBLE\r\n\r\n            } catch (e: Exception) {\r\n                Log.e(TAG, \"Error loading image: ${e.message}\")\r\n            }\r\n        }\r\n    }\r\n}\r\n```\r\n\r\n### Permission Callbacks\r\n```kotlin\r\noverride fun onPermissionGranted() {\r\n\r\n}\r\n\r\noverride fun onPermissionDenied() {\r\n    geoTagImage.requestCameraAndLocationPermissions()\r\n}\r\n```\r\n\r\n#### LICENSE\r\n```\r\nMIT License\r\n\r\nCopyright (c) 2023 Ashish Dangi\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the \"Software\"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE.\r\n```\r\n\r\n        \r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/README.md b/README.md
+--- a/README.md	(revision e8b17e8dbddcee7ae75936711ad3957329bec629)
++++ b/README.md	(date 1772896633502)
+@@ -1,43 +1,34 @@
+ <p align="center">
+-<img src="https://github.com/dangiashish/GeoTagImage/assets/70362030/88c3e47a-0029-4d90-8276-540558137ccc"/>
++<img src="https://github.com/dangiashish/GeoTagImage/assets/70362030/88c3e47a-0029-4d90-8276-540558137ccc" alt=""/>
+ </p>
+ 
+ 
+ <div align = "center">
+ <h1 align="center"> 💫 GeoTagImage (GTI) 📸🌍 </h1>
++<p align="center"><b>GeoTagImage</b> is a lightweight, powerful Android library designed to simplify capturing photos with embedded real-time metadata. It automatically overlays location details (Address, City, Lat/Lng), custom timestamps, author names, and even a Google Maps static preview directly onto the image.</p>
+ <a href="https://www.codefactor.io/repository/github/dangiashish/geotagimage/overview/master"><img src="https://www.codefactor.io/repository/github/dangiashish/geotagimage/badge/master" alt="CodeFactor" /></a>
+ <a href="https://jitpack.io/#dangiashish/GeoTagImage"><img src="https://jitpack.io/v/dangiashish/GeoTagImage.svg" alt=""/></a>
+ <a href="(https://developer.android.com/tools/sdkmanager"><img src="https://img.shields.io/badge/android--sdk-24%2B-green" alt=""/></a>
+ <a href="https://www.java.com/"><img src="https://img.shields.io/badge/compatible-java-blue" alt=""/></a>
+ <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/compatible-kotlin-blueviolet" alt=""/></a>
+ 
+-#### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f)
+-
++#### Read the documentation on [dangiashish.github.io](https://dangiashish.github.io/GeoTagImage)
+ <br/>
+ 
+-<a href="https://github.com/dangiashish/GeoTagImage/actions/runs/18504814655/artifacts/4268116577"><img src="https://www.nthlink.com/assets/images/apk-download.png" width="300px" height="80"/></a>
+-
+ </div>
+ 
+-```json lines
+-Key Features :
+ 
+-- Request camera & location permission callback by itself.
+-- CameraX api support.
+-- Show location and address.
+-- Show Lat Longs.
+-- Show author name.
+-- Show app name.
+-- Show Google map snapshot.
+-- Set Image Quality.
+-- Set Image Extension Type.
+-- Set Custom Typeface.
+-- Control the features of GTI.
+-- Set text size.
+-- Image File GeoTagging
+-```
++### ✨ Key Features :
++- 🚀 CameraX Integration: Seamless custom camera interface with zoom, flip, and flash support.
++- 🗺️ Google Maps Overlay: Embed a static map of the capture location onto the photo.
++- 📍 Smart Geocoding: Automatically fetches address, city, and country with flag emojis.
++- ✍️ Fully Customizable: Adjust text size, colors, fonts, and background transparency.
++- 💾 Flexible Storage: Choose between JPEG/PNG formats and custom directory names.
++- 🖼️ Aspect Ratio Control: Supports 1:1 (Square), 4:3, 16:9, and Full-screen ratios.
++- 🛠️ EXIF Support: Writes GPS coordinates and capture metadata into the image EXIF header.
+ 
+-### Gradle
++
++#### Gradle
+ 
+ Add repository in your `settings.gradle`
+ 
+@@ -87,14 +78,14 @@
+     }
+ }
+ ```
+-### Add dependency :
++#### Add dependency :
+ 
+ Add dependency in your `build.gradle` (module-level) file :
+ 
+ ```groovy
+ dependencies{
+ 
+-    implementation 'com.github.dangiashish:GeoTagImage:1.2.1'
++    implementation 'com.github.dangiashish:GeoTagImage:${latest_version}'
+ }
+ ```
+ #### OR
+@@ -103,35 +94,34 @@
+ ```groovy
+ dependencies{
+ 
+-    implementation("com.github.dangiashish:GeoTagImage:1.2.1")
++    implementation("com.github.dangiashish:GeoTagImage:${latest_version}")
+ }
+ ```
+ 
+ #### Add file provider in [AndroidManifest.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/AndroidManifest.xml#L34)
+ ```groovy
+ <provider
+-            android:name="androidx.core.content.FileProvider"
+-            android:authorities="${applicationId}.provider"
+-            android:exported="false"
+-            android:grantUriPermissions="true">
+-            <meta-data
+-                android:name="android.support.FILE_PROVIDER_PATHS"
+-                android:resource="@xml/provider_paths" />
++android:name="androidx.core.content.FileProvider"
++android:authorities="${applicationId}.provider"
++android:exported="false"
++android:grantUriPermissions="true">
++        <meta-data
++android:name="android.support.FILE_PROVIDER_PATHS"
++android:resource="@xml/provider_paths" />
+         </provider>
+ 
+ ```
+-#### Create an xml file for path provider [@xml/provider_path.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/res/xml/provider_paths.xml)
++#### Create an XML file for path provider [@xml/provider_path.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/res/xml/provider_paths.xml)
+ ```groovy
+ <?xml version="1.0" encoding="utf-8"?>
+-<paths xmlns:android="http://schemas.android.com/apk/res/android">
+-    <external-path name="external_files" path="."/>
+-</paths>
++        <paths xmlns:android="http://schemas.android.com/apk/res/android">
++        <external-path name="external_files" path="."/>
++        </paths>
+ ```
+ 
+-#### XML :
+-Go to here --> [activity_main.xml](https://github.com/dangiashish/GeoTagImage/blob/master/app/src/main/res/layout/activity_main.xml)
++#### Implementation :
++Reference → [activity_main.xml](https://github.com/dangiashish/GeoTagImage/blob/master/app/src/main/res/layout/activity_main.xml) & [MainActivity.kt](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/java/com/codebyashish/geotagimage/MainActivity.kt)
+ 
+-#### Kotlin : [MainActivity.kt](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/java/com/codebyashish/geotagimage/MainActivity.kt)
+ ```kotlin
+ import com.dangiashish.GeoTagImage
+ import com.dangiashish.PermissionCallback
+@@ -146,12 +136,12 @@
+ 
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+-        ...
++        
+     }
+ }
+ 
+ ```
+-### `onCreate()`
++#### onCreate() / onCreateView()
+ ```kotlin
+ permissionLauncher = registerForActivityResult(
+     ActivityResultContracts.RequestMultiplePermissions()
+@@ -175,7 +165,9 @@
+             Toast.makeText(mContext, "Image capture failed", Toast.LENGTH_SHORT).show()
+         }
+     }
+-
++```
++#### Initialization
++```kotlin
+ // initialize the GeoTagImage class object with context and callback
+ // use try/catch block to handle exceptions.
+ geoTagImage = GeoTagImage(this, permissionLauncher, cameraLauncher) // this || context || requireContext() || requireActivity()
+@@ -187,17 +179,17 @@
+      // setOnClickListener on camera button.
+ binding.ivCamera.setOnClickListener {
+     geoTagImage.launchCamera(
+-            onImageCaptured = { uri ->  // if captured via CameraX api
+-                if (uri != null) {
+-                    gtiUri = uri
+-                    previewCapturedImage()
+-                } else {
+-                    Toast.makeText(mContext, "Failed to capture photo", Toast.LENGTH_SHORT).show()
+-                }
+-            },
+-            onFailure = {
+-                Toast.makeText(mContext, it, Toast.LENGTH_SHORT).show()
+-            }
++        onImageCaptured = { uri ->  // if captured via CameraX api
++            if (uri != null) {
++                gtiUri = uri
++                previewCapturedImage()
++            } else {
++                Toast.makeText(mContext, "Failed to capture photo", Toast.LENGTH_SHORT).show()
++            }
++        },
++        onFailure = {
++            Toast.makeText(mContext, it, Toast.LENGTH_SHORT).show()
++        }
+     )
+ }
+ ```
+@@ -207,6 +199,7 @@
+ 
+ geoTagImage.enableGTIService(false) // Enable/Disable GTI Features
+ 
++geoTagImage.enableCameraX(true)  // enable cameraX as default
+ geoTagImage.setTextSize(30f)
+ geoTagImage.setBackgroundRadius(5f)
+ geoTagImage.setBackgroundColor(Color.parseColor("#66000000"))
+@@ -214,9 +207,11 @@
+ geoTagImage.setAuthorName("Ashish")
+ geoTagImage.showAuthorName(true)
+ geoTagImage.showAppName(true)
+-geoTagImage.setImageQuality(ImageQuality.LOW) // Deprecated
+ geoTagImage.setImageExtension(PNG)
+ geoTagImage.setLabel("Clicked By") // Upload By || Author || Captured By
++geoTagImage.setDateFormat("yyyy-MM-dd HH:mm:ss") // default date format
++geoTagImage.setCameraAspectRatio(RATIO_1X1) // RATIO_1X1 || RATIO_4X3 || RATIO_16X9 || RATIO_FULL
++geoTagImage.setMapView(MapViewType.SATELLITE) // MapViewType.ROADMAP || MapViewType.SATELLITE || MapViewType.TERRAIN || MapViewType.HYBRID
+ 
+ ```
+ 
+@@ -244,7 +239,7 @@
+ }
+ ```
+ 
+-### Permission Callbacks
++#### Permission Callbacks
+ ```kotlin
+ override fun onPermissionGranted() {
+ 
+Index: GeoTagImage/src/main/java/com/dangiashish/GTIUtility.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/*\r\n * MIT License\r\n *\r\n * Copyright (c) 2023 Ashish Dangi\r\n *\r\n * Permission is hereby granted, free of charge, to any person obtaining a copy\r\n * of this software and associated documentation files (the \"Software\"), to deal\r\n * in the Software without restriction, including without limitation the rights\r\n * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\n * copies of the Software, and to permit persons to whom the Software is\r\n * furnished to do so, subject to the following conditions:\r\n *\r\n * The above copyright notice and this permission notice shall be included in all\r\n * copies or substantial portions of the Software.\r\n *\r\n * THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\n * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\n * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\n * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\n * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\n * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\n * SOFTWARE.\r\n */\r\n\r\npackage com.dangiashish\r\n\r\nimport android.content.Context\r\nimport android.content.pm.ApplicationInfo\r\nimport android.content.pm.PackageManager\r\nimport android.graphics.Bitmap\r\nimport android.graphics.BitmapFactory\r\nimport android.media.MediaScannerConnection\r\nimport android.net.Uri\r\nimport android.os.Environment\r\nimport android.util.Log\r\nimport androidx.core.content.FileProvider\r\nimport androidx.fragment.app.FragmentActivity\r\nimport java.io.File\r\nimport java.security.cert.Extension\r\nimport java.text.SimpleDateFormat\r\nimport java.util.Date\r\nimport java.util.Locale\r\n\r\nobject GTIUtility {\r\n    private val TAG = \"GTIUtility\"\r\n\r\n    /** Check for Map SDK Integration */\r\n    @JvmStatic\r\n    fun isGoogleMapsLinked(context: Context): Boolean {\r\n        val packageManager = context.packageManager\r\n        var apiKey: String? = null\r\n        try {\r\n            val applicationInfo =\r\n                packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)\r\n            val metaData = applicationInfo.metaData\r\n            if (metaData != null && metaData.containsKey(\"com.google.android.geo.API_KEY\")) {\r\n                apiKey = metaData.getString(\"com.google.android.geo.API_KEY\")\r\n            }\r\n        } catch (e: PackageManager.NameNotFoundException) {\r\n            e.printStackTrace()\r\n        }\r\n        return apiKey != null\r\n    }\r\n\r\n    /** Check for google map api key (if Map SDK is integrated) */\r\n    @JvmStatic\r\n    fun getMapKey(context: Context): String? {\r\n        val packageManager = context.packageManager\r\n        var apiKey: String? = null\r\n        try {\r\n            val applicationInfo =\r\n                packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)\r\n            val metaData = applicationInfo.metaData\r\n            if (metaData != null && metaData.containsKey(\"com.google.android.geo.API_KEY\")) {\r\n                apiKey = metaData.getString(\"com.google.android.geo.API_KEY\")\r\n            }\r\n        } catch (e: PackageManager.NameNotFoundException) {\r\n            e.printStackTrace()\r\n        }\r\n        return apiKey\r\n    }\r\n\r\n    /** To get application name */\r\n    @JvmStatic\r\n    fun getApplicationName(context: Context): String {\r\n        val packageManager = context.packageManager\r\n        val applicationInfo: ApplicationInfo? = try {\r\n            packageManager.getApplicationInfo(context.applicationInfo.packageName, 0)\r\n        } catch (e: PackageManager.NameNotFoundException) {\r\n            null\r\n        }\r\n        return (if (applicationInfo != null) packageManager.getApplicationLabel(applicationInfo) else \"Unknown\") as String\r\n    }\r\n\r\n    @Deprecated(\"\")\r\n    /** Save original image in camera directory  */\r\n    @JvmStatic\r\n    fun generateOriginalFile(mContext: FragmentActivity, imageExtension: String): File? {\r\n        var file: File? = null\r\n        Log.i(TAG, \"generateOriginalFile: Step 1\")\r\n        try {\r\n            val mediaStorageDir = File(\r\n                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),\r\n                \"Camera\"\r\n            )\r\n            Log.w(TAG, \"generateOriginalFile: Step 2 : $mediaStorageDir\", )\r\n            if (!mediaStorageDir.exists()) {\r\n                if (!mediaStorageDir.mkdirs()) {\r\n                    return null\r\n                }\r\n            }\r\n            val timeStamp = SimpleDateFormat(\"yyyyMMdd_HHmm\", Locale.getDefault()).format(Date())\r\n            file =\r\n                File(mediaStorageDir.path + File.separator + \"IMG_\" + timeStamp + imageExtension)\r\n        } catch (e: Exception) {\r\n            e.printStackTrace()\r\n        }\r\n        if (file != null) {\r\n            scanMediaFIle(mContext, file)\r\n        }\r\n        Log.w(TAG, \"generateOriginalFile: Step 3 $file\", )\r\n        return file\r\n    }\r\n\r\n    private fun scanMediaFIle(mContext: FragmentActivity, file: File) {\r\n        MediaScannerConnection.scanFile(\r\n            mContext, arrayOf(file.absolutePath),\r\n            null\r\n        ) { _: String?, _: Uri? -> }\r\n    }\r\n\r\n    /** Optimize bitmap to prevent OutOfMemory Exception */\r\n    @JvmStatic\r\n    fun optimizeBitmap(filePath: String?): Bitmap {\r\n        val options = BitmapFactory.Options()\r\n        options.inSampleSize = 4\r\n        return BitmapFactory.decodeFile(filePath, options)\r\n    }\r\n\r\n    /** get File Uri from application provider */\r\n    @JvmStatic\r\n    fun getFileUri(context: Context, file: File?): Uri {\r\n        return FileProvider.getUriForFile(context, context.packageName + \".provider\", file!!)\r\n    }\r\n\r\n    /** get country flags based on country code */\r\n    @JvmStatic\r\n    fun getCountryWithFlag(countryName: String, countryCode: String): String {\r\n        if (countryCode.length != 2) return countryName\r\n\r\n        val firstChar = Character.codePointAt(countryCode, 0) - 65 + 0x1F1E6\r\n        val secondChar = Character.codePointAt(countryCode, 1) - 65 + 0x1F1E6\r\n\r\n        val flag = String(Character.toChars(firstChar)) +\r\n                String(Character.toChars(secondChar))\r\n\r\n        return \"$countryName $flag \"\r\n    }\r\n\r\n    val dateFormats = listOf(\r\n        \"dd/MM/yyyy\",\r\n        \"dd-MM-yyyy\",\r\n        \"yyyy-MM-dd\",\r\n        \"MM/dd/yyyy\",\r\n        \"dd MMM yyyy\",\r\n        \"dd MMMM yyyy\",\r\n\r\n        \"dd/MM/yyyy HH:mm\",\r\n        \"dd/MM/yyyy hh:mm a\",\r\n        \"dd/MM/yyyy HH:mm:ss\",\r\n        \"dd/MM/yyyy hh:mm:ss a\",\r\n\r\n        \"yyyy-MM-dd HH:mm:ss\",\r\n        \"yyyy-MM-dd'T'HH:mm:ss\",\r\n\r\n        \"EEE, dd MMM yyyy\",\r\n        \"EEEE, dd MMMM yyyy\",\r\n\r\n        \"dd/MM/yyyy hh:mm a z\",\r\n        \"dd MMM yyyy hh:mm a z\",\r\n\r\n        \"HH:mm\",\r\n        \"hh:mm a\",\r\n\r\n        \"HH:mm:ss\",\r\n        \"hh:mm:ss a\",\r\n\r\n        \"yyyyMMdd\",\r\n        \"ddMMyyyy\",\r\n\r\n        \"yyyy-MM-dd HH:mm:ss.SSS\",\r\n        \"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\r\n    )\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GeoTagImage/src/main/java/com/dangiashish/GTIUtility.kt b/GeoTagImage/src/main/java/com/dangiashish/GTIUtility.kt
+--- a/GeoTagImage/src/main/java/com/dangiashish/GTIUtility.kt	(revision e8b17e8dbddcee7ae75936711ad3957329bec629)
++++ b/GeoTagImage/src/main/java/com/dangiashish/GTIUtility.kt	(date 1772890736628)
+@@ -97,13 +97,11 @@
+     @JvmStatic
+     fun generateOriginalFile(mContext: FragmentActivity, imageExtension: String): File? {
+         var file: File? = null
+-        Log.i(TAG, "generateOriginalFile: Step 1")
+         try {
+             val mediaStorageDir = File(
+                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                 "Camera"
+             )
+-            Log.w(TAG, "generateOriginalFile: Step 2 : $mediaStorageDir", )
+             if (!mediaStorageDir.exists()) {
+                 if (!mediaStorageDir.mkdirs()) {
+                     return null
+@@ -118,7 +116,6 @@
+         if (file != null) {
+             scanMediaFIle(mContext, file)
+         }
+-        Log.w(TAG, "generateOriginalFile: Step 3 $file", )
+         return file
+     }
+ 
+@@ -157,38 +154,29 @@
+         return "$countryName $flag "
+     }
+ 
+-    val dateFormats = listOf(
+-        "dd/MM/yyyy",
+-        "dd-MM-yyyy",
+-        "yyyy-MM-dd",
+-        "MM/dd/yyyy",
+-        "dd MMM yyyy",
+-        "dd MMMM yyyy",
+-
+-        "dd/MM/yyyy HH:mm",
+-        "dd/MM/yyyy hh:mm a",
+-        "dd/MM/yyyy HH:mm:ss",
+-        "dd/MM/yyyy hh:mm:ss a",
+-
+-        "yyyy-MM-dd HH:mm:ss",
+-        "yyyy-MM-dd'T'HH:mm:ss",
+-
+-        "EEE, dd MMM yyyy",
+-        "EEEE, dd MMMM yyyy",
++    fun decodeSampledBitmap(path: String, reqWidth: Int, reqHeight: Int): Bitmap {
++        return BitmapFactory.Options().run {
++            inJustDecodeBounds = true
++            BitmapFactory.decodeFile(path, this)
+ 
+-        "dd/MM/yyyy hh:mm a z",
+-        "dd MMM yyyy hh:mm a z",
++            inSampleSize = calculateInSampleSize(this, reqWidth, reqHeight)
+ 
+-        "HH:mm",
+-        "hh:mm a",
++            inJustDecodeBounds = false
++            BitmapFactory.decodeFile(path, this)
++        }
++    }
+ 
+-        "HH:mm:ss",
+-        "hh:mm:ss a",
++    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
++        val (height: Int, width: Int) = options.outHeight to options.outWidth
++        var inSampleSize = 1
+ 
+-        "yyyyMMdd",
+-        "ddMMyyyy",
+-
+-        "yyyy-MM-dd HH:mm:ss.SSS",
+-        "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+-    )
++        if (height > reqHeight || width > reqWidth) {
++            val halfHeight = height / 2
++            val halfWidth = width / 2
++            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
++                inSampleSize *= 2
++            }
++        }
++        return inSampleSize
++    }
+ }
+\ No newline at end of file
+Index: GeoTagImage/src/main/java/com/dangiashish/GTILocationUtility.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/*\r\n * MIT License\r\n *\r\n * Copyright (c) 2023 Ashish Dangi\r\n *\r\n * Permission is hereby granted, free of charge, to any person obtaining a copy\r\n * of this software and associated documentation files (the \"Software\"), to deal\r\n * in the Software without restriction, including without limitation the rights\r\n * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\n * copies of the Software, and to permit persons to whom the Software is\r\n * furnished to do so, subject to the following conditions:\r\n *\r\n * The above copyright notice and this permission notice shall be included in all\r\n * copies or substantial portions of the Software.\r\n *\r\n * THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\n * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\n * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\n * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\n * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\n * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\n * SOFTWARE.\r\n */\r\n\r\npackage com.dangiashish\r\n\r\nimport android.Manifest\r\nimport android.content.Context\r\nimport android.content.pm.PackageManager\r\nimport android.location.Location\r\nimport android.os.Handler\r\nimport android.os.Looper\r\nimport android.util.Log\r\nimport android.widget.Toast\r\nimport androidx.core.app.ActivityCompat\r\nimport com.google.android.gms.location.FusedLocationProviderClient\r\nimport com.google.android.gms.location.LocationAvailability\r\nimport com.google.android.gms.location.LocationCallback\r\nimport com.google.android.gms.location.LocationRequest\r\nimport com.google.android.gms.location.LocationResult\r\nimport com.google.android.gms.location.LocationServices\r\nimport com.google.android.gms.location.Priority\r\n\r\ninternal object GTILocationUtility {\r\n    private var fusedLocationProviderClient: FusedLocationProviderClient? = null\r\n\r\n    fun fetchLocation(context: Context, callback: (Location?) -> Unit) {\r\n        if (fusedLocationProviderClient == null) {\r\n            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)\r\n        }\r\n\r\n        if (ActivityCompat.checkSelfPermission(\r\n                context,\r\n                Manifest.permission.ACCESS_FINE_LOCATION\r\n            ) != PackageManager.PERMISSION_GRANTED ||\r\n            ActivityCompat.checkSelfPermission(\r\n                context,\r\n                Manifest.permission.ACCESS_COARSE_LOCATION\r\n            ) != PackageManager.PERMISSION_GRANTED\r\n        ) {\r\n            Handler(Looper.getMainLooper()).post {\r\n                Toast.makeText(context, \"Location permissions are not enabled\", Toast.LENGTH_SHORT).show()\r\n            }\r\n            callback(null)\r\n            return\r\n        }\r\n\r\n        fusedLocationProviderClient?.lastLocation\r\n            ?.addOnSuccessListener { loc ->\r\n                if (loc != null) {\r\n                    callback(loc)\r\n                    Log.e(\"LocationUtils\", \"fetchLocation: $loc\")\r\n                } else {\r\n                    requestLiveLocation(context, callback)\r\n                }\r\n            }\r\n            ?.addOnFailureListener { err ->\r\n                Log.e(\"LocationUtils\", \"fetchLocation: ${err.message}\")\r\n                requestLiveLocation(context, callback)\r\n            }\r\n    }\r\n\r\n    private fun requestLiveLocation(context: Context, callback: (Location?) -> Unit) {\r\n        val locationRequest = LocationRequest.Builder(\r\n            Priority.PRIORITY_HIGH_ACCURACY, 1000L\r\n        ).setMaxUpdates(1) // Get one update\r\n            .build()\r\n\r\n        if (ActivityCompat.checkSelfPermission(\r\n                context,\r\n                Manifest.permission.ACCESS_FINE_LOCATION\r\n            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(\r\n                context,\r\n                Manifest.permission.ACCESS_COARSE_LOCATION\r\n            ) != PackageManager.PERMISSION_GRANTED\r\n        ) {\r\n            return\r\n        }\r\n        fusedLocationProviderClient?.requestLocationUpdates(\r\n            locationRequest,\r\n            object : LocationCallback() {\r\n                override fun onLocationResult(locationResult: LocationResult) {\r\n                    fusedLocationProviderClient?.removeLocationUpdates(this)\r\n                    val location = locationResult.lastLocation\r\n                    callback(location)\r\n                    Log.e(\"LocationUtils\", \"Live Location: $location\")\r\n                }\r\n\r\n                override fun onLocationAvailability(locationAvailability: LocationAvailability) {\r\n                    if (!locationAvailability.isLocationAvailable) {\r\n                        Log.e(\"LocationUtils\", \"Location unavailable\")\r\n                        callback(null)\r\n\r\n                    }\r\n                }\r\n            },\r\n            Looper.getMainLooper()\r\n        )\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GeoTagImage/src/main/java/com/dangiashish/GTILocationUtility.kt b/GeoTagImage/src/main/java/com/dangiashish/GTILocationUtility.kt
+--- a/GeoTagImage/src/main/java/com/dangiashish/GTILocationUtility.kt	(revision e8b17e8dbddcee7ae75936711ad3957329bec629)
++++ b/GeoTagImage/src/main/java/com/dangiashish/GTILocationUtility.kt	(date 1772888913810)
+@@ -28,6 +28,7 @@
+ import android.content.Context
+ import android.content.pm.PackageManager
+ import android.location.Location
++import android.location.LocationManager
+ import android.os.Handler
+ import android.os.Looper
+ import android.util.Log
+@@ -41,6 +42,8 @@
+ import com.google.android.gms.location.LocationServices
+ import com.google.android.gms.location.Priority
+ 
++private const val TAG = "GTILocationUtility"
++
+ internal object GTILocationUtility {
+     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
+ 
+@@ -69,18 +72,24 @@
+             ?.addOnSuccessListener { loc ->
+                 if (loc != null) {
+                     callback(loc)
+-                    Log.e("LocationUtils", "fetchLocation: $loc")
+                 } else {
+                     requestLiveLocation(context, callback)
+                 }
+             }
+             ?.addOnFailureListener { err ->
+-                Log.e("LocationUtils", "fetchLocation: ${err.message}")
+                 requestLiveLocation(context, callback)
+             }
+     }
+ 
+     private fun requestLiveLocation(context: Context, callback: (Location?) -> Unit) {
++        if (!isLocationEnabled(context)){
++            Handler(Looper.getMainLooper()).post {
++                Toast.makeText(context, "Device GPS is not enabled", Toast.LENGTH_SHORT).show()
++            }
++            callback(null)
++            return
++        }
++        
+         val locationRequest = LocationRequest.Builder(
+             Priority.PRIORITY_HIGH_ACCURACY, 1000L
+         ).setMaxUpdates(1) // Get one update
+@@ -103,12 +112,10 @@
+                     fusedLocationProviderClient?.removeLocationUpdates(this)
+                     val location = locationResult.lastLocation
+                     callback(location)
+-                    Log.e("LocationUtils", "Live Location: $location")
+                 }
+ 
+                 override fun onLocationAvailability(locationAvailability: LocationAvailability) {
+                     if (!locationAvailability.isLocationAvailable) {
+-                        Log.e("LocationUtils", "Location unavailable")
+                         callback(null)
+ 
+                     }
+@@ -118,4 +125,10 @@
+         )
+     }
+ 
++    private fun isLocationEnabled(context: Context): Boolean {
++        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
++        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
++                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
++    }
++
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?><!--\r\n  ~ MIT License\r\n  ~\r\n  ~ Copyright (c) 2023 Ashish Dangi\r\n  ~\r\n  ~ Permission is hereby granted, free of charge, to any person obtaining a copy\r\n  ~ of this software and associated documentation files (the \"Software\"), to deal\r\n  ~ in the Software without restriction, including without limitation the rights\r\n  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\n  ~ copies of the Software, and to permit persons to whom the Software is\r\n  ~ furnished to do so, subject to the following conditions:\r\n  ~\r\n  ~ The above copyright notice and this permission notice shall be included in all\r\n  ~ copies or substantial portions of the Software.\r\n  ~\r\n  ~ THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\n  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\n  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\n  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\n  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\n  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\n  ~ SOFTWARE.\r\n  -->\r\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:fitsSystemWindows=\"true\"\r\n    android:orientation=\"vertical\"\r\n    tools:context=\".MainActivity\">\r\n\r\n    <LinearLayout\r\n        android:id=\"@+id/layoutImage\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_margin=\"10dp\"\r\n        android:layout_weight=\"1\"\r\n        android:orientation=\"horizontal\"\r\n        android:visibility=\"visible\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\">\r\n\r\n\r\n        <TextView\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"match_parent\"\r\n            android:layout_gravity=\"center\"\r\n            android:layout_weight=\"1\"\r\n            android:fontFamily=\"monospace\"\r\n            android:gravity=\"center\"\r\n            android:text=\"G\\nT\\nI\"\r\n            android:textSize=\"44dp\"\r\n            android:textStyle=\"bold\"\r\n\r\n            />\r\n\r\n        <com.google.android.material.card.MaterialCardView\r\n            android:layout_width=\"200dp\"\r\n            android:layout_height=\"200dp\"\r\n            android:layout_gravity=\"center\"\r\n            android:visibility=\"visible\"\r\n\r\n            app:cardElevation=\"1dp\"\r\n            app:cardUseCompatPadding=\"true\">\r\n\r\n            <RelativeLayout\r\n                android:id=\"@+id/llImage1\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"match_parent\"\r\n                android:gravity=\"center_vertical\"\r\n                android:orientation=\"horizontal\">\r\n\r\n                <ImageView\r\n                    android:id=\"@+id/ivImage\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"match_parent\"\r\n                    android:scaleType=\"fitXY\"\r\n                    android:visibility=\"visible\" />\r\n\r\n                <RelativeLayout\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_centerInParent=\"true\"\r\n                    android:gravity=\"center_vertical\"\r\n                    android:orientation=\"horizontal\"\r\n                    android:padding=\"5dp\">\r\n\r\n                    <ImageView\r\n                        android:id=\"@+id/ivCamera\"\r\n                        android:layout_width=\"100dp\"\r\n                        android:layout_height=\"100dp\"\r\n                        android:layout_marginEnd=\"5dp\"\r\n                        android:scaleType=\"fitXY\"\r\n                        android:src=\"@drawable/ic_outline_camera_alt_24\"\r\n                        android:visibility=\"visible\" />\r\n\r\n                    <ProgressBar\r\n                        android:id=\"@+id/progressBar\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_centerInParent=\"true\"\r\n                        android:visibility=\"gone\" />\r\n\r\n                </RelativeLayout>\r\n\r\n                <androidx.appcompat.widget.AppCompatImageView\r\n                    android:id=\"@+id/ivClose\"\r\n                    android:layout_width=\"20dp\"\r\n                    android:layout_height=\"20dp\"\r\n                    android:layout_alignParentTop=\"true\"\r\n                    android:layout_alignParentEnd=\"true\"\r\n                    android:background=\"@color/white\"\r\n                    android:scaleType=\"fitXY\"\r\n                    android:src=\"@drawable/ic_close\"\r\n                    android:visibility=\"gone\"\r\n                    app:tint=\"@color/black\" />\r\n\r\n            </RelativeLayout>\r\n\r\n        </com.google.android.material.card.MaterialCardView>\r\n\r\n        <TextView\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"match_parent\"\r\n            android:layout_gravity=\"center\"\r\n            android:layout_weight=\"1\"\r\n            android:fontFamily=\"monospace\"\r\n            android:gravity=\"center\"\r\n            android:text=\"G\\nT\\nI\"\r\n            android:textSize=\"44dp\"\r\n            android:textStyle=\"bold\"\r\n\r\n            />\r\n\r\n    </LinearLayout>\r\n\r\n    <ScrollView\r\n        android:id=\"@+id/scrollView\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_below=\"@id/layoutImage\"\r\n        app:layout_constraintTop_toBottomOf=\"@id/layoutImage\">\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"vertical\">\r\n\r\n            <androidx.cardview.widget.CardView\r\n                android:id=\"@+id/cardPreview\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                app:cardCornerRadius=\"8dp\"\r\n                app:cardUseCompatPadding=\"true\">\r\n\r\n                <androidx.appcompat.widget.LinearLayoutCompat\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:background=\"#000000\"\r\n                    android:orientation=\"vertical\"\r\n                    android:padding=\"8dp\">\r\n\r\n                    <androidx.appcompat.widget.AppCompatTextView\r\n                        android:id=\"@+id/tvCity\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Jhunjhunu, Rajasthan, India\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:textSize=\"14sp\" />\r\n\r\n                    <androidx.appcompat.widget.AppCompatTextView\r\n                        android:id=\"@+id/tvAddress\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Dangi Niwas, Patusari, Jhunjhunu, Rajasthan, 333001, India\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:textSize=\"14sp\" />\r\n\r\n                    <androidx.appcompat.widget.AppCompatTextView\r\n                        android:id=\"@+id/tvDate\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"01-02-2026 13:50:30 PM IST\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:textSize=\"14sp\" />\r\n\r\n                    <androidx.appcompat.widget.AppCompatTextView\r\n                        android:id=\"@+id/tvLatLong\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Lat : 34.4534654, Long : 43.435454\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:textSize=\"14sp\" />\r\n\r\n                    <androidx.appcompat.widget.AppCompatTextView\r\n                        android:id=\"@+id/tvAppName\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Captured via GPS Camera\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:textSize=\"14sp\" />\r\n\r\n                    <androidx.appcompat.widget.AppCompatTextView\r\n                        android:id=\"@+id/tvAuthor\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Clicked by Ashish\"\r\n                        android:textColor=\"@color/white\"\r\n                        android:textSize=\"14sp\" />\r\n\r\n\r\n                </androidx.appcompat.widget.LinearLayoutCompat>\r\n            </androidx.cardview.widget.CardView>\r\n\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:gravity=\"center\"\r\n                android:orientation=\"horizontal\"\r\n                android:weightSum=\"2\">\r\n\r\n                <com.google.android.material.button.MaterialButtonToggleGroup\r\n                    android:id=\"@+id/toggle_camera\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    app:checkedButton=\"@id/toggle_system_camera\"\r\n                    app:selectionRequired=\"true\"\r\n                    app:singleSelection=\"true\">\r\n\r\n                    <com.google.android.material.button.MaterialButton\r\n                        android:id=\"@+id/toggle_camera_x\"\r\n                        style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"CameraX Api\"\r\n                        android:textSize=\"12sp\" />\r\n\r\n                    <com.google.android.material.button.MaterialButton\r\n                        android:id=\"@+id/toggle_system_camera\"\r\n                        style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"System Camera\"\r\n                        android:textSize=\"12sp\" />\r\n                </com.google.android.material.button.MaterialButtonToggleGroup>\r\n            </LinearLayout>\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_margin=\"10dp\"\r\n                android:orientation=\"vertical\"\r\n                app:layout_constraintEnd_toEndOf=\"parent\"\r\n                app:layout_constraintStart_toStartOf=\"parent\"\r\n                app:layout_constraintTop_toBottomOf=\"@+id/layoutImage\">\r\n\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:padding=\"8dp\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:orientation=\"vertical\"\r\n                        android:padding=\"5dp\">\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:layout_width=\"wrap_content\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"3dp\"\r\n                            android:text=\"GTI Image Path : \"\r\n                            android:textStyle=\"bold\" />\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:id=\"@+id/tvGTIPath\"\r\n                            android:layout_width=\"wrap_content\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"3dp\" />\r\n                    </LinearLayout>\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"70dp\"\r\n                    android:padding=\"8dp\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_gravity=\"center_vertical\"\r\n                        android:orientation=\"horizontal\"\r\n                        android:padding=\"5dp\">\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:layout_width=\"wrap_content\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"3dp\"\r\n                            android:text=\"GTI Image Size : \"\r\n                            android:textStyle=\"bold\" />\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:id=\"@+id/tvImgSize\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"3dp\"\r\n                            android:textAlignment=\"textEnd\" />\r\n                    </LinearLayout>\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n                <!-- CardView for GTI Features -->\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:padding=\"8dp\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:gravity=\"center_vertical\"\r\n                        android:orientation=\"horizontal\"\r\n                        android:padding=\"5dp\">\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:layout_width=\"wrap_content\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"3dp\"\r\n                            android:text=\"Enable GTI Features : \"\r\n                            android:textStyle=\"bold\" />\r\n\r\n                        <com.google.android.material.materialswitch.MaterialSwitch\r\n                            android:id=\"@+id/gtiFeature\"\r\n                            android:layout_width=\"0dp\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_weight=\"1\"\r\n                            android:checked=\"true\" />\r\n                    </LinearLayout>\r\n\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n                <!-- CardView for Author Name -->\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:padding=\"8dp\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:orientation=\"vertical\">\r\n\r\n                        <LinearLayout\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:gravity=\"center_vertical\"\r\n                            android:orientation=\"horizontal\"\r\n                            android:padding=\"5dp\">\r\n\r\n                            <androidx.appcompat.widget.AppCompatTextView\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:layout_margin=\"3dp\"\r\n                                android:text=\"Show author name : \"\r\n                                android:textStyle=\"bold\" />\r\n\r\n                            <com.google.android.material.materialswitch.MaterialSwitch\r\n                                android:id=\"@+id/sAuthor\"\r\n                                android:layout_width=\"0dp\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:layout_weight=\"1\"\r\n                                android:checked=\"true\" />\r\n                        </LinearLayout>\r\n\r\n                        <com.google.android.material.textfield.TextInputEditText\r\n                            android:id=\"@+id/etAuthorName\"\r\n                            style=\"@style/Widget.Material3.TextInputEditText.OutlinedBox\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"2dp\"\r\n                            android:hint=\"Enter author name\" />\r\n                    </LinearLayout>\r\n\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n                <!-- CardView for App Name -->\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:padding=\"8dp\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:orientation=\"vertical\">\r\n\r\n                        <LinearLayout\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:gravity=\"center_vertical\"\r\n                            android:orientation=\"horizontal\"\r\n                            android:padding=\"5dp\">\r\n\r\n                            <androidx.appcompat.widget.AppCompatTextView\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:layout_margin=\"3dp\"\r\n                                android:text=\"Show app name : \"\r\n                                android:textStyle=\"bold\" />\r\n\r\n                            <com.google.android.material.materialswitch.MaterialSwitch\r\n                                android:id=\"@+id/sApp\"\r\n                                android:layout_width=\"0dp\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:layout_weight=\"1\"\r\n                                android:checked=\"true\" />\r\n                        </LinearLayout>\r\n\r\n                        <com.google.android.material.textfield.TextInputEditText\r\n                            android:id=\"@+id/etAppName\"\r\n                            style=\"@style/Widget.Material3.TextInputEditText.OutlinedBox\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"2dp\"\r\n                            android:hint=\"Enter app name (custom)\" />\r\n\r\n                    </LinearLayout>\r\n\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n                <!-- CardView for Lat Long -->\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n\r\n                    android:padding=\"8dp\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:gravity=\"center_vertical\"\r\n                        android:orientation=\"horizontal\"\r\n                        android:padding=\"5dp\">\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:layout_width=\"wrap_content\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"3dp\"\r\n                            android:text=\"Show lat long : \"\r\n                            android:textStyle=\"bold\" />\r\n\r\n                        <com.google.android.material.materialswitch.MaterialSwitch\r\n                            android:id=\"@+id/sLatLng\"\r\n                            android:layout_width=\"0dp\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_weight=\"1\"\r\n                            android:checked=\"true\" />\r\n                    </LinearLayout>\r\n\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n                <!-- CardView for Date -->\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n\r\n                    android:padding=\"8dp\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:gravity=\"center_vertical\"\r\n                        android:orientation=\"horizontal\"\r\n                        android:padding=\"5dp\">\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:layout_width=\"wrap_content\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"3dp\"\r\n                            android:text=\"Show date : \"\r\n                            android:textStyle=\"bold\" />\r\n\r\n                        <com.google.android.material.materialswitch.MaterialSwitch\r\n                            android:id=\"@+id/sDate\"\r\n                            android:layout_width=\"0dp\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_weight=\"1\"\r\n                            android:checked=\"true\" />\r\n                    </LinearLayout>\r\n\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n                <!-- CardView for Google Map -->\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n\r\n                    android:padding=\"8dp\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:gravity=\"center_vertical\"\r\n                        android:orientation=\"horizontal\"\r\n                        android:padding=\"5dp\">\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:layout_width=\"wrap_content\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"3dp\"\r\n                            android:text=\"Show google map : \"\r\n                            android:textStyle=\"bold\" />\r\n\r\n                        <com.google.android.material.materialswitch.MaterialSwitch\r\n                            android:id=\"@+id/sMap\"\r\n                            android:layout_width=\"0dp\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_weight=\"1\"\r\n                            android:checked=\"true\" />\r\n                    </LinearLayout>\r\n\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n                <!-- CardView for Image Extension -->\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:orientation=\"vertical\"\r\n                        android:padding=\"10dp\">\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:layout_width=\"wrap_content\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:text=\"Set Image Extension:\"\r\n                            android:textStyle=\"bold\"/>\r\n\r\n                        <HorizontalScrollView\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_marginTop=\"8dp\"\r\n                            android:scrollbars=\"none\">\r\n\r\n                            <com.google.android.material.button.MaterialButtonToggleGroup\r\n                                android:id=\"@+id/toggle_appearance_random\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                app:selectionRequired=\"true\"\r\n                                app:singleSelection=\"true\">\r\n\r\n                                <com.google.android.material.button.MaterialButton\r\n                                    android:id=\"@+id/button_ext_png\"\r\n                                    style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                                    android:layout_width=\"wrap_content\"\r\n                                    android:layout_height=\"wrap_content\"\r\n                                    android:text=\"PNG\"\r\n                                    android:textSize=\"12sp\"/>\r\n\r\n                                <com.google.android.material.button.MaterialButton\r\n                                    android:id=\"@+id/button_ext_jpeg\"\r\n                                    style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                                    android:layout_width=\"wrap_content\"\r\n                                    android:layout_height=\"wrap_content\"\r\n                                    android:text=\"JPEG\"\r\n                                    android:textSize=\"12sp\"/>\r\n\r\n                            </com.google.android.material.button.MaterialButtonToggleGroup>\r\n\r\n                        </HorizontalScrollView>\r\n\r\n                    </LinearLayout>\r\n\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n                <!-- CardView for camera ratio -->\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:padding=\"8dp\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:orientation=\"vertical\"\r\n                        android:padding=\"10dp\">\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:layout_width=\"wrap_content\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"3dp\"\r\n                            android:text=\"Set Camera Ratio : \"\r\n                            android:textStyle=\"bold\" />\r\n\r\n                        <HorizontalScrollView\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_marginTop=\"8dp\"\r\n                            android:scrollbars=\"none\">\r\n\r\n                        <com.google.android.material.button.MaterialButtonToggleGroup\r\n                            android:id=\"@+id/toggle_camera_ratio\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_gravity=\"end\"\r\n                            app:selectionRequired=\"true\"\r\n                            app:singleSelection=\"true\">\r\n\r\n                            <com.google.android.material.button.MaterialButton\r\n                                android:id=\"@+id/button_rat_1\"\r\n                                style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:text=\"1:1\"\r\n                                android:textSize=\"12sp\" />\r\n\r\n                            <com.google.android.material.button.MaterialButton\r\n                                android:id=\"@+id/button_rat_2\"\r\n                                style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:text=\"4:3\"\r\n                                android:textSize=\"12sp\" />\r\n\r\n                            <com.google.android.material.button.MaterialButton\r\n                                android:id=\"@+id/button_rat_3\"\r\n                                style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:text=\"16:9\"\r\n                                android:textSize=\"12sp\" />\r\n\r\n                            <com.google.android.material.button.MaterialButton\r\n                                android:id=\"@+id/button_rat_4\"\r\n                                style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:text=\"Full\"\r\n                                android:textSize=\"12sp\" />\r\n                        </com.google.android.material.button.MaterialButtonToggleGroup>\r\n\r\n                        </HorizontalScrollView>\r\n\r\n                    </LinearLayout>\r\n\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n                <!-- CardView for map view -->\r\n                <com.google.android.material.card.MaterialCardView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:padding=\"8dp\"\r\n                    app:cardUseCompatPadding=\"true\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:orientation=\"vertical\"\r\n                        android:padding=\"10dp\">\r\n\r\n                        <androidx.appcompat.widget.AppCompatTextView\r\n                            android:layout_width=\"wrap_content\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_margin=\"3dp\"\r\n                            android:text=\"Set Map View : \"\r\n                            android:textStyle=\"bold\" />\r\n\r\n                        <HorizontalScrollView\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_marginTop=\"8dp\"\r\n                            android:scrollbars=\"none\">\r\n\r\n                        <com.google.android.material.button.MaterialButtonToggleGroup\r\n                            android:id=\"@+id/toggle_map_view\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_gravity=\"end\"\r\n                            app:selectionRequired=\"true\"\r\n                            app:singleSelection=\"true\">\r\n\r\n                            <com.google.android.material.button.MaterialButton\r\n                                android:id=\"@+id/button_satellite\"\r\n                                style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:text=\"SATELLITE\"\r\n                                android:textSize=\"12sp\" />\r\n\r\n                            <com.google.android.material.button.MaterialButton\r\n                                android:id=\"@+id/button_hybrid\"\r\n                                style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:text=\"HYBRID\"\r\n                                android:textSize=\"12sp\" />\r\n\r\n                            <com.google.android.material.button.MaterialButton\r\n                                android:id=\"@+id/button_terrain\"\r\n                                style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:text=\"TERRAIN\"\r\n                                android:textSize=\"12sp\" />\r\n\r\n                            <com.google.android.material.button.MaterialButton\r\n                                android:id=\"@+id/button_roadmap\"\r\n                                style=\"@style/Widget.Material3.Button.OutlinedButton\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:text=\"ROADMAP\"\r\n                                android:textSize=\"12sp\" />\r\n                        </com.google.android.material.button.MaterialButtonToggleGroup>\r\n\r\n                        </HorizontalScrollView>\r\n\r\n                    </LinearLayout>\r\n\r\n                </com.google.android.material.card.MaterialCardView>\r\n\r\n            </LinearLayout>\r\n\r\n            <androidx.appcompat.widget.AppCompatButton\r\n                android:id=\"@+id/btnGithub\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_margin=\"10dp\"\r\n                android:text=\"View On Github\"\r\n                android:textAllCaps=\"false\"\r\n                android:visibility=\"gone\"\r\n                app:layout_constraintBottom_toBottomOf=\"parent\"\r\n                app:layout_constraintEnd_toEndOf=\"parent\"\r\n                app:layout_constraintStart_toStartOf=\"parent\" />\r\n\r\n        </LinearLayout>\r\n\r\n\r\n    </ScrollView>\r\n\r\n\r\n</RelativeLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	(revision e8b17e8dbddcee7ae75936711ad3957329bec629)
++++ b/app/src/main/res/layout/activity_main.xml	(date 1772883926294)
+@@ -345,6 +345,45 @@
+ 
+                 </com.google.android.material.card.MaterialCardView>
+ 
++                <!-- CardView for Directory Name -->
++                <com.google.android.material.card.MaterialCardView
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:padding="8dp"
++                    app:cardUseCompatPadding="true">
++
++                    <LinearLayout
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:orientation="vertical">
++
++                        <LinearLayout
++                            android:layout_width="match_parent"
++                            android:layout_height="wrap_content"
++                            android:gravity="center_vertical"
++                            android:orientation="horizontal"
++                            android:padding="5dp">
++
++                            <androidx.appcompat.widget.AppCompatTextView
++                                android:layout_width="wrap_content"
++                                android:layout_height="wrap_content"
++                                android:layout_margin="3dp"
++                                android:text="Directory Name : "
++                                android:textStyle="bold" />
++
++                        </LinearLayout>
++
++                        <com.google.android.material.textfield.TextInputEditText
++                            android:id="@+id/etDirectoryName"
++                            style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
++                            android:layout_width="match_parent"
++                            android:layout_height="wrap_content"
++                            android:layout_margin="2dp"
++                            android:hint="Camera (default)" />
++                    </LinearLayout>
++
++                </com.google.android.material.card.MaterialCardView>
++
+                 <!-- CardView for Author Name -->
+                 <com.google.android.material.card.MaterialCardView
+                     android:layout_width="match_parent"
+Index: app/src/main/java/com/codebyashish/geotagimage/demo/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/*\r\n * MIT License\r\n *\r\n * Copyright (c) 2023 Ashish Dangi\r\n *\r\n * Permission is hereby granted, free of charge, to any person obtaining a copy\r\n * of this software and associated documentation files (the \"Software\"), to deal\r\n * in the Software without restriction, including without limitation the rights\r\n * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\n * copies of the Software, and to permit persons to whom the Software is\r\n * furnished to do so, subject to the following conditions:\r\n *\r\n * The above copyright notice and this permission notice shall be included in all\r\n * copies or substantial portions of the Software.\r\n *\r\n * THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\n * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\n * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\n * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\n * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\n * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\n * SOFTWARE.\r\n */\r\n\r\npackage com.codebyashish.geotagimage.demo\r\n\r\nimport android.content.Context\r\nimport android.content.Intent\r\nimport android.graphics.ImageDecoder\r\nimport android.net.Uri\r\nimport android.os.Build\r\nimport android.os.Bundle\r\nimport android.os.Environment\r\nimport android.provider.MediaStore\r\nimport android.text.Editable\r\nimport android.text.TextWatcher\r\nimport android.util.Log\r\nimport android.view.View\r\nimport android.widget.Toast\r\nimport androidx.activity.addCallback\r\nimport androidx.activity.result.ActivityResultLauncher\r\nimport androidx.activity.result.contract.ActivityResultContracts\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.core.content.FileProvider\r\nimport androidx.core.net.toUri\r\nimport androidx.fragment.app.FragmentActivity\r\nimport com.dangiashish.PermissionCallback\r\nimport com.codebyashish.geotagimage.demo.databinding.ActivityMainBinding\r\nimport com.dangiashish.GeoTagImage\r\nimport com.dangiashish.GeoTagImage.Companion.JPEG\r\nimport com.dangiashish.GeoTagImage.Companion.PNG\r\nimport com.dangiashish.GeoTagImage.Companion.RATIO_16X9\r\nimport com.dangiashish.GeoTagImage.Companion.RATIO_1X1\r\nimport com.dangiashish.GeoTagImage.Companion.RATIO_4X3\r\nimport com.dangiashish.GeoTagImage.Companion.RATIO_FULL\r\nimport java.io.File\r\nimport java.text.DecimalFormat\r\n\r\nclass MainActivity : AppCompatActivity(), PermissionCallback {\r\n    private var gtiUri: Uri? = null\r\n    private lateinit var geoTagImage: GeoTagImage\r\n    private lateinit var cameraLauncher: ActivityResultLauncher<Uri>\r\n    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>\r\n\r\n    private val TAG = \"GeoTagImageLog\"\r\n    private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        setContentView(binding.root)\r\n\r\n        // initialize the context\r\n        mContext = this@MainActivity\r\n\r\n\r\n        binding.btnGithub.setOnClickListener {\r\n            val url = \"https://github.com/dangiashish/GeoTagImage\"\r\n            val intent = Intent(Intent.ACTION_VIEW)\r\n            intent.data = url.toUri()\r\n            startActivity(intent)\r\n        }\r\n        onBackPressedDispatcher.addCallback {\r\n            clearAppData(this@MainActivity)\r\n            finish()\r\n        }\r\n\r\n        permissionLauncher = registerForActivityResult(\r\n            ActivityResultContracts.RequestMultiplePermissions()\r\n        ) { permissions ->\r\n            val allGranted = permissions.all { it.value }\r\n\r\n            if (allGranted) {\r\n                onPermissionGranted()\r\n            } else {\r\n                onPermissionDenied()\r\n            }\r\n        }\r\n\r\n        cameraLauncher =\r\n            registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->\r\n                if (success) {\r\n                    gtiUri = geoTagImage.processCapturedImage()\r\n                    previewCapturedImage()\r\n                } else {\r\n                    Toast.makeText(mContext, \"Image capture failed\", Toast.LENGTH_SHORT).show()\r\n                }\r\n            }\r\n\r\n        // initialize the GeoTagImage class object with context and callback\r\n        geoTagImage = GeoTagImage(this, permissionLauncher, cameraLauncher)\r\n        geoTagImage.requestCameraAndLocationPermissions()\r\n        geoTagImage.enableCameraX(true)  // enable cameraX as default\r\n        geoTagImage.setDateFormat(\"yyyy-MM-dd HH:mm:ss\") // default date format\r\n\r\n\r\n        // setOnClickListener on camera button.\r\n        binding.ivCamera.setOnClickListener {\r\n            geoTagImage.launchCamera(\r\n                onImageCaptured = { uri ->\r\n                    if (uri != null) {\r\n                        gtiUri = uri\r\n                        previewCapturedImage()\r\n                    } else {\r\n                        Toast.makeText(mContext, \"Failed to capture photo\", Toast.LENGTH_SHORT).show()\r\n                    }\r\n                },\r\n                onFailure = {\r\n                    Toast.makeText(mContext, it, Toast.LENGTH_SHORT).show()\r\n                }\r\n            )\r\n        }\r\n\r\n        binding.gtiFeature.setOnCheckedChangeListener { _, isChecked ->\r\n            geoTagImage.enableGTIService(isChecked)  // Enable/Disable GTI Features.\r\n            if (!isChecked) {\r\n                geoTagImage.showAuthorName(false)\r\n                binding.etAuthorName.visibility = View.GONE\r\n                binding.sAuthor.isChecked = false\r\n                geoTagImage.showAppName(false)\r\n                binding.sApp.isChecked = false\r\n                geoTagImage.showLatLng(false)\r\n                binding.sLatLng.isChecked = false\r\n                geoTagImage.showDate(false)\r\n                binding.sDate.isChecked = false\r\n                geoTagImage.showGoogleMap(false)\r\n                binding.sMap.isChecked = false\r\n                binding.cardPreview.visibility = View.GONE\r\n            } else {\r\n                binding.cardPreview.visibility = View.VISIBLE\r\n            }\r\n        }\r\n\r\n        binding.sAuthor.setOnCheckedChangeListener { _, isChecked ->\r\n            geoTagImage.showAuthorName(isChecked)\r\n            binding.etAuthorName.visibility = if (isChecked) View.VISIBLE else View.GONE\r\n            binding.tvAuthor.visibility = if (isChecked) View.VISIBLE else View.GONE\r\n\r\n        }\r\n\r\n        binding.etAuthorName.addTextChangedListener(object : TextWatcher {\r\n            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {\r\n            }\r\n\r\n            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {\r\n                geoTagImage.setAuthorName(s.toString().trim())\r\n                binding.tvAuthor.text = \"Clicked by $s\"\r\n            }\r\n\r\n            override fun afterTextChanged(s: Editable?) {\r\n\r\n            }\r\n        })\r\n\r\n        binding.sApp.setOnCheckedChangeListener { _, isChecked ->\r\n            geoTagImage.showAppName(isChecked)\r\n            binding.etAppName.visibility = if (isChecked) View.VISIBLE else View.GONE\r\n            binding.tvAppName.visibility = if (isChecked) View.VISIBLE else View.GONE\r\n\r\n        }\r\n\r\n        binding.etAppName.addTextChangedListener(object : TextWatcher {\r\n            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {\r\n            }\r\n\r\n            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {\r\n                geoTagImage.setAppName(s.toString().trim())\r\n                binding.tvAppName.text = \"Captured via $s\"\r\n            }\r\n\r\n            override fun afterTextChanged(s: Editable?) {\r\n\r\n            }\r\n        })\r\n\r\n        binding.sLatLng.setOnCheckedChangeListener { _, isChecked ->\r\n            geoTagImage.showLatLng(isChecked)\r\n            binding.tvLatLong.visibility = if (isChecked) View.VISIBLE else View.GONE\r\n        }\r\n\r\n        binding.sDate.setOnCheckedChangeListener { _, isChecked ->\r\n            geoTagImage.showDate(isChecked)\r\n            binding.tvDate.visibility = if (isChecked) View.VISIBLE else View.GONE\r\n        }\r\n\r\n        binding.sMap.setOnCheckedChangeListener { _, isChecked ->\r\n            geoTagImage.showGoogleMap(isChecked)\r\n        }\r\n\r\n        binding.toggleAppearanceRandom.check(R.id.button_ext_jpeg)\r\n        binding.toggleAppearanceRandom.addOnButtonCheckedListener { group, checkedId, isChecked ->\r\n            if (isChecked) {\r\n                when (checkedId) {\r\n                    R.id.button_ext_png -> {\r\n                        geoTagImage.setImageExtension(PNG)\r\n                    }\r\n\r\n                    R.id.button_ext_jpeg -> {\r\n                        geoTagImage.setImageExtension(JPEG)\r\n                    }\r\n                }\r\n            }\r\n        }\r\n\r\n        binding.toggleCamera.check(R.id.toggle_camera_x)\r\n        binding.toggleCamera.addOnButtonCheckedListener { group, checkedId, isChecked ->\r\n            if (isChecked) {\r\n                when (checkedId) {\r\n                    R.id.toggle_camera_x -> {\r\n                        geoTagImage.enableCameraX(true)\r\n                    }\r\n\r\n                    R.id.toggle_system_camera -> {\r\n                        geoTagImage.enableCameraX(false)\r\n                    }\r\n                }\r\n            }\r\n        }\r\n\r\n        binding.toggleAppearanceRandom.check(R.id.button_ext_png)\r\n        binding.toggleAppearanceRandom.addOnButtonCheckedListener { group, checkedId, isChecked ->\r\n            if (isChecked) {\r\n                when (checkedId) {\r\n                    R.id.button_ext_png -> {\r\n                        geoTagImage.setImageExtension(PNG)\r\n                    }\r\n\r\n                    R.id.button_ext_jpeg -> {\r\n                        geoTagImage.setImageExtension(JPEG)\r\n                    }\r\n                }\r\n            }\r\n        }\r\n\r\n        binding.toggleCameraRatio.check(R.id.button_rat_1)\r\n        binding.toggleCameraRatio.addOnButtonCheckedListener { group, checkedId, isChecked ->\r\n            if (isChecked) {\r\n                when (checkedId) {\r\n                    R.id.button_rat_1 -> {\r\n                        geoTagImage.setCameraAspectRatio(RATIO_1X1)\r\n                    }\r\n                    R.id.button_rat_2 -> {\r\n                        geoTagImage.setCameraAspectRatio(RATIO_4X3)\r\n                    }\r\n                    R.id.button_rat_3 -> {\r\n                        geoTagImage.setCameraAspectRatio(RATIO_16X9)\r\n                    }\r\n                    R.id.button_rat_4 -> {\r\n                        geoTagImage.setCameraAspectRatio(RATIO_FULL)\r\n                    }\r\n                }\r\n            }\r\n        }\r\n\r\n        binding.toggleMapView.check(R.id.button_satellite)\r\n        binding.toggleCameraRatio.addOnButtonCheckedListener { group, checkedId, isChecked ->\r\n            if (isChecked) {\r\n                when (checkedId) {\r\n                    R.id.button_satellite -> {\r\n                        geoTagImage.setMapView(GeoTagImage.MapViewType.SATELLITE)\r\n                    }\r\n                    R.id.button_hybrid -> {\r\n                        geoTagImage.setMapView(GeoTagImage.MapViewType.HYBRID)\r\n                    }\r\n                    R.id.button_terrain -> {\r\n                        geoTagImage.setMapView(GeoTagImage.MapViewType.TERRAIN)\r\n                    }\r\n                    R.id.button_roadmap -> {\r\n                        geoTagImage.setMapView(GeoTagImage.MapViewType.ROADMAP)\r\n                    }\r\n                }\r\n            }\r\n        }\r\n\r\n\r\n    }\r\n\r\n    private fun previewCapturedImage() {\r\n        gtiUri?.let { uri ->\r\n            binding.ivImage.let { imageView ->\r\n                try {\r\n                    val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {\r\n                        ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))\r\n                    } else {\r\n                        @Suppress(\"DEPRECATION\")\r\n                        MediaStore.Images.Media.getBitmap(contentResolver, uri)\r\n                    }\r\n                    imageView.setImageBitmap(bitmap)\r\n                    imageView.visibility = View.VISIBLE\r\n                    binding.ivClose.visibility = View.VISIBLE\r\n                    binding.progressBar.visibility = View.GONE\r\n\r\n                    binding.tvGTIPath.text = gtiUri?.path\r\n                    binding.tvImgSize.text = getFileSize(gtiUri?.path!!)\r\n\r\n\r\n                } catch (e: Exception) {\r\n                    Log.e(TAG, \"Error loading image: ${e.message}\")\r\n                }\r\n            }\r\n            binding.ivClose.setOnClickListener { v: View? ->\r\n                binding.ivImage.setImageBitmap(null)\r\n                binding.ivCamera.visibility = View.VISIBLE\r\n                binding.ivClose.visibility = View.GONE\r\n                binding.ivImage.setImageDrawable(null)\r\n                binding.tvGTIPath.text = \"\"\r\n                binding.tvImgSize.text = \"\"\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun viewInGallery(gtiImageStoragePath: String) {\r\n        val file = File(gtiImageStoragePath)\r\n        if (file.exists()) {\r\n            val uri: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {\r\n                FileProvider.getUriForFile(\r\n                    mContext,\r\n                    \"${applicationContext.packageName}.provider\",\r\n                    file\r\n                )\r\n            } else {\r\n                Uri.fromFile(file)\r\n            }\r\n            val intent = Intent(Intent.ACTION_VIEW).apply {\r\n                setDataAndType(uri, \"image/*\")\r\n                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)\r\n            }\r\n            startActivity(intent)\r\n        } else {\r\n            Log.e(TAG, \"viewInGallery: file not exist\")\r\n        }\r\n\r\n    }\r\n\r\n    override fun onPermissionGranted() {\r\n\r\n    }\r\n\r\n    override fun onPermissionDenied() {\r\n        geoTagImage.requestCameraAndLocationPermissions()\r\n    }\r\n\r\n    companion object {\r\n        lateinit var mContext: FragmentActivity\r\n    }\r\n\r\n    private fun getFileSize(filePath: String?): String {\r\n        val file = filePath?.let { File(it) }\r\n\r\n        if (file!!.exists()) {\r\n            val fileSizeInBytes = file.length()\r\n            val fileSizeInKB = fileSizeInBytes / 1024.0\r\n            val fileSizeInMB = fileSizeInKB / 1024.0\r\n\r\n            val decimalFormat = DecimalFormat(\"#.##\")\r\n\r\n            return when {\r\n                fileSizeInMB >= 1 -> \"~ ${decimalFormat.format(fileSizeInMB)} MB\"\r\n                fileSizeInKB >= 1 -> \"~ ${decimalFormat.format(fileSizeInKB)} KB\"\r\n                else -> \"~ $fileSizeInBytes Bytes\" // Return size in Bytes\r\n            }\r\n        } else {\r\n            return \"\"\r\n        }\r\n    }\r\n\r\n    fun clearAppData(context: Context) {\r\n        try {\r\n            val picturesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)\r\n            var success = true\r\n            picturesDir?.listFiles()?.forEach { file ->\r\n                if (file.isFile) {\r\n                    success = success && file.delete()\r\n                }\r\n            }\r\n            Toast.makeText(context, \"Deleted $success\", Toast.LENGTH_SHORT).show()\r\n        } catch (e: Exception) {\r\n            e.printStackTrace()\r\n        }\r\n    }\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/codebyashish/geotagimage/demo/MainActivity.kt b/app/src/main/java/com/codebyashish/geotagimage/demo/MainActivity.kt
+--- a/app/src/main/java/com/codebyashish/geotagimage/demo/MainActivity.kt	(revision e8b17e8dbddcee7ae75936711ad3957329bec629)
++++ b/app/src/main/java/com/codebyashish/geotagimage/demo/MainActivity.kt	(date 1772896633497)
+@@ -26,6 +26,7 @@
+ 
+ import android.content.Context
+ import android.content.Intent
++import android.graphics.Color
+ import android.graphics.ImageDecoder
+ import android.net.Uri
+ import android.os.Build
+@@ -58,7 +59,7 @@
+ 
+ class MainActivity : AppCompatActivity(), PermissionCallback {
+     private var gtiUri: Uri? = null
+-    private lateinit var geoTagImage: GeoTagImage
++    private lateinit var gti: GeoTagImage
+     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
+     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+ 
+@@ -99,23 +100,38 @@
+         cameraLauncher =
+             registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+                 if (success) {
+-                    gtiUri = geoTagImage.processCapturedImage()
++                    gtiUri = gti.processCapturedImage()
+                     previewCapturedImage()
+                 } else {
+-                    Toast.makeText(mContext, "Image capture failed", Toast.LENGTH_SHORT).show()
++                    Toast.makeText(mContext, "Failed to capture photo", Toast.LENGTH_SHORT).show()
+                 }
+             }
+ 
+         // initialize the GeoTagImage class object with context and callback
+-        geoTagImage = GeoTagImage(this, permissionLauncher, cameraLauncher)
+-        geoTagImage.requestCameraAndLocationPermissions()
+-        geoTagImage.enableCameraX(true)  // enable cameraX as default
+-        geoTagImage.setDateFormat("yyyy-MM-dd HH:mm:ss") // default date format
++        gti = GeoTagImage(this, permissionLauncher, cameraLauncher)
++        gti.requestCameraAndLocationPermissions()
++        gti.enableCameraX(true)  // enable cameraX as default
++        gti.setDateFormat("yyyy-MM-dd HH:mm:ss") // default date format
++
++        // author details
++        gti.showAuthorName(true) // default true
++        gti.setLabel("Captured By") // default label
++        gti.setAuthorName("Ashish") // default author name
++
++        // app details
++        gti.showAppName(true) // default true
++        gti.setAppName("GeoTagImage") // default app name
++
++        gti.showDate(true) // default true
++
++        gti.setBackgroundRadius(10f)
++        gti.setBackgroundColor("#80000000")
++        gti.setTextColor(Color.WHITE)
+ 
+ 
+         // setOnClickListener on camera button.
+         binding.ivCamera.setOnClickListener {
+-            geoTagImage.launchCamera(
++            gti.launchCamera(
+                 onImageCaptured = { uri ->
+                     if (uri != null) {
+                         gtiUri = uri
+@@ -131,18 +147,18 @@
+         }
+ 
+         binding.gtiFeature.setOnCheckedChangeListener { _, isChecked ->
+-            geoTagImage.enableGTIService(isChecked)  // Enable/Disable GTI Features.
++            gti.enableGTIService(isChecked)  // Enable/Disable GTI Features.
+             if (!isChecked) {
+-                geoTagImage.showAuthorName(false)
++                gti.showAuthorName(false)
+                 binding.etAuthorName.visibility = View.GONE
+                 binding.sAuthor.isChecked = false
+-                geoTagImage.showAppName(false)
++                gti.showAppName(false)
+                 binding.sApp.isChecked = false
+-                geoTagImage.showLatLng(false)
++                gti.showLatLng(false)
+                 binding.sLatLng.isChecked = false
+-                geoTagImage.showDate(false)
++                gti.showDate(false)
+                 binding.sDate.isChecked = false
+-                geoTagImage.showGoogleMap(false)
++                gti.showGoogleMap(false)
+                 binding.sMap.isChecked = false
+                 binding.cardPreview.visibility = View.GONE
+             } else {
+@@ -151,18 +167,31 @@
+         }
+ 
+         binding.sAuthor.setOnCheckedChangeListener { _, isChecked ->
+-            geoTagImage.showAuthorName(isChecked)
++            gti.showAuthorName(isChecked)
+             binding.etAuthorName.visibility = if (isChecked) View.VISIBLE else View.GONE
+             binding.tvAuthor.visibility = if (isChecked) View.VISIBLE else View.GONE
+ 
+         }
+ 
++        binding.etDirectoryName.addTextChangedListener(object : TextWatcher {
++            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
++            }
++
++            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
++                gti.setDirectory(s.toString().trim()) // custom directory/folder name
++            }
++
++            override fun afterTextChanged(s: Editable?) {
++
++            }
++        })
++
+         binding.etAuthorName.addTextChangedListener(object : TextWatcher {
+             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+             }
+ 
+             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+-                geoTagImage.setAuthorName(s.toString().trim())
++                gti.setAuthorName(s.toString().trim())
+                 binding.tvAuthor.text = "Clicked by $s"
+             }
+ 
+@@ -172,7 +201,7 @@
+         })
+ 
+         binding.sApp.setOnCheckedChangeListener { _, isChecked ->
+-            geoTagImage.showAppName(isChecked)
++            gti.showAppName(isChecked)
+             binding.etAppName.visibility = if (isChecked) View.VISIBLE else View.GONE
+             binding.tvAppName.visibility = if (isChecked) View.VISIBLE else View.GONE
+ 
+@@ -183,7 +212,7 @@
+             }
+ 
+             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+-                geoTagImage.setAppName(s.toString().trim())
++                gti.setAppName(s.toString().trim())
+                 binding.tvAppName.text = "Captured via $s"
+             }
+ 
+@@ -193,32 +222,17 @@
+         })
+ 
+         binding.sLatLng.setOnCheckedChangeListener { _, isChecked ->
+-            geoTagImage.showLatLng(isChecked)
++            gti.showLatLng(isChecked)
+             binding.tvLatLong.visibility = if (isChecked) View.VISIBLE else View.GONE
+         }
+ 
+         binding.sDate.setOnCheckedChangeListener { _, isChecked ->
+-            geoTagImage.showDate(isChecked)
++            gti.showDate(isChecked)
+             binding.tvDate.visibility = if (isChecked) View.VISIBLE else View.GONE
+         }
+ 
+         binding.sMap.setOnCheckedChangeListener { _, isChecked ->
+-            geoTagImage.showGoogleMap(isChecked)
+-        }
+-
+-        binding.toggleAppearanceRandom.check(R.id.button_ext_jpeg)
+-        binding.toggleAppearanceRandom.addOnButtonCheckedListener { group, checkedId, isChecked ->
+-            if (isChecked) {
+-                when (checkedId) {
+-                    R.id.button_ext_png -> {
+-                        geoTagImage.setImageExtension(PNG)
+-                    }
+-
+-                    R.id.button_ext_jpeg -> {
+-                        geoTagImage.setImageExtension(JPEG)
+-                    }
+-                }
+-            }
++            gti.showGoogleMap(isChecked)
+         }
+ 
+         binding.toggleCamera.check(R.id.toggle_camera_x)
+@@ -226,66 +240,69 @@
+             if (isChecked) {
+                 when (checkedId) {
+                     R.id.toggle_camera_x -> {
+-                        geoTagImage.enableCameraX(true)
++                        gti.enableCameraX(true)
+                     }
+ 
+                     R.id.toggle_system_camera -> {
+-                        geoTagImage.enableCameraX(false)
++                        gti.enableCameraX(false)
+                     }
+                 }
+             }
+         }
+ 
+         binding.toggleAppearanceRandom.check(R.id.button_ext_png)
++        gti.setImageExtension(PNG)
+         binding.toggleAppearanceRandom.addOnButtonCheckedListener { group, checkedId, isChecked ->
+             if (isChecked) {
+                 when (checkedId) {
+                     R.id.button_ext_png -> {
+-                        geoTagImage.setImageExtension(PNG)
++                        gti.setImageExtension(PNG)
+                     }
+ 
+                     R.id.button_ext_jpeg -> {
+-                        geoTagImage.setImageExtension(JPEG)
++                        gti.setImageExtension(JPEG)
+                     }
+                 }
+             }
+         }
+ 
+         binding.toggleCameraRatio.check(R.id.button_rat_1)
++        gti.setCameraAspectRatio(RATIO_1X1)
+         binding.toggleCameraRatio.addOnButtonCheckedListener { group, checkedId, isChecked ->
+             if (isChecked) {
+                 when (checkedId) {
+                     R.id.button_rat_1 -> {
+-                        geoTagImage.setCameraAspectRatio(RATIO_1X1)
++                        gti.setCameraAspectRatio(RATIO_1X1)
+                     }
+                     R.id.button_rat_2 -> {
+-                        geoTagImage.setCameraAspectRatio(RATIO_4X3)
++                        gti.setCameraAspectRatio(RATIO_4X3)
+                     }
+                     R.id.button_rat_3 -> {
+-                        geoTagImage.setCameraAspectRatio(RATIO_16X9)
++                        gti.setCameraAspectRatio(RATIO_16X9)
+                     }
+                     R.id.button_rat_4 -> {
+-                        geoTagImage.setCameraAspectRatio(RATIO_FULL)
++                        gti.setCameraAspectRatio(RATIO_FULL)
+                     }
+                 }
+             }
+         }
+ 
+         binding.toggleMapView.check(R.id.button_satellite)
+-        binding.toggleCameraRatio.addOnButtonCheckedListener { group, checkedId, isChecked ->
++        gti.setMapView(GeoTagImage.MapViewType.SATELLITE)
++        binding.toggleMapView.addOnButtonCheckedListener { group, checkedId, isChecked ->
+             if (isChecked) {
+                 when (checkedId) {
+                     R.id.button_satellite -> {
+-                        geoTagImage.setMapView(GeoTagImage.MapViewType.SATELLITE)
++                        gti.setMapView(GeoTagImage.MapViewType.SATELLITE)
+                     }
+                     R.id.button_hybrid -> {
+-                        geoTagImage.setMapView(GeoTagImage.MapViewType.HYBRID)
++                        gti.setMapView(GeoTagImage.MapViewType.HYBRID)
+                     }
+                     R.id.button_terrain -> {
+-                        geoTagImage.setMapView(GeoTagImage.MapViewType.TERRAIN)
++                        gti.setMapView(GeoTagImage.MapViewType.TERRAIN)
+                     }
+                     R.id.button_roadmap -> {
+-                        geoTagImage.setMapView(GeoTagImage.MapViewType.ROADMAP)
++                        gti.setMapView(GeoTagImage.MapViewType.ROADMAP)
+                     }
+                 }
+             }
+@@ -356,7 +373,7 @@
+     }
+ 
+     override fun onPermissionDenied() {
+-        geoTagImage.requestCameraAndLocationPermissions()
++        gti.requestCameraAndLocationPermissions()
+     }
+ 
+     companion object {
+@@ -392,6 +409,7 @@
+                     success = success && file.delete()
+                 }
+             }
++            gti.cleanup()
+             Toast.makeText(context, "Deleted $success", Toast.LENGTH_SHORT).show()
+         } catch (e: Exception) {
+             e.printStackTrace()
+Index: GeoTagImage/src/main/java/com/dangiashish/GeoTagImage.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/*\r\n * MIT License\r\n *\r\n * Copyright (c) 2023 Ashish Dangi\r\n *\r\n * Permission is hereby granted, free of charge, to any person obtaining a copy\r\n * of this software and associated documentation files (the \"Software\"), to deal\r\n * in the Software without restriction, including without limitation the rights\r\n * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\n * copies of the Software, and to permit persons to whom the Software is\r\n * furnished to do so, subject to the following conditions:\r\n *\r\n * The above copyright notice and this permission notice shall be included in all\r\n * copies or substantial portions of the Software.\r\n *\r\n * THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\n * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\n * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\n * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\n * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\n * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\n * SOFTWARE.\r\n */\r\n\r\npackage com.dangiashish\r\n\r\nimport android.Manifest\r\nimport android.app.Activity\r\nimport android.app.Dialog\r\nimport android.content.ContentValues\r\nimport android.content.pm.PackageManager\r\nimport android.graphics.Bitmap\r\nimport android.graphics.BitmapFactory\r\nimport android.graphics.Canvas\r\nimport android.graphics.Color\r\nimport android.graphics.Matrix\r\nimport android.graphics.Paint\r\nimport android.graphics.RectF\r\nimport android.graphics.Typeface\r\nimport android.location.Geocoder\r\nimport android.location.Location\r\nimport android.media.MediaPlayer\r\nimport android.media.MediaScannerConnection\r\nimport android.net.Uri\r\nimport android.os.Build\r\nimport android.os.Environment\r\nimport android.provider.MediaStore\r\nimport android.util.Log\r\nimport android.util.Size\r\nimport android.view.MotionEvent\r\nimport android.view.ScaleGestureDetector\r\nimport android.view.Window\r\nimport android.widget.SeekBar\r\nimport android.widget.Toast\r\nimport androidx.activity.result.ActivityResultLauncher\r\nimport androidx.camera.core.AspectRatio\r\nimport androidx.camera.core.Camera\r\nimport androidx.camera.core.CameraSelector\r\nimport androidx.camera.core.ImageCapture\r\nimport androidx.camera.core.ImageCaptureException\r\nimport androidx.camera.core.Preview\r\nimport androidx.camera.lifecycle.ProcessCameraProvider\r\nimport androidx.camera.view.PreviewView\r\nimport androidx.constraintlayout.widget.ConstraintLayout\r\nimport androidx.core.content.ContextCompat\r\nimport androidx.core.content.FileProvider\r\nimport androidx.core.graphics.scale\r\nimport androidx.core.graphics.toColorInt\r\nimport androidx.exifinterface.media.ExifInterface\r\nimport androidx.fragment.app.FragmentActivity\r\nimport androidx.lifecycle.LifecycleOwner\r\nimport com.codebyashish.geotagimage.R\r\nimport com.codebyashish.geotagimage.databinding.CameraLayoutBinding\r\nimport java.io.File\r\nimport java.io.FileOutputStream\r\nimport java.io.IOException\r\nimport java.net.URL\r\nimport java.text.SimpleDateFormat\r\nimport java.util.Date\r\nimport java.util.Locale\r\nimport java.util.concurrent.ExecutorService\r\nimport java.util.concurrent.Executors\r\nimport kotlin.math.abs\r\nimport kotlin.math.max\r\nimport kotlin.math.min\r\n\r\n/**\r\n * @param context FragmentActivity or AppCompatActivity\r\n * @param permissionLauncher ActivityResultLauncher for camera and location permissions\r\n * @param cameraLauncher ActivityResultLauncher for camera capture (mandatory, if app/developer required using system camera)\r\n */\r\nclass GeoTagImage(\r\n    private val context: FragmentActivity,\r\n    private val permissionLauncher: ActivityResultLauncher<Array<String>>,\r\n    private val cameraLauncher: ActivityResultLauncher<Uri>? = null\r\n) {\r\n    private var address: String = \"\"\r\n    private var city: String = \"\"\r\n    private var country: String = \"\"\r\n    private var latLong = \"\"\r\n    private var date = \"\"\r\n    private var mapBitmap: Bitmap? = null\r\n    private var imageExtension = \".jpg\"\r\n    private var fileUri: Uri? = null\r\n    private var geocoder: Geocoder? = null\r\n    private var latitude = 0.0\r\n    private var longitude = 0.0\r\n    private var customTextSize = 25f\r\n    private var typeface = Typeface.DEFAULT\r\n    private var radius = dpToPx(6f)\r\n    private var backgroundColor = \"#66000000\".toColorInt()\r\n    private var textColor = Color.WHITE\r\n    private var backgroundHeight = 150f\r\n    private var authorName: String = \"\"\r\n    private var dateFormat: String = \"\"\r\n    private var label: String = \"Captured By\"\r\n    private var exifAppName: String? = null\r\n    private var showAuthorName = false\r\n    private var showAppName = false\r\n    private var showLatLng = true\r\n    private var showDate = true\r\n    private var showGoogleMap = true\r\n    private val elementsList = ArrayList<String>()\r\n    private var mapHeight = backgroundHeight.toInt()\r\n    private var mapWidth = 140\r\n    private var apiKey: String? = null\r\n    private var center: String? = null\r\n    private var dimension: String? = null\r\n    private var markerUrl: String? = null\r\n    private var mapView=  MapViewType.SATELLITE\r\n    private val executorService = Executors.newSingleThreadExecutor()\r\n    private val TAG = \"GTILogs\"\r\n    private var isEnabled = true\r\n    private var currentPhotoPath: String? = null\r\n    private var latestLocation: Location? = null\r\n\r\n    // CameraX related variables\r\n    private var useCameraX = false\r\n    private var cameraProvider: ProcessCameraProvider? = null\r\n    private var imageCapture: ImageCapture? = null\r\n    private var camera: Camera? = null\r\n    private var cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()\r\n\r\n    // Camera UI components (managed internally)\r\n    private var cameraDialog: Dialog? = null\r\n    private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA\r\n    private var pendingCallback: ((Uri?) -> Unit)? = null\r\n    private var scaleGestureDetector: ScaleGestureDetector? = null\r\n    private var currentZoomRatio = 1f\r\n    private var cameraAspectRatio: Int = AspectRatio.RATIO_4_3\r\n    private lateinit var binding: CameraLayoutBinding\r\n    enum class FlashMode { ON, OFF, AUTO }\r\n    private var flashMode = FlashMode.OFF\r\n    private var flashCode = 0\r\n\r\n    enum class MapViewType(val value: String) {\r\n        ROADMAP(\"roadmap\"),\r\n        SATELLITE(\"satellite\"),\r\n        TERRAIN(\"terrain\"),\r\n        HYBRID(\"hybrid\")\r\n    }\r\n\r\n    /**\r\n     * Launch camera interface\r\n     * If CameraX is enabled, shows custom camera UI\r\n     * If CameraX is disabled, uses system camera (original behavior)\r\n     * @param onImageCaptured callback with captured image URI\r\n     */\r\n    fun launchCamera(onImageCaptured: (Uri?) -> Unit, onFailure: (String?) -> Unit) {\r\n        if (useCameraX) {\r\n            val lifecycleOwner = getLifecycleOwner()\r\n            if (lifecycleOwner != null) {\r\n                showCameraXInterface(onImageCaptured)\r\n            } else {\r\n                Log.e(TAG, \"Context must be FragmentActivity or AppCompatActivity for CameraX\")\r\n                onImageCaptured(null)\r\n                onFailure.invoke(\"Context must be FragmentActivity or AppCompatActivity for CameraX\")\r\n            }\r\n        } else {\r\n            if (cameraLauncher == null) {\r\n                onFailure.invoke(\"CameraLauncher is not initialized\")\r\n                return\r\n            }\r\n            pendingCallback = onImageCaptured\r\n            preparePhotoUriAndLocation(onImageCaptured)\r\n        }\r\n    }\r\n\r\n    private fun getLifecycleOwner(): LifecycleOwner? {\r\n        return when (context) {\r\n            else -> context\r\n        }\r\n    }\r\n\r\n    private fun showCameraXInterface(onImageCaptured: (Uri?) -> Unit) {\r\n        if (!checkCameraPermissions()) {\r\n            requestCameraAndLocationPermissions()\r\n            onImageCaptured(null)\r\n            return\r\n        }\r\n\r\n        createCameraDialog(onImageCaptured)\r\n        startCameraX()\r\n    }\r\n\r\n    private fun createCameraDialog(onImageCaptured: (Uri?) -> Unit) {\r\n        var mediaPlayer: MediaPlayer? = null\r\n\r\n        cameraDialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen).apply {\r\n            requestWindowFeature(Window.FEATURE_NO_TITLE)\r\n            setCancelable(true)\r\n            binding = CameraLayoutBinding.inflate(layoutInflater)\r\n            setContentView(binding.root)\r\n\r\n            binding.zoomSeekBar.max = 90\r\n            binding.zoomSeekBar.progress = 0\r\n            binding.zoomValue.text = \"1.0x\"\r\n\r\n            binding.previewView.scaleType = PreviewView.ScaleType.FILL_CENTER\r\n\r\n            scaleGestureDetector = ScaleGestureDetector(\r\n                context,\r\n                object : ScaleGestureDetector.SimpleOnScaleGestureListener() {\r\n                    override fun onScale(detector: ScaleGestureDetector): Boolean {\r\n                        val zoomState = camera?.cameraInfo?.zoomState?.value ?: return false\r\n\r\n                        val minZoom = zoomState.minZoomRatio\r\n                        val maxZoom = zoomState.maxZoomRatio\r\n\r\n                        currentZoomRatio *= detector.scaleFactor\r\n                        currentZoomRatio = currentZoomRatio.coerceIn(minZoom, maxZoom)\r\n                        camera?.cameraControl?.setZoomRatio(currentZoomRatio)\r\n\r\n                        val uiZoom = 1f + ((currentZoomRatio - minZoom) / (maxZoom - minZoom)) * 9f\r\n                        binding.zoomSeekBar.progress = ((uiZoom - 1f) * 10).toInt()\r\n                        binding.zoomValue.text = String.format(Locale.US, \"%.1fx\", uiZoom)\r\n\r\n                        return true\r\n                    }\r\n                })\r\n\r\n            binding.previewView.setOnTouchListener { v, event ->\r\n                scaleGestureDetector?.onTouchEvent(event)\r\n                if (event.action == MotionEvent.ACTION_UP) v.performClick()\r\n                true\r\n            }\r\n\r\n            binding.zoomSeekBar.setOnSeekBarChangeListener(object :\r\n                SeekBar.OnSeekBarChangeListener {\r\n                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {\r\n                    val zoomState = camera?.cameraInfo?.zoomState?.value ?: return\r\n\r\n                    val minZoom = zoomState.minZoomRatio\r\n                    val maxZoom = zoomState.maxZoomRatio\r\n\r\n                    // UI zoom 1x to 10x\r\n                    val uiZoom = 1f + (progress / 10f)\r\n\r\n                    val cameraZoom = minZoom + ((uiZoom - 1f) / 9f) * (maxZoom - minZoom)\r\n\r\n                    camera?.cameraControl?.setZoomRatio(cameraZoom)\r\n                    currentZoomRatio = cameraZoom\r\n\r\n                    binding.zoomValue.text = String.format(Locale.US, \"%.1fx\", uiZoom)\r\n                }\r\n\r\n                override fun onStartTrackingTouch(seekBar: SeekBar?) {}\r\n                override fun onStopTrackingTouch(seekBar: SeekBar?) {}\r\n            })\r\n\r\n            binding.btnCapture.setOnClickListener {\r\n                if (mediaPlayer == null) mediaPlayer =\r\n                    MediaPlayer.create(context, R.raw.sound_shutter)\r\n                mediaPlayer?.start()\r\n\r\n                it.animate().scaleX(0.85f).scaleY(0.85f).setDuration(100).withEndAction {\r\n                    it.animate().scaleX(1f).scaleY(1f).setDuration(100).start()\r\n                }.start()\r\n\r\n                capturePhotoWithCameraX(onImageCaptured)\r\n            }\r\n\r\n            binding.btnClose.setOnClickListener { closeCameraDialog() }\r\n            binding.btnFlip.setOnClickListener { flipCamera() }\r\n\r\n            binding.ivFlash.setOnClickListener {\r\n                if (flashCode >= 2) flashCode = 0 else flashCode += 1\r\n                updateFlashUI()\r\n\r\n            }\r\n\r\n\r\n            show()\r\n        }\r\n    }\r\n\r\n    private fun flipCamera() {\r\n        cameraSelector = if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {\r\n            CameraSelector.DEFAULT_FRONT_CAMERA\r\n        } else {\r\n            CameraSelector.DEFAULT_BACK_CAMERA\r\n        }\r\n\r\n        // Restart camera with new selector\r\n        startCameraX()\r\n    }\r\n\r\n    private fun closeCameraDialog() {\r\n        cameraDialog?.dismiss()\r\n        cameraDialog = null\r\n        stopCameraX()\r\n    }\r\n\r\n    private fun startCameraX() {\r\n        val lifecycleOwner = getLifecycleOwner() ?: return\r\n\r\n        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)\r\n        cameraProviderFuture.addListener({\r\n            try {\r\n                cameraProvider = cameraProviderFuture.get()\r\n                bindCameraUseCases(lifecycleOwner)\r\n            } catch (exc: Exception) {\r\n                Log.e(TAG, \"Use case binding failed\", exc)\r\n            }\r\n        }, ContextCompat.getMainExecutor(context))\r\n    }\r\n\r\n    private fun bindCameraUseCases(lifecycleOwner: LifecycleOwner) {\r\n        val cameraProvider =\r\n            cameraProvider ?: throw IllegalStateException(\"Camera initialization failed.\")\r\n\r\n        val screenMetrics = context.resources.displayMetrics\r\n        val screenAspectRatio = aspectRatio(screenMetrics.widthPixels, screenMetrics.heightPixels)\r\n\r\n        // Adjust PreviewView Aspect Ratio\r\n        binding.previewView.post {\r\n            binding.previewView.let { pv ->\r\n                val layoutParams = pv.layoutParams as ConstraintLayout.LayoutParams\r\n                when (cameraAspectRatio) {\r\n                    RATIO_4X3 -> {\r\n                        layoutParams.dimensionRatio = \"H,3:4\"\r\n                        layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT\r\n                        layoutParams.height = 0\r\n                    }\r\n\r\n                    RATIO_16X9 -> {\r\n                        layoutParams.dimensionRatio = \"H,9:16\"\r\n                        layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT\r\n                        layoutParams.height = 0\r\n                    }\r\n\r\n                    RATIO_FULL -> {\r\n                        layoutParams.dimensionRatio = null\r\n                        layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT\r\n                        layoutParams.height = ConstraintLayout.LayoutParams.MATCH_PARENT\r\n                    }\r\n\r\n                    RATIO_1X1 -> {\r\n                        layoutParams.dimensionRatio = \"H,1:1\"\r\n                        layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT\r\n                        layoutParams.height = 0\r\n                    }\r\n                }\r\n                pv.layoutParams = layoutParams\r\n            }\r\n        }\r\n\r\n        // Preview\r\n        val previewBuilder = Preview.Builder()\r\n\r\n        // ImageCapture\r\n        val imageCaptureBuilder = ImageCapture.Builder()\r\n            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)\r\n            .setFlashMode(\r\n                when (flashMode) {\r\n                    FlashMode.ON -> ImageCapture.FLASH_MODE_ON\r\n                    FlashMode.OFF -> ImageCapture.FLASH_MODE_OFF\r\n                    FlashMode.AUTO -> ImageCapture.FLASH_MODE_AUTO\r\n                }\r\n            )\r\n\r\n        if (cameraAspectRatio == 3) { // 1:1 Special case\r\n            val size = Size(1080, 1080)\r\n            previewBuilder.setTargetResolution(size)\r\n            imageCaptureBuilder.setTargetResolution(size)\r\n        } else {\r\n            val ratio = if (cameraAspectRatio == 2) screenAspectRatio else cameraAspectRatio\r\n            previewBuilder.setTargetAspectRatio(ratio)\r\n            imageCaptureBuilder.setTargetAspectRatio(ratio)\r\n        }\r\n\r\n        val preview = previewBuilder.build().also {\r\n            it.surfaceProvider = binding.previewView.surfaceProvider\r\n        }\r\n\r\n        imageCapture = imageCaptureBuilder.build()\r\n\r\n        try {\r\n            // Unbind use cases before rebinding\r\n            cameraProvider.unbindAll()\r\n\r\n            // Bind use cases to camera\r\n            camera = cameraProvider.bindToLifecycle(\r\n                lifecycleOwner, cameraSelector, preview, imageCapture\r\n            )\r\n\r\n        } catch (exc: Exception) {\r\n            Log.e(TAG, \"Use case binding failed\", exc)\r\n        }\r\n    }\r\n\r\n    private fun aspectRatio(width: Int, height: Int): Int {\r\n        val previewRatio = max(width, height).toDouble() / min(width, height)\r\n        if (abs(previewRatio - 4.0 / 3.0) <= abs(previewRatio - 16.0 / 9.0)) {\r\n            return AspectRatio.RATIO_4_3\r\n        }\r\n        return AspectRatio.RATIO_16_9\r\n    }\r\n\r\n    private fun updateFlashUI() {\r\n        when (flashCode) {\r\n            0 -> {\r\n                camera?.cameraControl?.enableTorch(false)\r\n                flashMode = FlashMode.OFF\r\n                binding.ivFlash.setImageResource(R.drawable.baseline_flash_off_24)\r\n            }\r\n\r\n            1 -> {\r\n                if (camera?.cameraInfo?.hasFlashUnit() == true) {\r\n                    camera?.cameraControl?.enableTorch(true)\r\n                    flashMode = FlashMode.ON\r\n                    binding.ivFlash.setImageResource(R.drawable.baseline_flash_on_24)\r\n                }\r\n            }\r\n\r\n            2 -> {\r\n                camera?.cameraControl?.enableTorch(false)\r\n                flashMode = FlashMode.AUTO\r\n                binding.ivFlash.setImageResource(R.drawable.baseline_flash_auto_24)\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun capturePhotoWithCameraX(onImageCaptured: (Uri?) -> Unit) {\r\n        val imageCapture = imageCapture ?: run {\r\n            onImageCaptured(null)\r\n            return\r\n        }\r\n\r\n        // Get current location first\r\n        fetchCurrentLocation {\r\n            // Create output file\r\n            val photoFile = createImageInternally()\r\n            if (photoFile == null) {\r\n                onImageCaptured(null)\r\n                return@fetchCurrentLocation\r\n            }\r\n\r\n            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()\r\n\r\n            imageCapture.takePicture(\r\n                outputOptions,\r\n                cameraExecutor,\r\n                object : ImageCapture.OnImageSavedCallback {\r\n                    override fun onError(exception: ImageCaptureException) {\r\n                        (context as? Activity)?.runOnUiThread {\r\n                            onImageCaptured(null)\r\n                            closeCameraDialog()\r\n                        }\r\n                    }\r\n\r\n                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {\r\n                        currentPhotoPath = photoFile.absolutePath\r\n\r\n                        // Process the captured image\r\n                        val processedUri = processCapturedImage()\r\n\r\n                        (context as? Activity)?.runOnUiThread {\r\n                            onImageCaptured(processedUri)\r\n                            closeCameraDialog()\r\n                        }\r\n                    }\r\n                }\r\n            )\r\n        }\r\n    }\r\n\r\n    private fun stopCameraX() {\r\n        cameraProvider?.unbindAll()\r\n        cameraExecutor.shutdown()\r\n        cameraExecutor = Executors.newSingleThreadExecutor()\r\n    }\r\n\r\n    private fun checkCameraPermissions(): Boolean {\r\n        return ContextCompat.checkSelfPermission(\r\n            context,\r\n            Manifest.permission.CAMERA\r\n        ) == PackageManager.PERMISSION_GRANTED &&\r\n                ContextCompat.checkSelfPermission(\r\n                    context,\r\n                    Manifest.permission.ACCESS_FINE_LOCATION\r\n                ) == PackageManager.PERMISSION_GRANTED\r\n    }\r\n\r\n    fun preparePhotoUriAndLocation(onReady: (Uri?) -> Unit) {\r\n        if (useCameraX) {\r\n            Log.w(TAG, \"CameraX is enabled. Use launchCamera() instead.\")\r\n            onReady(null)\r\n            return\r\n        }\r\n\r\n        if (checkCameraPermissions()) {\r\n            fetchCurrentLocation {\r\n                fileUri = createImageInternally()?.let {\r\n                    FileProvider.getUriForFile(context, \"${context.packageName}.provider\", it)\r\n                }\r\n                cameraLauncher?.launch(fileUri!!)\r\n                onReady(fileUri)\r\n            }\r\n        } else {\r\n            onReady(null)\r\n            requestCameraAndLocationPermissions()\r\n        }\r\n    }\r\n\r\n    private fun deviceLocation(location: Location?) {\r\n        if (location != null) {\r\n            latitude = location.latitude\r\n            longitude = location.longitude\r\n            geocoder = Geocoder(context, Locale.getDefault())\r\n            try {\r\n                address = geocoder!!.getFromLocation(latitude, longitude, 1)?.firstOrNull()\r\n                    ?.getAddressLine(0)\r\n                    ?: \"Location: Not available\"\r\n                city = geocoder!!.getFromLocation(latitude, longitude, 1)?.firstOrNull()\r\n                    ?.locality\r\n                    ?: (\"\" + \", \" + geocoder!!.getFromLocation(latitude, longitude, 1)\r\n                        ?.firstOrNull()\r\n                        ?.adminArea)\r\n                country = geocoder!!.getFromLocation(latitude, longitude, 1)?.firstOrNull()\r\n                    ?.countryName\r\n                    ?: \"\"\r\n                country = GTIUtility.getCountryWithFlag(country,\r\n                    geocoder!!.getFromLocation(latitude, longitude, 1)?.firstOrNull()\r\n                        ?.countryCode\r\n                        ?: \"\")\r\n                if (GTIUtility.isGoogleMapsLinked(context)) {\r\n                    apiKey = GTIUtility.getMapKey(context)\r\n                    center = \"$latitude,$longitude\"\r\n                    dimension = mapWidth.toString() + \"x\" + mapHeight\r\n                    markerUrl = String.format(\r\n                        Locale.getDefault(),\r\n                        \"%s%s%s\",\r\n                        \"markers=color:red%7C\",\r\n                        center,\r\n                        \"&\"\r\n                    )\r\n                    val imageUrl = String.format(\r\n                        Locale.getDefault(),\r\n                        \"https://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=%d&size=%s&%s&maptype=%s&key=%s\",\r\n                        center,\r\n                        17,\r\n                        dimension,\r\n                        markerUrl,\r\n                        mapView.value,\r\n                        apiKey\r\n                    )\r\n                    executorService.submit(LoadImageTask(imageUrl))\r\n                }\r\n            } catch (e: Exception) {\r\n                e.printStackTrace()\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun processBitmapAspectRatio(bitmap: Bitmap): Bitmap {\r\n        return when (cameraAspectRatio) {\r\n            3 -> { // 1:1\r\n                val size = min(bitmap.width, bitmap.height)\r\n                val x = (bitmap.width - size) / 2\r\n                val y = (bitmap.height - size) / 2\r\n                Bitmap.createBitmap(bitmap, x, y, size, size)\r\n            }\r\n\r\n            else -> bitmap\r\n        }\r\n    }\r\n\r\n    private inner class LoadImageTask(private val imageUrl: String) : Runnable {\r\n        override fun run() {\r\n            try {\r\n                val bitmap = loadImageFromUrl(imageUrl)\r\n                if (bitmap != null) {\r\n                    mapBitmap = bitmap\r\n                }\r\n            } catch (e: Exception) {\r\n                e.printStackTrace()\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun loadImageFromUrl(imageUrl: String): Bitmap? {\r\n        try {\r\n            val inputStream = URL(imageUrl).openStream()\r\n            return BitmapFactory.decodeStream(inputStream)\r\n        } catch (e: IOException) {\r\n            e.printStackTrace()\r\n        }\r\n        return null\r\n    }\r\n\r\n    /**\r\n     * Call this after receiving image capture result.\r\n     */\r\n    fun processCapturedImage(geoTagged: Boolean = isEnabled): Uri? {\r\n        currentPhotoPath?.let { filePath ->\r\n            val file = File(filePath)\r\n\r\n            var bitmap = BitmapFactory.decodeFile(filePath)\r\n\r\n            bitmap = setOrientation(filePath, bitmap)\r\n\r\n            bitmap = processBitmapAspectRatio(bitmap)\r\n\r\n            if (useCameraX) {\r\n                bitmap = when (cameraAspectRatio) {\r\n                    RATIO_1X1 -> bitmap.scale(1024, 1024)\r\n                    RATIO_16X9 -> bitmap.scale(720, 1280)\r\n                    RATIO_FULL -> {\r\n                        val maxSide = 1280\r\n                        val width = bitmap.width\r\n                        val height = bitmap.height\r\n\r\n                        if (width >= height) {\r\n                            val ratio = height.toFloat() / width\r\n                            bitmap.scale(maxSide, (maxSide * ratio).toInt())\r\n                        } else {\r\n                            val ratio = width.toFloat() / height\r\n                            bitmap.scale((maxSide * ratio).toInt(), maxSide)\r\n                        }\r\n                    }\r\n\r\n                    else -> bitmap.scale(768, 1024)\r\n                }\r\n            } else {\r\n                bitmap =  scaleToMaxSide(bitmap)\r\n            }\r\n\r\n            if (!geoTagged) {\r\n                saveImageToGallery(bitmap)\r\n                val outputStream = file.outputStream()\r\n                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)\r\n                outputStream.close()\r\n                return Uri.fromFile(file)\r\n            }\r\n\r\n            val geoTaggedBitmap = drawTextOnBitmap(bitmap)\r\n\r\n            saveImageToGallery(geoTaggedBitmap)\r\n\r\n            val outputStream = file.outputStream()\r\n            geoTaggedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)\r\n            outputStream.close()\r\n\r\n            latestLocation?.let { embedGeoTagInExif(filePath, it) }\r\n\r\n            return Uri.fromFile(file)\r\n        }\r\n        return null\r\n    }\r\n\r\n    private fun scaleToMaxSide(bitmap: Bitmap, maxSide: Int = 1024): Bitmap {\r\n        val width = bitmap.width\r\n        val height = bitmap.height\r\n\r\n        if (width <= maxSide && height <= maxSide) return bitmap\r\n\r\n        val ratio = if (width >= height) {\r\n            maxSide.toFloat() / width\r\n        } else {\r\n            maxSide.toFloat() / height\r\n        }\r\n\r\n        val newWidth = (width * ratio).toInt()\r\n        val newHeight = (height * ratio).toInt()\r\n\r\n        return bitmap.scale(newWidth, newHeight)\r\n    }\r\n\r\n    private fun embedGeoTagInExif(filePath: String, location: Location) {\r\n        try {\r\n            val exif = ExifInterface(filePath)\r\n\r\n            val label = if (!exifAppName.isNullOrEmpty()) {\r\n                \", Captured via $exifAppName\"\r\n            } else {\r\n                \", Captured via GeoTagImage App\"\r\n            }\r\n            exif.setAttribute(\r\n                ExifInterface.TAG_DATETIME,\r\n                SimpleDateFormat(\"yyyy:MM:dd HH:mm:ss\", Locale.getDefault()).format(Date())\r\n            )\r\n            exif.setAttribute(ExifInterface.TAG_MAKE, Build.MANUFACTURER)\r\n            exif.setAttribute(ExifInterface.TAG_MODEL, Build.MODEL + label)\r\n            exif.setAttribute(ExifInterface.TAG_SOFTWARE, \"Android ${Build.VERSION.RELEASE}\")\r\n\r\n            exif.setGpsInfo(location)\r\n            exif.saveAttributes()\r\n        } catch (e: IOException) {\r\n            Log.e(TAG, \"Error writing EXIF data: ${e.localizedMessage}\")\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Set EXIF data for the captured image.\r\n     */\r\n    private fun setExif(exif: ExifInterface, location: Location) {\r\n        val label = if (!exifAppName.isNullOrEmpty()) {\r\n            \", Captured via $exifAppName\"\r\n        } else {\r\n            \", Captured via GeoTagImage App\"\r\n        }\r\n        exif.setAttribute(\r\n            ExifInterface.TAG_DATETIME,\r\n            SimpleDateFormat(\"yyyy:MM:dd HH:mm:ss\", Locale.getDefault()).format(Date())\r\n        )\r\n        exif.setAttribute(ExifInterface.TAG_MAKE, Build.MANUFACTURER)\r\n        exif.setAttribute(ExifInterface.TAG_MODEL, Build.MODEL + label)\r\n        exif.setAttribute(ExifInterface.TAG_SOFTWARE, \"Android ${Build.VERSION.RELEASE}\")\r\n\r\n        exif.setGpsInfo(location)\r\n        exif.saveAttributes()\r\n    }\r\n\r\n    private fun saveImageToGallery(bitmap: Bitmap): Uri? {\r\n        val resolver = context.contentResolver\r\n        val timeStamp: String =\r\n            SimpleDateFormat(\"yyyyMMdd_HHmmss\", Locale.getDefault()).format(Date())\r\n\r\n        var mimeType = \"image/jpeg\"\r\n        when (imageExtension) {\r\n            PNG -> mimeType = \"image/png\"\r\n            JPEG -> mimeType = \"image/jpeg\"\r\n        }\r\n\r\n\r\n        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {\r\n            val contentValues = ContentValues().apply {\r\n                put(MediaStore.Images.Media.DISPLAY_NAME, \"IMG_$timeStamp$imageExtension\")\r\n                put(MediaStore.Images.Media.MIME_TYPE, mimeType)\r\n                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + \"/Camera\")\r\n                put(MediaStore.Images.Media.IS_PENDING, 1)\r\n            }\r\n\r\n            val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)\r\n            uri?.let {\r\n                resolver.openOutputStream(it)?.use { out ->\r\n                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)\r\n                }\r\n                contentValues.clear()\r\n                contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)\r\n                resolver.update(uri, contentValues, null, null)\r\n            }\r\n            latestLocation?.let { location ->\r\n                uri?.let {\r\n                    try {\r\n                        context.contentResolver.openFileDescriptor(it, \"rw\")?.use { pfd ->\r\n                            val exif = ExifInterface(pfd.fileDescriptor)\r\n                            if (isEnabled) {\r\n                                setExif(exif, location)\r\n                            }\r\n                        }\r\n                    } catch (e: Exception) {\r\n                        Log.e(TAG, \">Q Error writing EXIF via URI: ${e.localizedMessage}\")\r\n                    }\r\n                }\r\n\r\n            }\r\n            uri\r\n        } else {\r\n            val imagesDir =\r\n                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)\r\n                    .toString() + \"/Camera\"\r\n            val file = File(imagesDir, \"IMG_$timeStamp$imageExtension\")\r\n\r\n            file.parentFile?.mkdirs()\r\n            FileOutputStream(file).use { out ->\r\n                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)\r\n            }\r\n\r\n            val values = ContentValues().apply {\r\n                put(MediaStore.Images.Media.DATA, file.absolutePath)\r\n                put(MediaStore.Images.Media.MIME_TYPE, mimeType)\r\n            }\r\n            latestLocation?.let { location ->\r\n                file.let {\r\n                    try {\r\n                        val exif = ExifInterface(file.absolutePath)\r\n                        if (isEnabled) {\r\n                            setExif(exif, location)\r\n                        }\r\n                    } catch (e: Exception) {\r\n                        Log.e(TAG, \"<Q Error writing EXIF via URI: ${e.localizedMessage}\")\r\n                    }\r\n                }\r\n            }\r\n            resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)\r\n        }\r\n    }\r\n\r\n    private fun setOrientation(path: String, bitmap: Bitmap): Bitmap {\r\n        return try {\r\n            val exif = ExifInterface(path)\r\n            val orientation = exif.getAttributeInt(\r\n                ExifInterface.TAG_ORIENTATION,\r\n                ExifInterface.ORIENTATION_NORMAL\r\n            )\r\n\r\n            val matrix = Matrix()\r\n            when (orientation) {\r\n                ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)\r\n                ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)\r\n                ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)\r\n            }\r\n\r\n            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)\r\n        } catch (e: Exception) {\r\n            e.printStackTrace()\r\n            bitmap\r\n        }\r\n    }\r\n\r\n    private fun drawTextOnBitmap(bitmap: Bitmap): Bitmap {\r\n        elementsList.clear()\r\n        elementsList.add(\"$city, $country\")\r\n        elementsList.add(address)\r\n        if (showLatLng) {\r\n            latLong = \"Lat Lng : $latitude, $longitude\"\r\n            elementsList.add(latLong)\r\n        }\r\n        if (showDate) {\r\n            try {\r\n                date = SimpleDateFormat(dateFormat, Locale.getDefault()).format(Date())\r\n            } catch (e : Exception) {\r\n                date = SimpleDateFormat(\"dd/MM/yyyy hh:mm a z\", Locale.getDefault()).format(Date())\r\n            }\r\n            elementsList.add(date)\r\n        }\r\n        if (showAuthorName) {\r\n            elementsList.add(\"$label $authorName\")\r\n        }\r\n\r\n        if (showAppName) {\r\n            elementsList.add(\"Captured via $exifAppName\")\r\n        }\r\n\r\n        val result = bitmap.copy(Bitmap.Config.ARGB_8888, true)\r\n        val canvas = Canvas(result)\r\n\r\n        val textPaint = Paint().apply {\r\n            color = textColor\r\n            textSize = customTextSize\r\n            isAntiAlias = true\r\n            setShadowLayer(1f, 0f, 1f, Color.BLACK)\r\n        }\r\n\r\n        val bgPaint = Paint().apply {\r\n            color = backgroundColor\r\n        }\r\n\r\n        val design = Paint()\r\n        val padding = 20f\r\n        val lineSpacing = 10f\r\n\r\n        if (mapBitmap == null) {\r\n            mapWidth = 0\r\n        }\r\n\r\n        if (!showGoogleMap) {\r\n            mapWidth = 0\r\n        }\r\n\r\n        val maxTextWidth = result.width - mapWidth - 60\r\n\r\n        mapBitmap?.let {\r\n            if (mapWidth > 0 && mapHeight > 0) {\r\n                val scaledMap = it.scale(mapWidth, mapHeight, false)\r\n                canvas.drawBitmap(scaledMap, 10f, canvas.height - 160f, design)\r\n            }\r\n        }\r\n        fun wrapText(line: String, paint: Paint, maxWidth: Int): List<String> {\r\n            val words = line.split(\" \")\r\n            val lines = mutableListOf<String>()\r\n            var currentLine = \"\"\r\n\r\n            for (word in words) {\r\n                val testLine = if (currentLine.isEmpty()) word else \"$currentLine $word\"\r\n                if (paint.measureText(testLine) <= maxWidth) {\r\n                    currentLine = testLine\r\n                } else {\r\n                    lines.add(currentLine)\r\n                    currentLine = word\r\n                }\r\n            }\r\n            if (currentLine.isNotEmpty()) {\r\n                lines.add(currentLine)\r\n            }\r\n            return lines\r\n        }\r\n\r\n        val allWrappedLines = mutableListOf<String>()\r\n        for (text in elementsList) {\r\n            text.split(\"\\n\").forEach { line ->\r\n                allWrappedLines.addAll(wrapText(line, textPaint, maxTextWidth))\r\n            }\r\n        }\r\n\r\n        val textHeight = textPaint.fontMetrics.run { bottom - top }\r\n        val blockHeight = allWrappedLines.size * (textHeight + lineSpacing)\r\n        val blockWidth = maxTextWidth + padding * 2\r\n\r\n        val left = mapWidth + 20f\r\n        val top = result.height - blockHeight - 30f\r\n        val right = left + blockWidth - 10f\r\n        val bottom = top + blockHeight + padding\r\n\r\n        canvas.drawRoundRect(RectF(left, top, right, bottom), 12f, 12f, bgPaint)\r\n\r\n        var y = top + padding - textPaint.fontMetrics.top\r\n        allWrappedLines.forEach { line ->\r\n            canvas.drawText(line, left + padding, y, textPaint)\r\n            y += textHeight + lineSpacing\r\n        }\r\n\r\n        return result\r\n    }\r\n\r\n    private fun dpToPx(dp: Float): Float {\r\n        return dp * context.resources.displayMetrics.density\r\n    }\r\n\r\n    /**\r\n     * Create a temporary image file\r\n     * @return the file\r\n     */\r\n    private fun createImageInternally(): File? {\r\n        val timeStamp =\r\n            SimpleDateFormat(\"yyyyMMdd_HHmmss\", Locale.getDefault()).format(Date())\r\n\r\n        val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)\r\n            ?: return null\r\n\r\n        val fileName = \"IMG_$timeStamp$imageExtension\"\r\n        return File(storageDir, fileName).apply {\r\n            currentPhotoPath = absolutePath\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Get current location\r\n     * @param onLocationReady the callback to be called when location is ready\r\n     */\r\n    private fun fetchCurrentLocation(onLocationReady: () -> Unit) {\r\n        try {\r\n            GTILocationUtility.fetchLocation(context) { location ->\r\n                if (location != null) {\r\n                    latestLocation = location\r\n                    deviceLocation(location)\r\n                } else {\r\n                    Toast.makeText(context, \"Location not available\", Toast.LENGTH_SHORT).show()\r\n                }\r\n                onLocationReady()\r\n            }\r\n        } catch (e: SecurityException) {\r\n            Toast.makeText(context, \"Location permission not granted\", Toast.LENGTH_SHORT).show()\r\n            onLocationReady()\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Set the text size\r\n     * @param textSize the text size\r\n     */\r\n    fun setTextSize(textSize: Float) {\r\n        this.customTextSize = textSize\r\n    }\r\n\r\n    /**\r\n     * Set the custom font to be used\r\n     * @param typeface the custom font to be used\r\n     */\r\n    fun setCustomFont(typeface: Typeface?) {\r\n        this.typeface = typeface\r\n    }\r\n\r\n    /**\r\n     * Set the background radius\r\n     * @param radius the background radius\r\n     */\r\n    fun setBackgroundRadius(radius: Float) {\r\n        this.radius = radius\r\n    }\r\n\r\n    /**\r\n     * Set the background color\r\n     * @param backgroundColor the background color\r\n     */\r\n    fun setBackgroundColor(backgroundColor: Int) {\r\n        this.backgroundColor = backgroundColor\r\n    }\r\n\r\n    /**\r\n     * Set the text color\r\n     * @param textColor the text color\r\n     */\r\n    fun setTextColor(textColor: Int) {\r\n        this.textColor = textColor\r\n    }\r\n\r\n    /**\r\n     * Set whether to show the author name\r\n     * @param showAuthorName true to show author name, false to hide author name\r\n     */\r\n    fun showAuthorName(showAuthorName: Boolean) {\r\n        this.showAuthorName = showAuthorName\r\n    }\r\n\r\n    /**\r\n     * Set whether to show the app name\r\n     * @param showAppName true to show app name, false to hide app name\r\n     */\r\n    fun showAppName(showAppName: Boolean) {\r\n        this.showAppName = showAppName\r\n    }\r\n\r\n    /**\r\n     * Set whether to show the latitude and longitude\r\n     * @param showLatLng true to show latitude and longitude, false to hide latitude and longitude\r\n     */\r\n    fun showLatLng(showLatLng: Boolean) {\r\n        this.showLatLng = showLatLng\r\n    }\r\n\r\n    /**\r\n     * Set whether to show the date\r\n     * @param showDate true to show date, false to hide date\r\n     */\r\n    fun showDate(showDate: Boolean) {\r\n        this.showDate = showDate\r\n    }\r\n\r\n    /** Set Custom Date Format */\r\n    fun setDateFormat(dateFormat : String){\r\n        this.dateFormat = dateFormat\r\n    }\r\n\r\n    /**\r\n     * Set whether to show Google Maps in the image\r\n     * @param showGoogleMap true to show Google Maps, false to hide Google Maps\r\n     */\r\n    fun showGoogleMap(showGoogleMap: Boolean) {\r\n        this.showGoogleMap = showGoogleMap\r\n    }\r\n\r\n    /**\r\n     * Set the author name to be displayed in the image\r\n     * @param authorName the author name to be displayed\r\n     */\r\n    fun setAuthorName(authorName: String) {\r\n        this.authorName = authorName\r\n    }\r\n\r\n    /**\r\n     * Set the label to be displayed in the image\r\n     * @param label the label to be displayed\r\n     */\r\n    fun setLabel(label: String) {\r\n        this.label = label\r\n    }\r\n\r\n    /**\r\n     * Set the app name to be displayed in the image\r\n     * @param appName the app name to be displayed\r\n     */\r\n    fun setAppName(appName: String) {\r\n        this.exifAppName = appName\r\n    }\r\n\r\n    /**\r\n     * Enable or disable CameraX usage\r\n     * @param useCameraX true to use CameraX, false to use system camera\r\n     */\r\n    fun enableCameraX(useCameraX: Boolean) {\r\n        this.useCameraX = useCameraX\r\n    }\r\n\r\n    /**\r\n     * Set the aspect ratio for the camera preview and captured image\r\n     * @param ratio Ratio_1X1, Ratio_4X3, Ratio_16X9, Ratio_Full\r\n     */\r\n    fun setCameraAspectRatio(ratio: Int) {\r\n        this.cameraAspectRatio = ratio\r\n        if (cameraProvider != null && cameraDialog?.isShowing == true) {\r\n            startCameraX()\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Set the image extension\r\n     * @param imgExtension the image extension\r\n     */\r\n    fun setImageExtension(imgExtension: String) {\r\n        when (imgExtension) {\r\n            PNG -> imageExtension = \".png\"\r\n            JPEG -> imageExtension = \".jpg\"\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Enable or disable GeoTagService\r\n     * @param isActive true to enable GeoTagService, false to disable GeoTagService\r\n     */\r\n    fun enableGTIService(isActive: Boolean) {\r\n        this.isEnabled = isActive\r\n    }\r\n\r\n    /**\r\n     * Clean up resources when done\r\n     * Call this in onDestroy() of your Activity\r\n     */\r\n    fun cleanup() {\r\n        closeCameraDialog()\r\n        executorService.shutdown()\r\n        cameraExecutor.shutdown()\r\n    }\r\n\r\n    /** Set MapView Style */\r\n    fun setMapView(mapView: MapViewType) {\r\n        this.mapView = mapView\r\n    }\r\n\r\n    companion object {\r\n        const val PNG = \".png\"\r\n        const val JPEG = \".jpg\"\r\n\r\n        const val RATIO_1X1 = 3\r\n        const val RATIO_4X3 = 0\r\n        const val RATIO_16X9 = 1\r\n        const val RATIO_FULL = 2\r\n    }\r\n\r\n    fun requestCameraAndLocationPermissions() {\r\n        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) { // Android 9 or below\r\n            val permissionsToRequest = mutableListOf(\r\n                Manifest.permission.CAMERA,\r\n                Manifest.permission.ACCESS_FINE_LOCATION,\r\n                Manifest.permission.ACCESS_COARSE_LOCATION,\r\n                Manifest.permission.WRITE_EXTERNAL_STORAGE,\r\n            )\r\n            permissionLauncher.launch(permissionsToRequest.toTypedArray())\r\n            return\r\n        }\r\n        val permissionsToRequest = mutableListOf(\r\n            Manifest.permission.CAMERA,\r\n            Manifest.permission.ACCESS_FINE_LOCATION,\r\n            Manifest.permission.ACCESS_COARSE_LOCATION\r\n        )\r\n\r\n        permissionLauncher.launch(permissionsToRequest.toTypedArray())\r\n    }\r\n\r\n    @Deprecated(\"getImageUri() is now deprecated, please use local {{URI?.path}}\")\r\n    fun getImagePath(): String {\r\n        val mediaStorageDir = File(\r\n            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),\r\n            \"/\"\r\n        )\r\n        if (!mediaStorageDir.exists()) {\r\n            if (!mediaStorageDir.mkdirs()) {\r\n                return \"\"\r\n            }\r\n        }\r\n        val timeStamp = SimpleDateFormat(\"yyyyMMdd_HHmm\", Locale.getDefault()).format(Date())\r\n        val mImageName = \"IMG_$timeStamp$imageExtension\"\r\n        val imagePath = mediaStorageDir.path + File.separator + mImageName\r\n        val media = File(imagePath)\r\n        MediaScannerConnection.scanFile(context, arrayOf(media.absolutePath), null) { _, _ -> }\r\n        return imagePath\r\n    }\r\n\r\n    @Deprecated(\"getImageUri() is now deprecated, please use local url preparePhotoUriAndLocation()\")\r\n    fun getImageUri(): Uri? {\r\n\r\n        val mediaStorageDir = File(\r\n            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),\r\n            \"/\"\r\n        )\r\n        if (!mediaStorageDir.exists()) {\r\n            if (!mediaStorageDir.mkdirs()) {\r\n                return null\r\n            }\r\n        }\r\n        val timeStamp = SimpleDateFormat(\"yyyyMMdd_HHmm\", Locale.getDefault()).format(Date())\r\n        val mImageName = \"IMG_$timeStamp$imageExtension\"\r\n        val imagePath = mediaStorageDir.path + File.separator + mImageName\r\n        val media = File(imagePath)\r\n        return Uri.fromFile(media)\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GeoTagImage/src/main/java/com/dangiashish/GeoTagImage.kt b/GeoTagImage/src/main/java/com/dangiashish/GeoTagImage.kt
+--- a/GeoTagImage/src/main/java/com/dangiashish/GeoTagImage.kt	(revision e8b17e8dbddcee7ae75936711ad3957329bec629)
++++ b/GeoTagImage/src/main/java/com/dangiashish/GeoTagImage.kt	(date 1772892279035)
+@@ -25,6 +25,7 @@
+ package com.dangiashish
+ 
+ import android.Manifest
++import android.R.attr.text
+ import android.app.Activity
+ import android.app.Dialog
+ import android.content.ContentValues
+@@ -37,6 +38,7 @@
+ import android.graphics.Paint
+ import android.graphics.RectF
+ import android.graphics.Typeface
++import android.location.Address
+ import android.location.Geocoder
+ import android.location.Location
+ import android.media.MediaPlayer
+@@ -68,9 +70,11 @@
+ import androidx.core.graphics.toColorInt
+ import androidx.exifinterface.media.ExifInterface
+ import androidx.fragment.app.FragmentActivity
++import androidx.lifecycle.Lifecycle
+ import androidx.lifecycle.LifecycleOwner
+ import com.codebyashish.geotagimage.R
+ import com.codebyashish.geotagimage.databinding.CameraLayoutBinding
++import com.dangiashish.GTIUtility.decodeSampledBitmap
+ import java.io.File
+ import java.io.FileOutputStream
+ import java.io.IOException
+@@ -114,7 +118,7 @@
+     private var authorName: String = ""
+     private var dateFormat: String = ""
+     private var label: String = "Captured By"
+-    private var exifAppName: String? = null
++    private var exifAppName: String? = ""
+     private var showAuthorName = false
+     private var showAppName = false
+     private var showLatLng = true
+@@ -123,16 +127,17 @@
+     private val elementsList = ArrayList<String>()
+     private var mapHeight = backgroundHeight.toInt()
+     private var mapWidth = 140
+-    private var apiKey: String? = null
+-    private var center: String? = null
+-    private var dimension: String? = null
+-    private var markerUrl: String? = null
+-    private var mapView=  MapViewType.SATELLITE
++    private var apiKey: String? = ""
++    private var center: String? = ""
++    private var dimension: String? = ""
++    private var markerUrl: String? = ""
++    private var mapView = MapViewType.SATELLITE
+     private val executorService = Executors.newSingleThreadExecutor()
+     private val TAG = "GTILogs"
+     private var isEnabled = true
+     private var currentPhotoPath: String? = null
+     private var latestLocation: Location? = null
++    private var directoryName: String? = "Camera"
+ 
+     // CameraX related variables
+     private var useCameraX = false
+@@ -149,7 +154,9 @@
+     private var currentZoomRatio = 1f
+     private var cameraAspectRatio: Int = AspectRatio.RATIO_4_3
+     private lateinit var binding: CameraLayoutBinding
++
+     enum class FlashMode { ON, OFF, AUTO }
++
+     private var flashMode = FlashMode.OFF
+     private var flashCode = 0
+ 
+@@ -314,11 +321,17 @@
+     private fun startCameraX() {
+         val lifecycleOwner = getLifecycleOwner() ?: return
+ 
++        if (lifecycleOwner is Activity && (lifecycleOwner.isFinishing || lifecycleOwner.isDestroyed)) {
++            return
++        }
++
+         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+         cameraProviderFuture.addListener({
+             try {
+                 cameraProvider = cameraProviderFuture.get()
+-                bindCameraUseCases(lifecycleOwner)
++                if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.INITIALIZED)) {
++                    bindCameraUseCases(lifecycleOwner)
++                }
+             } catch (exc: Exception) {
+                 Log.e(TAG, "Use case binding failed", exc)
+             }
+@@ -417,6 +430,9 @@
+         return AspectRatio.RATIO_16_9
+     }
+ 
++    /**
++     * Update UI based on flash mode
++     */
+     private fun updateFlashUI() {
+         when (flashCode) {
+             0 -> {
+@@ -441,6 +457,9 @@
+         }
+     }
+ 
++    /**
++     * Launch camera interface
++     */
+     private fun capturePhotoWithCameraX(onImageCaptured: (Uri?) -> Unit) {
+         val imageCapture = imageCapture ?: run {
+             onImageCaptured(null)
+@@ -485,12 +504,18 @@
+         }
+     }
+ 
++    /**
++     * Stop cameraX
++     */
+     private fun stopCameraX() {
+         cameraProvider?.unbindAll()
+         cameraExecutor.shutdown()
+         cameraExecutor = Executors.newSingleThreadExecutor()
+     }
+ 
++    /**
++     * Check if camera permissions are granted
++     */
+     private fun checkCameraPermissions(): Boolean {
+         return ContextCompat.checkSelfPermission(
+             context,
+@@ -502,6 +527,9 @@
+                 ) == PackageManager.PERMISSION_GRANTED
+     }
+ 
++    /**
++     * Request camera and location permissions
++     */
+     fun preparePhotoUriAndLocation(onReady: (Uri?) -> Unit) {
+         if (useCameraX) {
+             Log.w(TAG, "CameraX is enabled. Use launchCamera() instead.")
+@@ -523,56 +551,67 @@
+         }
+     }
+ 
++    /**
++     * Fetch current location
++     */
+     private fun deviceLocation(location: Location?) {
+-        if (location != null) {
+-            latitude = location.latitude
+-            longitude = location.longitude
+-            geocoder = Geocoder(context, Locale.getDefault())
++        if (location == null) return
++
++        latitude = location.latitude
++        longitude = location.longitude
++        geocoder = Geocoder(context, Locale.getDefault())
++
++        executorService.execute {
+             try {
+-                address = geocoder!!.getFromLocation(latitude, longitude, 1)?.firstOrNull()
+-                    ?.getAddressLine(0)
+-                    ?: "Location: Not available"
+-                city = geocoder!!.getFromLocation(latitude, longitude, 1)?.firstOrNull()
+-                    ?.locality
+-                    ?: ("" + ", " + geocoder!!.getFromLocation(latitude, longitude, 1)
+-                        ?.firstOrNull()
+-                        ?.adminArea)
+-                country = geocoder!!.getFromLocation(latitude, longitude, 1)?.firstOrNull()
+-                    ?.countryName
+-                    ?: ""
+-                country = GTIUtility.getCountryWithFlag(country,
+-                    geocoder!!.getFromLocation(latitude, longitude, 1)?.firstOrNull()
+-                        ?.countryCode
+-                        ?: "")
+-                if (GTIUtility.isGoogleMapsLinked(context)) {
+-                    apiKey = GTIUtility.getMapKey(context)
+-                    center = "$latitude,$longitude"
+-                    dimension = mapWidth.toString() + "x" + mapHeight
+-                    markerUrl = String.format(
+-                        Locale.getDefault(),
+-                        "%s%s%s",
+-                        "markers=color:red%7C",
+-                        center,
+-                        "&"
+-                    )
+-                    val imageUrl = String.format(
+-                        Locale.getDefault(),
+-                        "https://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=%d&size=%s&%s&maptype=%s&key=%s",
+-                        center,
+-                        17,
+-                        dimension,
+-                        markerUrl,
+-                        mapView.value,
+-                        apiKey
+-                    )
+-                    executorService.submit(LoadImageTask(imageUrl))
+-                }
+-            } catch (e: Exception) {
+-                e.printStackTrace()
+-            }
++                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
++                    geocoder?.getFromLocation(latitude, longitude, 1) { addresses ->
++                        val addressObj = addresses.firstOrNull()
++                        if (addressObj != null) {
++                            processAddressResult(addressObj)
++                        }
++                    }
++                } else {
++                    @Suppress("DEPRECATION")
++                    val addressObj =
++                        geocoder?.getFromLocation(latitude, longitude, 1)?.firstOrNull()
++                    if (addressObj != null) {
++                        processAddressResult(addressObj)
++                    }
++                }
++            } catch (e: Exception) {
++                Log.e(TAG, "Geocoding failed", e)
++            }
++        }
++
++    }
++
++    /**
++     * Process geocoded address
++     */
++    private fun processAddressResult(addressObj: Address) {
++        address = addressObj.getAddressLine(0) ?: "Location: Not available"
++        city = addressObj.locality ?: addressObj.adminArea ?: ""
++        country = addressObj.countryName ?: ""
++        country = GTIUtility.getCountryWithFlag(country, addressObj.countryCode ?: "")
++
++        // Fetch Google Map Static Image if API key exists
++        if (GTIUtility.isGoogleMapsLinked(context)) {
++            apiKey = GTIUtility.getMapKey(context)
++            center = "$latitude,$longitude"
++            dimension = "${mapWidth}x$mapHeight"
++            markerUrl = "markers=color:red%7C$center&"
++
++            val imageUrl =
++                "https://maps.googleapis.com/maps/api/staticmap?center=$center&zoom=17&size=$dimension&$markerUrl" +
++                        "maptype=${mapView.value}&key=$apiKey"
++
++            executorService.submit(LoadImageTask(imageUrl))
+         }
+     }
+ 
++    /**
++     * Scale image to max side
++     */
+     private fun processBitmapAspectRatio(bitmap: Bitmap): Bitmap {
+         return when (cameraAspectRatio) {
+             3 -> { // 1:1
+@@ -586,6 +625,9 @@
+         }
+     }
+ 
++    /**
++     * Load image from URL
++     */
+     private inner class LoadImageTask(private val imageUrl: String) : Runnable {
+         override fun run() {
+             try {
+@@ -599,6 +641,9 @@
+         }
+     }
+ 
++    /**
++     * Load image from URL
++     */
+     private fun loadImageFromUrl(imageUrl: String): Bitmap? {
+         try {
+             val inputStream = URL(imageUrl).openStream()
+@@ -616,14 +661,22 @@
+         currentPhotoPath?.let { filePath ->
+             val file = File(filePath)
+ 
+-            var bitmap = BitmapFactory.decodeFile(filePath)
++            var bitmap = decodeSampledBitmap(filePath, 1280, 1280)
+ 
+-            bitmap = setOrientation(filePath, bitmap)
++            val rotatedBitmap = setOrientation(filePath, bitmap)
++            if (rotatedBitmap != bitmap) {
++                bitmap.recycle()
++                bitmap = rotatedBitmap
++            }
+ 
+-            bitmap = processBitmapAspectRatio(bitmap)
++            val croppedBitmap = processBitmapAspectRatio(bitmap)
++            if (croppedBitmap != bitmap) {
++                bitmap.recycle()
++                bitmap = croppedBitmap
++            }
+ 
+             if (useCameraX) {
+-                bitmap = when (cameraAspectRatio) {
++                val scaled = when (cameraAspectRatio) {
+                     RATIO_1X1 -> bitmap.scale(1024, 1024)
+                     RATIO_16X9 -> bitmap.scale(720, 1280)
+                     RATIO_FULL -> {
+@@ -642,33 +695,39 @@
+ 
+                     else -> bitmap.scale(768, 1024)
+                 }
++                if (scaled != bitmap) {
++                    bitmap.recycle()
++                    bitmap = scaled
++                }
+             } else {
+-                bitmap =  scaleToMaxSide(bitmap)
++                bitmap = scaleToMaxSide(bitmap)
+             }
+ 
+-            if (!geoTagged) {
+-                saveImageToGallery(bitmap)
+-                val outputStream = file.outputStream()
+-                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+-                outputStream.close()
+-                return Uri.fromFile(file)
+-            }
+-
+-            val geoTaggedBitmap = drawTextOnBitmap(bitmap)
+-
+-            saveImageToGallery(geoTaggedBitmap)
+-
++            val finalBitmap = if (geoTagged) {
++                val tagged = drawTextOnBitmap(bitmap)
++                bitmap.recycle()
++                tagged
++            } else {
++                bitmap
++            }
++
++            saveImageToGallery(finalBitmap)
+             val outputStream = file.outputStream()
+-            geoTaggedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
++            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+             outputStream.close()
+ 
+             latestLocation?.let { embedGeoTagInExif(filePath, it) }
+ 
++            finalBitmap.recycle()
++
+             return Uri.fromFile(file)
+         }
+         return null
+     }
+ 
++    /**
++     * Scale image to max side
++     */
+     private fun scaleToMaxSide(bitmap: Bitmap, maxSide: Int = 1024): Bitmap {
+         val width = bitmap.width
+         val height = bitmap.height
+@@ -687,6 +746,9 @@
+         return bitmap.scale(newWidth, newHeight)
+     }
+ 
++    /**
++     * Set EXIF data for the captured image.
++     */
+     private fun embedGeoTagInExif(filePath: String, location: Location) {
+         try {
+             val exif = ExifInterface(filePath)
+@@ -732,6 +794,9 @@
+         exif.saveAttributes()
+     }
+ 
++    /**
++     * Save image to gallery
++     */
+     private fun saveImageToGallery(bitmap: Bitmap): Uri? {
+         val resolver = context.contentResolver
+         val timeStamp: String =
+@@ -743,12 +808,14 @@
+             JPEG -> mimeType = "image/jpeg"
+         }
+ 
+-
+         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+             val contentValues = ContentValues().apply {
+                 put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_$timeStamp$imageExtension")
+                 put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+-                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + "/Camera")
++                put(
++                    MediaStore.Images.Media.RELATIVE_PATH,
++                    Environment.DIRECTORY_DCIM + "/" + directoryName
++                )
+                 put(MediaStore.Images.Media.IS_PENDING, 1)
+             }
+ 
+@@ -780,7 +847,7 @@
+         } else {
+             val imagesDir =
+                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+-                    .toString() + "/Camera"
++                    .toString() + "/" + directoryName
+             val file = File(imagesDir, "IMG_$timeStamp$imageExtension")
+ 
+             file.parentFile?.mkdirs()
+@@ -808,6 +875,9 @@
+         }
+     }
+ 
++    /**
++     * Set the orientation of the image
++     */
+     private fun setOrientation(path: String, bitmap: Bitmap): Bitmap {
+         return try {
+             val exif = ExifInterface(path)
+@@ -830,18 +900,24 @@
+         }
+     }
+ 
++    /**
++     * Draw text on the image
++     */
+     private fun drawTextOnBitmap(bitmap: Bitmap): Bitmap {
+         elementsList.clear()
+-        elementsList.add("$city, $country")
+-        elementsList.add(address)
+-        if (showLatLng) {
+-            latLong = "Lat Lng : $latitude, $longitude"
++        val hasValidLocation = latitude != 0.0 && longitude != 0.0
++        if (hasValidLocation) {
++            elementsList.add("$city, $country")
++            elementsList.add(address)
++        }
++        if (showLatLng && hasValidLocation) {
++            latLong = "Lat Long : $latitude, $longitude"
+             elementsList.add(latLong)
+         }
+         if (showDate) {
+             try {
+                 date = SimpleDateFormat(dateFormat, Locale.getDefault()).format(Date())
+-            } catch (e : Exception) {
++            } catch (e: Exception) {
+                 date = SimpleDateFormat("dd/MM/yyyy hh:mm a z", Locale.getDefault()).format(Date())
+             }
+             elementsList.add(date)
+@@ -857,6 +933,10 @@
+         val result = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+         val canvas = Canvas(result)
+ 
++        if (elementsList.isEmpty()) {
++            return result
++        }
++
+         val textPaint = Paint().apply {
+             color = textColor
+             textSize = customTextSize
+@@ -872,11 +952,7 @@
+         val padding = 20f
+         val lineSpacing = 10f
+ 
+-        if (mapBitmap == null) {
+-            mapWidth = 0
+-        }
+-
+-        if (!showGoogleMap) {
++        if (mapBitmap == null || !showGoogleMap) {
+             mapWidth = 0
+         }
+ 
+@@ -935,6 +1011,9 @@
+         return result
+     }
+ 
++    /**
++     * Convert dp to px
++     */
+     private fun dpToPx(dp: Float): Float {
+         return dp * context.resources.displayMetrics.density
+     }
+@@ -966,8 +1045,6 @@
+                 if (location != null) {
+                     latestLocation = location
+                     deviceLocation(location)
+-                } else {
+-                    Toast.makeText(context, "Location not available", Toast.LENGTH_SHORT).show()
+                 }
+                 onLocationReady()
+             }
+@@ -1009,6 +1086,14 @@
+         this.backgroundColor = backgroundColor
+     }
+ 
++    /**
++     * Set the background color
++     * @param backgroundColor the background color
++     */
++    fun setBackgroundColor(backgroundColor: String) {
++        this.backgroundColor = backgroundColor.toColorInt()
++    }
++
+     /**
+      * Set the text color
+      * @param textColor the text color
+@@ -1017,6 +1102,14 @@
+         this.textColor = textColor
+     }
+ 
++    /**
++     * Set the text color
++     * @param textColor the text color
++     */
++    fun setTextColor(textColor: String) {
++        this.textColor = textColor.toColorInt()
++    }
++
+     /**
+      * Set whether to show the author name
+      * @param showAuthorName true to show author name, false to hide author name
+@@ -1049,8 +1142,10 @@
+         this.showDate = showDate
+     }
+ 
+-    /** Set Custom Date Format */
+-    fun setDateFormat(dateFormat : String){
++    /**
++     * Set Custom Date Format\
++     */
++    fun setDateFormat(dateFormat: String) {
+         this.dateFormat = dateFormat
+     }
+ 
+@@ -1129,16 +1224,41 @@
+      * Call this in onDestroy() of your Activity
+      */
+     fun cleanup() {
+-        closeCameraDialog()
+-        executorService.shutdown()
+-        cameraExecutor.shutdown()
++        try {
++            cameraDialog?.dismiss()
++            cameraDialog = null
++
++            executorService.shutdownNow()
++            cameraExecutor.shutdownNow()
++
++            cameraProvider?.unbindAll()
++
++            mapBitmap?.recycle()
++            mapBitmap = null
++            latestLocation = null
++            pendingCallback = null
++        } catch (e: Exception) {
++            Log.e(TAG, "Error during cleanup", e)
++        }
+     }
+ 
+-    /** Set MapView Style */
++    /**
++     * Set MapView Style
++     */
+     fun setMapView(mapView: MapViewType) {
+         this.mapView = mapView
+     }
+ 
++    /**
++     * Set Directory Name
++     */
++    fun setDirectory(directoryName: String) {
++        this.directoryName = directoryName
++        this.directoryName?.replaceFirstChar {
++            if (it.isLowerCase()) it.titlecase() else it.toString()
++        }
++    }
++
+     companion object {
+         const val PNG = ".png"
+         const val JPEG = ".jpg"
+@@ -1149,6 +1269,9 @@
+         const val RATIO_FULL = 2
+     }
+ 
++    /**
++     * Request camera and location permissions
++     */
+     fun requestCameraAndLocationPermissions() {
+         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) { // Android 9 or below
+             val permissionsToRequest = mutableListOf(
+@@ -1169,7 +1292,7 @@
+         permissionLauncher.launch(permissionsToRequest.toTypedArray())
+     }
+ 
+-    @Deprecated("getImageUri() is now deprecated, please use local {{URI?.path}}")
++    @Deprecated("getImageUri() is now deprecated, please use local {{uri?.path}}")
+     fun getImagePath(): String {
+         val mediaStorageDir = File(
+             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),

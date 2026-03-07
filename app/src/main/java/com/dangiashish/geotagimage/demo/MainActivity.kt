@@ -115,18 +115,18 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
 
         // author details
         gti.showAuthorName(true) // default true
-        gti.setLabel("Captured By") // default label
-        gti.setAuthorName("Ashish") // default author name
+//        gti.setLabel("Captured By") // default label
+//        gti.setAuthorName("Ashish") // default author name
 
         // app details
         gti.showAppName(true) // default true
-        gti.setAppName("GeoTagImage") // default app name
+//        gti.setAppName("GeoTagImage") // default app name
 
-        gti.showDate(true) // default true
+//        gti.showDate(true) // default true
 
-        gti.setBackgroundRadius(10f)
-        gti.setBackgroundColor("#80000000")
-        gti.setTextColor(Color.WHITE)
+//        gti.setBackgroundRadius(10f)
+//        gti.setBackgroundColor("#80000000")
+//        gti.setTextColor(Color.WHITE)
 
 
         // setOnClickListener on camera button.

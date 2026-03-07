@@ -1,46 +1,34 @@
 <p align="center">
-<img src="https://github.com/dangiashish/GeoTagImage/assets/70362030/88c3e47a-0029-4d90-8276-540558137ccc"/>
+<img src="https://github.com/dangiashish/GeoTagImage/assets/70362030/88c3e47a-0029-4d90-8276-540558137ccc" alt=""/>
 </p>
 
 
 <div align = "center">
 <h1 align="center"> 💫 GeoTagImage (GTI) 📸🌍 </h1>
+<p align="center"><b>GeoTagImage</b> is a lightweight, powerful Android library designed to simplify capturing photos with embedded real-time metadata. It automatically overlays location details (Address, City, Lat/Lng), custom timestamps, author names, and even a Google Maps static preview directly onto the image.</p>
 <a href="https://www.codefactor.io/repository/github/dangiashish/geotagimage/overview/master"><img src="https://www.codefactor.io/repository/github/dangiashish/geotagimage/badge/master" alt="CodeFactor" /></a>
 <a href="https://jitpack.io/#dangiashish/GeoTagImage"><img src="https://jitpack.io/v/dangiashish/GeoTagImage.svg" alt=""/></a>
 <a href="(https://developer.android.com/tools/sdkmanager"><img src="https://img.shields.io/badge/android--sdk-24%2B-green" alt=""/></a>
 <a href="https://www.java.com/"><img src="https://img.shields.io/badge/compatible-java-blue" alt=""/></a>
 <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/compatible-kotlin-blueviolet" alt=""/></a>
 
-#### Read the documentation on [ashishdangi.medium.com](https://ashishdangi.medium.com/geotags-on-images-in-android-studio-334753c0489f)
-
+#### Read the documentation on [dangiashish.github.io](https://dangiashish.github.io/GeoTagImage)
 <br/>
-
-<a href="https://github.com/dangiashish/GeoTagImage/actions/runs/18504814655/artifacts/4268116577"><img src="https://www.nthlink.com/assets/images/apk-download.png" width="300px" height="80"/></a>
 
 </div>
 
-```json lines
-Key Features :
 
-- Request camera & location permission callback by itself.
-- CameraX api support.
-- Show location and address.
-- Show Lat Longs.
-- Show author name.
-- Show app name.
-- Show Google map snapshot.
-- Set Image Quality.
-- Set Image Extension Type.
-- Set Custom Typeface.
-- Control the features of GTI.
-- Set text size.
-- Image File GeoTagging
-- Camera Aspect Ratio Customization
-- Camera Flash Customization
-- Camera Zoom Customization
-```
+### ✨ Key Features :
+- 🚀 CameraX Integration: Seamless custom camera interface with zoom, flip, and flash support.
+- 🗺️ Google Maps Overlay: Embed a static map of the capture location onto the photo.
+- 📍 Smart Geocoding: Automatically fetches address, city, and country with flag emojis.
+- ✍️ Fully Customizable: Adjust text size, colors, fonts, and background transparency.
+- 💾 Flexible Storage: Choose between JPEG/PNG formats and custom directory names.
+- 🖼️ Aspect Ratio Control: Supports 1:1 (Square), 4:3, 16:9, and Full-screen ratios.
+- 🛠️ EXIF Support: Writes GPS coordinates and capture metadata into the image EXIF header.
 
-### Gradle
+
+#### Gradle
 
 Add repository in your `settings.gradle`
 
@@ -90,14 +78,14 @@ dependencyResolutionManagement {
     }
 }
 ```
-### Add dependency :
+#### Add dependency :
 
 Add dependency in your `build.gradle` (module-level) file :
 
 ```groovy
 dependencies{
 
-    implementation 'com.github.dangiashish:GeoTagImage:1.2.2'
+    implementation 'com.github.dangiashish:GeoTagImage:${latest_version}'
 }
 ```
 #### OR
@@ -106,35 +94,34 @@ Add dependency in your `build.gradle.kts` (module-level) file :
 ```groovy
 dependencies{
 
-    implementation("com.github.dangiashish:GeoTagImage:1.2.2")
+    implementation("com.github.dangiashish:GeoTagImage:${latest_version}")
 }
 ```
 
 #### Add file provider in [AndroidManifest.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/AndroidManifest.xml#L34)
 ```groovy
 <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+android:name="androidx.core.content.FileProvider"
+android:authorities="${applicationId}.provider"
+android:exported="false"
+android:grantUriPermissions="true">
+        <meta-data
+android:name="android.support.FILE_PROVIDER_PATHS"
+android:resource="@xml/provider_paths" />
         </provider>
 
 ```
-#### Create an xml file for path provider [@xml/provider_path.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/res/xml/provider_paths.xml)
+#### Create an XML file for path provider [@xml/provider_path.xml](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/res/xml/provider_paths.xml)
 ```groovy
 <?xml version="1.0" encoding="utf-8"?>
-<paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-path name="external_files" path="."/>
-</paths>
+        <paths xmlns:android="http://schemas.android.com/apk/res/android">
+        <external-path name="external_files" path="."/>
+        </paths>
 ```
 
-#### XML :
-Go to here --> [activity_main.xml](https://github.com/dangiashish/GeoTagImage/blob/master/app/src/main/res/layout/activity_main.xml)
+#### Implementation :
+Reference → [activity_main.xml](https://github.com/dangiashish/GeoTagImage/blob/master/app/src/main/res/layout/activity_main.xml) & [MainActivity.kt](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/java/com/codebyashish/geotagimage/MainActivity.kt)
 
-#### Kotlin : [MainActivity.kt](https://github.com/dangiashish/GeoTagImage/blob/afad2aca53837da4de3c37163911ed897bc3c540/app/src/main/java/com/codebyashish/geotagimage/MainActivity.kt)
 ```kotlin
 import com.dangiashish.GeoTagImage
 import com.dangiashish.PermissionCallback
@@ -149,12 +136,12 @@ class MainActivity : AppCompatActivity(), PermissionCallback{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ...
+        
     }
 }
 
 ```
-### `onCreate()`
+#### onCreate() / onCreateView()
 ```kotlin
 permissionLauncher = registerForActivityResult(
     ActivityResultContracts.RequestMultiplePermissions()
@@ -178,7 +165,9 @@ cameraLauncher =
             Toast.makeText(mContext, "Image capture failed", Toast.LENGTH_SHORT).show()
         }
     }
-
+```
+#### Initialization
+```kotlin
 // initialize the GeoTagImage class object with context and callback
 // use try/catch block to handle exceptions.
 geoTagImage = GeoTagImage(this, permissionLauncher, cameraLauncher) // this || context || requireContext() || requireActivity()
@@ -190,17 +179,17 @@ geoTagImage.requestCameraAndLocationPermissions()
      // setOnClickListener on camera button.
 binding.ivCamera.setOnClickListener {
     geoTagImage.launchCamera(
-            onImageCaptured = { uri ->  // if captured via CameraX api
-                if (uri != null) {
-                    gtiUri = uri
-                    previewCapturedImage()
-                } else {
-                    Toast.makeText(mContext, "Failed to capture photo", Toast.LENGTH_SHORT).show()
-                }
-            },
-            onFailure = {
-                Toast.makeText(mContext, it, Toast.LENGTH_SHORT).show()
+        onImageCaptured = { uri ->  // if captured via CameraX api
+            if (uri != null) {
+                gtiUri = uri
+                previewCapturedImage()
+            } else {
+                Toast.makeText(mContext, "Failed to capture photo", Toast.LENGTH_SHORT).show()
             }
+        },
+        onFailure = {
+            Toast.makeText(mContext, it, Toast.LENGTH_SHORT).show()
+        }
     )
 }
 ```
@@ -210,6 +199,7 @@ binding.ivCamera.setOnClickListener {
 
 geoTagImage.enableGTIService(false) // Enable/Disable GTI Features
 
+geoTagImage.enableCameraX(true)  // enable cameraX as default
 geoTagImage.setTextSize(30f)
 geoTagImage.setBackgroundRadius(5f)
 geoTagImage.setBackgroundColor(Color.parseColor("#66000000"))
@@ -217,10 +207,11 @@ geoTagImage.setTextColor(Color.WHITE)
 geoTagImage.setAuthorName("Ashish")
 geoTagImage.showAuthorName(true)
 geoTagImage.showAppName(true)
-geoTagImage.setImageQuality(ImageQuality.LOW) // Deprecated
 geoTagImage.setImageExtension(PNG)
 geoTagImage.setLabel("Clicked By") // Upload By || Author || Captured By
-geoTagImage.setCameraAspectRatio(GeoTagImage.Ratio_4X3)
+geoTagImage.setDateFormat("yyyy-MM-dd HH:mm:ss") // default date format
+geoTagImage.setCameraAspectRatio(RATIO_1X1) // RATIO_1X1 || RATIO_4X3 || RATIO_16X9 || RATIO_FULL
+geoTagImage.setMapView(MapViewType.SATELLITE) // MapViewType.ROADMAP || MapViewType.SATELLITE || MapViewType.TERRAIN || MapViewType.HYBRID
 
 ```
 
@@ -248,7 +239,7 @@ private fun previewCapturedImage() {
 }
 ```
 
-### Permission Callbacks
+#### Permission Callbacks
 ```kotlin
 override fun onPermissionGranted() {
 
