@@ -28,6 +28,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -40,6 +41,8 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+
+private const val TAG = "GTILocationUtility"
 
 internal object GTILocationUtility {
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
@@ -69,18 +72,24 @@ internal object GTILocationUtility {
             ?.addOnSuccessListener { loc ->
                 if (loc != null) {
                     callback(loc)
-                    Log.e("LocationUtils", "fetchLocation: $loc")
                 } else {
                     requestLiveLocation(context, callback)
                 }
             }
             ?.addOnFailureListener { err ->
-                Log.e("LocationUtils", "fetchLocation: ${err.message}")
                 requestLiveLocation(context, callback)
             }
     }
 
     private fun requestLiveLocation(context: Context, callback: (Location?) -> Unit) {
+        if (!isLocationEnabled(context)){
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(context, "Device GPS is not enabled", Toast.LENGTH_SHORT).show()
+            }
+            callback(null)
+            return
+        }
+
         val locationRequest = LocationRequest.Builder(
             Priority.PRIORITY_HIGH_ACCURACY, 1000L
         ).setMaxUpdates(1) // Get one update
@@ -103,12 +112,10 @@ internal object GTILocationUtility {
                     fusedLocationProviderClient?.removeLocationUpdates(this)
                     val location = locationResult.lastLocation
                     callback(location)
-                    Log.e("LocationUtils", "Live Location: $location")
                 }
 
                 override fun onLocationAvailability(locationAvailability: LocationAvailability) {
                     if (!locationAvailability.isLocationAvailable) {
-                        Log.e("LocationUtils", "Location unavailable")
                         callback(null)
 
                     }
@@ -116,6 +123,12 @@ internal object GTILocationUtility {
             },
             Looper.getMainLooper()
         )
+    }
+
+    private fun isLocationEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
 }

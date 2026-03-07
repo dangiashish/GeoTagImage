@@ -26,6 +26,7 @@ package com.codebyashish.geotagimage.demo
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -58,7 +59,7 @@ import java.text.DecimalFormat
 
 class MainActivity : AppCompatActivity(), PermissionCallback {
     private var gtiUri: Uri? = null
-    private lateinit var geoTagImage: GeoTagImage
+    private lateinit var gti: GeoTagImage
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
@@ -99,23 +100,38 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         cameraLauncher =
             registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
                 if (success) {
-                    gtiUri = geoTagImage.processCapturedImage()
+                    gtiUri = gti.processCapturedImage()
                     previewCapturedImage()
                 } else {
-                    Toast.makeText(mContext, "Image capture failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mContext, "Failed to capture photo", Toast.LENGTH_SHORT).show()
                 }
             }
 
         // initialize the GeoTagImage class object with context and callback
-        geoTagImage = GeoTagImage(this, permissionLauncher, cameraLauncher)
-        geoTagImage.requestCameraAndLocationPermissions()
-        geoTagImage.enableCameraX(true)  // enable cameraX as default
-        geoTagImage.setDateFormat("yyyy-MM-dd HH:mm:ss") // default date format
+        gti = GeoTagImage(this, permissionLauncher, cameraLauncher)
+        gti.requestCameraAndLocationPermissions()
+        gti.enableCameraX(true)  // enable cameraX as default
+        gti.setDateFormat("yyyy-MM-dd HH:mm:ss") // default date format
+
+        // author details
+        gti.showAuthorName(true) // default true
+        gti.setLabel("Captured By") // default label
+        gti.setAuthorName("Ashish") // default author name
+
+        // app details
+        gti.showAppName(true) // default true
+        gti.setAppName("GeoTagImage") // default app name
+
+        gti.showDate(true) // default true
+
+        gti.setBackgroundRadius(10f)
+        gti.setBackgroundColor("#80000000")
+        gti.setTextColor(Color.WHITE)
 
 
         // setOnClickListener on camera button.
         binding.ivCamera.setOnClickListener {
-            geoTagImage.launchCamera(
+            gti.launchCamera(
                 onImageCaptured = { uri ->
                     if (uri != null) {
                         gtiUri = uri
@@ -131,18 +147,18 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         }
 
         binding.gtiFeature.setOnCheckedChangeListener { _, isChecked ->
-            geoTagImage.enableGTIService(isChecked)  // Enable/Disable GTI Features.
+            gti.enableGTIService(isChecked)  // Enable/Disable GTI Features.
             if (!isChecked) {
-                geoTagImage.showAuthorName(false)
+                gti.showAuthorName(false)
                 binding.etAuthorName.visibility = View.GONE
                 binding.sAuthor.isChecked = false
-                geoTagImage.showAppName(false)
+                gti.showAppName(false)
                 binding.sApp.isChecked = false
-                geoTagImage.showLatLng(false)
+                gti.showLatLng(false)
                 binding.sLatLng.isChecked = false
-                geoTagImage.showDate(false)
+                gti.showDate(false)
                 binding.sDate.isChecked = false
-                geoTagImage.showGoogleMap(false)
+                gti.showGoogleMap(false)
                 binding.sMap.isChecked = false
                 binding.cardPreview.visibility = View.GONE
             } else {
@@ -151,18 +167,31 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         }
 
         binding.sAuthor.setOnCheckedChangeListener { _, isChecked ->
-            geoTagImage.showAuthorName(isChecked)
+            gti.showAuthorName(isChecked)
             binding.etAuthorName.visibility = if (isChecked) View.VISIBLE else View.GONE
             binding.tvAuthor.visibility = if (isChecked) View.VISIBLE else View.GONE
 
         }
+
+        binding.etDirectoryName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                gti.setDirectory(s.toString().trim()) // custom directory/folder name
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
 
         binding.etAuthorName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                geoTagImage.setAuthorName(s.toString().trim())
+                gti.setAuthorName(s.toString().trim())
                 binding.tvAuthor.text = "Clicked by $s"
             }
 
@@ -172,7 +201,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         })
 
         binding.sApp.setOnCheckedChangeListener { _, isChecked ->
-            geoTagImage.showAppName(isChecked)
+            gti.showAppName(isChecked)
             binding.etAppName.visibility = if (isChecked) View.VISIBLE else View.GONE
             binding.tvAppName.visibility = if (isChecked) View.VISIBLE else View.GONE
 
@@ -183,7 +212,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                geoTagImage.setAppName(s.toString().trim())
+                gti.setAppName(s.toString().trim())
                 binding.tvAppName.text = "Captured via $s"
             }
 
@@ -193,32 +222,17 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
         })
 
         binding.sLatLng.setOnCheckedChangeListener { _, isChecked ->
-            geoTagImage.showLatLng(isChecked)
+            gti.showLatLng(isChecked)
             binding.tvLatLong.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
         binding.sDate.setOnCheckedChangeListener { _, isChecked ->
-            geoTagImage.showDate(isChecked)
+            gti.showDate(isChecked)
             binding.tvDate.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
         binding.sMap.setOnCheckedChangeListener { _, isChecked ->
-            geoTagImage.showGoogleMap(isChecked)
-        }
-
-        binding.toggleAppearanceRandom.check(R.id.button_ext_jpeg)
-        binding.toggleAppearanceRandom.addOnButtonCheckedListener { group, checkedId, isChecked ->
-            if (isChecked) {
-                when (checkedId) {
-                    R.id.button_ext_png -> {
-                        geoTagImage.setImageExtension(PNG)
-                    }
-
-                    R.id.button_ext_jpeg -> {
-                        geoTagImage.setImageExtension(JPEG)
-                    }
-                }
-            }
+            gti.showGoogleMap(isChecked)
         }
 
         binding.toggleCamera.check(R.id.toggle_camera_x)
@@ -226,66 +240,69 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
             if (isChecked) {
                 when (checkedId) {
                     R.id.toggle_camera_x -> {
-                        geoTagImage.enableCameraX(true)
+                        gti.enableCameraX(true)
                     }
 
                     R.id.toggle_system_camera -> {
-                        geoTagImage.enableCameraX(false)
+                        gti.enableCameraX(false)
                     }
                 }
             }
         }
 
         binding.toggleAppearanceRandom.check(R.id.button_ext_png)
+        gti.setImageExtension(PNG)
         binding.toggleAppearanceRandom.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
                 when (checkedId) {
                     R.id.button_ext_png -> {
-                        geoTagImage.setImageExtension(PNG)
+                        gti.setImageExtension(PNG)
                     }
 
                     R.id.button_ext_jpeg -> {
-                        geoTagImage.setImageExtension(JPEG)
+                        gti.setImageExtension(JPEG)
                     }
                 }
             }
         }
 
         binding.toggleCameraRatio.check(R.id.button_rat_1)
+        gti.setCameraAspectRatio(RATIO_1X1)
         binding.toggleCameraRatio.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
                 when (checkedId) {
                     R.id.button_rat_1 -> {
-                        geoTagImage.setCameraAspectRatio(RATIO_1X1)
+                        gti.setCameraAspectRatio(RATIO_1X1)
                     }
                     R.id.button_rat_2 -> {
-                        geoTagImage.setCameraAspectRatio(RATIO_4X3)
+                        gti.setCameraAspectRatio(RATIO_4X3)
                     }
                     R.id.button_rat_3 -> {
-                        geoTagImage.setCameraAspectRatio(RATIO_16X9)
+                        gti.setCameraAspectRatio(RATIO_16X9)
                     }
                     R.id.button_rat_4 -> {
-                        geoTagImage.setCameraAspectRatio(RATIO_FULL)
+                        gti.setCameraAspectRatio(RATIO_FULL)
                     }
                 }
             }
         }
 
         binding.toggleMapView.check(R.id.button_satellite)
-        binding.toggleCameraRatio.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        gti.setMapView(GeoTagImage.MapViewType.SATELLITE)
+        binding.toggleMapView.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
                 when (checkedId) {
                     R.id.button_satellite -> {
-                        geoTagImage.setMapView(GeoTagImage.MapViewType.SATELLITE)
+                        gti.setMapView(GeoTagImage.MapViewType.SATELLITE)
                     }
                     R.id.button_hybrid -> {
-                        geoTagImage.setMapView(GeoTagImage.MapViewType.HYBRID)
+                        gti.setMapView(GeoTagImage.MapViewType.HYBRID)
                     }
                     R.id.button_terrain -> {
-                        geoTagImage.setMapView(GeoTagImage.MapViewType.TERRAIN)
+                        gti.setMapView(GeoTagImage.MapViewType.TERRAIN)
                     }
                     R.id.button_roadmap -> {
-                        geoTagImage.setMapView(GeoTagImage.MapViewType.ROADMAP)
+                        gti.setMapView(GeoTagImage.MapViewType.ROADMAP)
                     }
                 }
             }
@@ -356,7 +373,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
     }
 
     override fun onPermissionDenied() {
-        geoTagImage.requestCameraAndLocationPermissions()
+        gti.requestCameraAndLocationPermissions()
     }
 
     companion object {
@@ -392,6 +409,7 @@ class MainActivity : AppCompatActivity(), PermissionCallback {
                     success = success && file.delete()
                 }
             }
+            gti.cleanup()
             Toast.makeText(context, "Deleted $success", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()

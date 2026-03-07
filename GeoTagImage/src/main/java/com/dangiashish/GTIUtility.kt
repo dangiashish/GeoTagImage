@@ -97,13 +97,11 @@ object GTIUtility {
     @JvmStatic
     fun generateOriginalFile(mContext: FragmentActivity, imageExtension: String): File? {
         var file: File? = null
-        Log.i(TAG, "generateOriginalFile: Step 1")
         try {
             val mediaStorageDir = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
                 "Camera"
             )
-            Log.w(TAG, "generateOriginalFile: Step 2 : $mediaStorageDir", )
             if (!mediaStorageDir.exists()) {
                 if (!mediaStorageDir.mkdirs()) {
                     return null
@@ -118,7 +116,6 @@ object GTIUtility {
         if (file != null) {
             scanMediaFIle(mContext, file)
         }
-        Log.w(TAG, "generateOriginalFile: Step 3 $file", )
         return file
     }
 
@@ -157,38 +154,29 @@ object GTIUtility {
         return "$countryName $flag "
     }
 
-    val dateFormats = listOf(
-        "dd/MM/yyyy",
-        "dd-MM-yyyy",
-        "yyyy-MM-dd",
-        "MM/dd/yyyy",
-        "dd MMM yyyy",
-        "dd MMMM yyyy",
+    fun decodeSampledBitmap(path: String, reqWidth: Int, reqHeight: Int): Bitmap {
+        return BitmapFactory.Options().run {
+            inJustDecodeBounds = true
+            BitmapFactory.decodeFile(path, this)
 
-        "dd/MM/yyyy HH:mm",
-        "dd/MM/yyyy hh:mm a",
-        "dd/MM/yyyy HH:mm:ss",
-        "dd/MM/yyyy hh:mm:ss a",
+            inSampleSize = calculateInSampleSize(this, reqWidth, reqHeight)
 
-        "yyyy-MM-dd HH:mm:ss",
-        "yyyy-MM-dd'T'HH:mm:ss",
+            inJustDecodeBounds = false
+            BitmapFactory.decodeFile(path, this)
+        }
+    }
 
-        "EEE, dd MMM yyyy",
-        "EEEE, dd MMMM yyyy",
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val (height: Int, width: Int) = options.outHeight to options.outWidth
+        var inSampleSize = 1
 
-        "dd/MM/yyyy hh:mm a z",
-        "dd MMM yyyy hh:mm a z",
-
-        "HH:mm",
-        "hh:mm a",
-
-        "HH:mm:ss",
-        "hh:mm:ss a",
-
-        "yyyyMMdd",
-        "ddMMyyyy",
-
-        "yyyy-MM-dd HH:mm:ss.SSS",
-        "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-    )
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight = height / 2
+            val halfWidth = width / 2
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+        return inSampleSize
+    }
 }
